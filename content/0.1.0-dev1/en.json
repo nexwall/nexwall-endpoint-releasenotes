@@ -96,6 +96,12 @@
      "note": "This preview stores events in files for development. Search and analytics stores (OpenSearch, ClickHouse) are not built yet."
     },
     {
+     "tag": "improved",
+     "title": "Stricter tenant checks on events",
+     "body": "An event that carries its own tenant or device field is accepted only if it matches the certificate exactly. Empty or malformed values and keys that differ only in letter case are refused, and a refused event is reported as a permanent error so the agent does not retry it forever. Certificate names must be in one exact form. A new randomised cross-tenant test and fuzz tests now run against these paths.",
+     "note": "Found during testing: no customer data was involved."
+    },
+    {
      "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
@@ -167,6 +173,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Stricter tenant checks",
+    "text": "Events must match the certificate identity exactly; look-alike fields are refused; cross-tenant and fuzz tests added."
    },
    {
     "date": "2026-11-24",

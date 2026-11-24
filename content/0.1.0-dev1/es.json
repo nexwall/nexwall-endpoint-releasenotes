@@ -96,6 +96,12 @@
      "note": "Esta vista previa guarda los eventos en archivos para desarrollo. Los almacenes de búsqueda y análisis (OpenSearch, ClickHouse) todavía no existen."
     },
     {
+     "tag": "improved",
+     "title": "Controles de tenant más estrictos en los eventos",
+     "body": "Un evento que incluye su propio campo de tenant o dispositivo solo se acepta si coincide exactamente con el certificado. Los valores vacíos o mal formados y las claves que solo difieren en mayúsculas se rechazan, y un evento rechazado se informa como error permanente para que el agente no lo reintente sin fin. Los nombres del certificado deben tener una única forma exacta. Ahora hay una prueba aleatoria entre tenants y pruebas de fuzzing sobre estas rutas.",
+     "note": "Detectado durante las pruebas: no hubo datos de clientes involucrados."
+    },
+    {
      "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
@@ -167,6 +173,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Controles de tenant más estrictos",
+    "text": "Los eventos deben coincidir exactamente con la identidad del certificado; se rechazan campos parecidos; nuevas pruebas entre tenants y de fuzzing."
    },
    {
     "date": "2026-11-24",
