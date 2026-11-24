@@ -103,6 +103,12 @@
     },
     {
      "tag": "new",
+     "title": "Sensors run as separate programs",
+     "body": "The agent can now start and supervise sensors that run as their own programs and talk to it over a local channel (a Unix socket, or a named pipe on Windows). Events from a sensor travel through the agent to the Controller, and each sensor receives its own part of the signed policy when it connects and whenever the policy changes. If a sensor refuses a policy, the agent rolls the whole policy back. A small test sensor is included for labs.",
+     "note": "The Windows, Linux and macOS production sensors are not connected yet; only the test sensor uses this path today."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -173,6 +179,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Sensors as separate programs",
+    "text": "The agent supervises sensor processes over a local channel; events and per-sensor policy cross the process boundary."
    },
    {
     "date": "2026-11-24",

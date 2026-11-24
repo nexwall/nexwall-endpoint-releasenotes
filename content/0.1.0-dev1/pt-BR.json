@@ -103,6 +103,12 @@
     },
     {
      "tag": "new",
+     "title": "Sensores executam como programas separados",
+     "body": "O agente agora pode iniciar e supervisionar sensores que executam como programas próprios e se comunicam com ele por um canal local (um socket Unix, ou um pipe nomeado no Windows). Os eventos de um sensor passam pelo agente até o Controller, e cada sensor recebe a sua própria parte da política assinada ao conectar e sempre que a política muda. Se um sensor recusa uma política, o agente reverte a política inteira. Um pequeno sensor de teste é incluído para laboratórios.",
+     "note": "Os sensores de produção para Windows, Linux e macOS ainda não estão conectados; hoje apenas o sensor de teste usa esse caminho."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -173,6 +179,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Sensores como programas separados",
+    "text": "O agente supervisiona processos sensores por um canal local; eventos e política de cada sensor cruzam o limite do processo."
    },
    {
     "date": "2026-11-24",
