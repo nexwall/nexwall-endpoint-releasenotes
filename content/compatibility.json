@@ -1,0 +1,215 @@
+{
+ "en": {
+  "title": "Compatibility",
+  "lead": "Operating systems and services of the current preview. Only what was tested is marked as tested.",
+  "tabs": [
+   {
+    "id": "endpoints",
+    "label": "Endpoint systems"
+   },
+   {
+    "id": "central",
+    "label": "Central service"
+   }
+  ],
+  "sections": [
+   {
+    "id": "os",
+    "tab": "endpoints",
+    "title": "Endpoint operating systems",
+    "head": [
+     "System",
+     "Status"
+    ],
+    "rows": [
+     [
+      "Windows 10 22H2, 64-bit",
+      "Tested in the lab: enrolment and sensor"
+     ],
+     [
+      "Windows 11",
+      "Planned"
+     ],
+     [
+      "Linux x86-64",
+      "Tested in the lab: enrolment; sensor planned"
+     ],
+     [
+      "macOS",
+      "Planned"
+     ]
+    ]
+   },
+   {
+    "id": "central",
+    "tab": "central",
+    "title": "Central service",
+    "head": [
+     "System",
+     "Status"
+    ],
+    "rows": [
+     [
+      "Linux x86-64",
+      "Tested in the lab, development mode"
+     ],
+     [
+      "Database and message bus",
+      "Planned; events are kept in memory in this preview"
+     ]
+    ]
+   },
+   {
+    "id": "notes",
+    "tab": "central",
+    "title": "Notes",
+    "items": [
+     "Results come from lab machines, not from customer networks.",
+     "No hardware or virtualization matrix has been published yet."
+    ]
+   }
+  ]
+ },
+ "es": {
+  "title": "Compatibilidad",
+  "lead": "Sistemas operativos y servicios de la vista previa actual. Solo lo probado figura como probado.",
+  "tabs": [
+   {
+    "id": "endpoints",
+    "label": "Sistemas de endpoint"
+   },
+   {
+    "id": "central",
+    "label": "Servicio Central"
+   }
+  ],
+  "sections": [
+   {
+    "id": "os",
+    "tab": "endpoints",
+    "title": "Sistemas operativos de endpoint",
+    "head": [
+     "Sistema",
+     "Estado"
+    ],
+    "rows": [
+     [
+      "Windows 10 22H2, 64 bits",
+      "Probado en laboratorio: registro y sensor"
+     ],
+     [
+      "Windows 11",
+      "Previsto"
+     ],
+     [
+      "Linux x86-64",
+      "Probado en laboratorio: registro; sensor previsto"
+     ],
+     [
+      "macOS",
+      "Previsto"
+     ]
+    ]
+   },
+   {
+    "id": "central",
+    "tab": "central",
+    "title": "Servicio Central",
+    "head": [
+     "Sistema",
+     "Estado"
+    ],
+    "rows": [
+     [
+      "Linux x86-64",
+      "Probado en laboratorio, modo de desarrollo"
+     ],
+     [
+      "Base de datos y bus de mensajes",
+      "Previsto; en esta vista previa los eventos se guardan en memoria"
+     ]
+    ]
+   },
+   {
+    "id": "notes",
+    "tab": "central",
+    "title": "Notas",
+    "items": [
+     "Los resultados vienen de máquinas de laboratorio, no de redes de clientes.",
+     "Todavía no se ha publicado una matriz de hardware ni de virtualización."
+    ]
+   }
+  ]
+ },
+ "pt-BR": {
+  "title": "Compatibilidade",
+  "lead": "Sistemas operacionais e serviços da prévia atual. Somente o que foi testado aparece como testado.",
+  "tabs": [
+   {
+    "id": "endpoints",
+    "label": "Sistemas de endpoint"
+   },
+   {
+    "id": "central",
+    "label": "Serviço Central"
+   }
+  ],
+  "sections": [
+   {
+    "id": "os",
+    "tab": "endpoints",
+    "title": "Sistemas operacionais de endpoint",
+    "head": [
+     "Sistema",
+     "Status"
+    ],
+    "rows": [
+     [
+      "Windows 10 22H2, 64 bits",
+      "Testado em laboratório: cadastro e sensor"
+     ],
+     [
+      "Windows 11",
+      "Previsto"
+     ],
+     [
+      "Linux x86-64",
+      "Testado em laboratório: cadastro; sensor previsto"
+     ],
+     [
+      "macOS",
+      "Previsto"
+     ]
+    ]
+   },
+   {
+    "id": "central",
+    "tab": "central",
+    "title": "Serviço Central",
+    "head": [
+     "Sistema",
+     "Status"
+    ],
+    "rows": [
+     [
+      "Linux x86-64",
+      "Testado em laboratório, modo de desenvolvimento"
+     ],
+     [
+      "Banco de dados e barramento de mensagens",
+      "Previsto; nesta prévia os eventos ficam em memória"
+     ]
+    ]
+   },
+   {
+    "id": "notes",
+    "tab": "central",
+    "title": "Notas",
+    "items": [
+     "Os resultados vêm de máquinas de laboratório, não de redes de clientes.",
+     "Ainda não foi publicada uma matriz de hardware nem de virtualização."
+    ]
+   }
+  ]
+ }
+}

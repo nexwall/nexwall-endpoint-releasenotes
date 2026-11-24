@@ -1,0 +1,113 @@
+{
+ "title": "Nexwall Endpoint 0.1.0-dev1",
+ "summary": "Primeira prévia de desenvolvimento: cadastro com identidade vinculada ao tenant, um serviço de ingestão que rejeita eventos de outro tenant e o modelo de eventos OCSF. Não é para produção; ainda não há download.",
+ "overview": "O Nexwall Endpoint é o produto de detecção e resposta em endpoints da Nexwall, projetado para funcionar junto com o Nexwall Firewall. Esta primeira prévia contém apenas as bases: como um endpoint prova quem é, como seus eventos chegam ao serviço e como são descritos. É uma versão de laboratório para a equipe de desenvolvimento e não está disponível para download.",
+ "at_a_glance": [
+  {
+   "label": "Versão",
+   "value": "0.1.0-dev1"
+  },
+  {
+   "label": "Status",
+   "value": "Prévia de desenvolvimento, não publicada"
+  },
+  {
+   "label": "Sistemas de endpoint testados",
+   "value": "Windows 10 22H2 e Linux x86-64, em laboratório"
+  },
+  {
+   "label": "Modelo de eventos",
+   "value": "OCSF 1.10.0"
+  },
+  {
+   "label": "Download",
+   "value": "Ainda não"
+  }
+ ],
+ "sections": [
+  {
+   "id": "whats-new",
+   "title": "Novidades",
+   "intro": "Tudo nesta prévia é novo.",
+   "items": [
+    {
+     "tag": "new",
+     "title": "Cadastro com token de uso único",
+     "body": "Um administrador cria um token de uso único para um tenant. O agente gera a própria chave no endpoint, envia uma solicitação de certificado com o token e recebe um certificado assinado pela autoridade certificadora do Nexwall Endpoint.",
+     "bullets": [
+      "A chave privada nunca sai do endpoint.",
+      "O serviço grava o tenant e o dispositivo no certificado; nada na solicitação pode escolhê-los.",
+      "Um token funciona uma única vez e expira; um token reutilizado ou desconhecido é recusado.",
+      "Verificado de ponta a ponta no Windows 10 e no Linux."
+     ]
+    },
+    {
+     "tag": "new",
+     "title": "Isolamento de tenants na ingestão",
+     "body": "Os eventos são aceitos por TLS mútuo (TLS 1.3). O tenant e o dispositivo vêm somente do certificado. Um evento que cita outro tenant ou dispositivo é rejeitado com 403, e o tamanho da requisição é limitado a 1 MiB."
+    },
+    {
+     "tag": "new",
+     "title": "Modelo de eventos OCSF 1.10.0",
+     "body": "Cada evento é colocado em um envelope versionado e descrito com o Open Cybersecurity Schema Framework, versão 1.10.0. Esta prévia mapeia atividade de processos, arquivos, rede e DNS. Os números de classe são fixados e verificados pelos testes."
+    },
+    {
+     "tag": "new",
+     "title": "Sensor do Windows verificado em laboratório",
+     "body": "Em uma máquina de laboratório com Windows 10 22H2 e Defender ligado, 11 regras de comportamento padrão do sensor do Windows dispararam como esperado. Um teste de resistência de 25 minutos executou 115 ciclos sem falhas e com pico de 121 MB de memória.",
+     "note": "Resultados de laboratório em um único sistema operacional; a matriz mais ampla ainda será testada."
+    }
+   ]
+  },
+  {
+   "id": "improvements",
+   "title": "Melhorias e mudanças",
+   "intro": "",
+   "items": [
+    {
+     "tag": "improved",
+     "title": "Verificação de licenças em cada build",
+     "body": "Cada build analisa suas dependências e falha quando uma licença é incompatível com o produto, e guarda o registro da origem de cada regra de detecção e componente."
+    }
+   ]
+  }
+ ],
+ "components": {
+  "intro": "Versões das partes que formam esta prévia.",
+  "rows": [
+   {
+    "name": "Agente (nx-agent)",
+    "version": "0.1.0-dev1",
+    "note": "Windows e Linux, comandos de cadastro e de teste"
+   },
+   {
+    "name": "Central (nx-central)",
+    "version": "0.1.0-dev1",
+    "note": "Serviço de ingestão e cadastro, modo de desenvolvimento"
+   },
+   {
+    "name": "Modelo de eventos",
+    "version": "OCSF 1.10.0",
+    "note": "Esquema do envelope, versão 1"
+   }
+  ]
+ },
+ "timeline": {
+  "intro": "Histórico de desenvolvimento desta prévia.",
+  "entries": [
+   {
+    "date": "2026-11-24",
+    "title": "Primeira prévia de desenvolvimento",
+    "text": "Cadastro, ingestão vinculada ao tenant e os primeiros mapeamentos OCSF, verificados no Windows 10 22H2 e no Linux."
+   }
+  ]
+ },
+ "requirements": [
+  "Ainda não há nada para instalar: a prévia não foi publicada para download.",
+  "As próximas versões informarão aqui as versões compatíveis de Windows, Linux e macOS."
+ ],
+ "upgrade": [
+  "Ainda não há caminho de atualização. As prévias de desenvolvimento não se destinam à instalação por clientes."
+ ],
+ "open_source": "O Nexwall Endpoint combina componentes de código aberto com código da Nexwall. A lista de componentes, versões e licenças será publicada com a primeira versão, junto com a lista de materiais de software. Cada build já executa uma verificação de licenças."
+}

@@ -1,0 +1,113 @@
+{
+ "title": "Nexwall Endpoint 0.1.0-dev1",
+ "summary": "First development preview: enrolment with a tenant-bound identity, an ingest service that rejects cross-tenant events, and the OCSF event model. Not for production; there is no download yet.",
+ "overview": "Nexwall Endpoint is the endpoint detection and response product of Nexwall, built to work together with Nexwall Firewall. This first development preview contains the foundations only: how an endpoint proves who it is, how its events reach the service, and how events are described. It is a lab build for the development team and is not available for download.",
+ "at_a_glance": [
+  {
+   "label": "Version",
+   "value": "0.1.0-dev1"
+  },
+  {
+   "label": "Status",
+   "value": "Development preview, not released"
+  },
+  {
+   "label": "Endpoint systems tested",
+   "value": "Windows 10 22H2 and Linux x86-64, in the lab"
+  },
+  {
+   "label": "Event model",
+   "value": "OCSF 1.10.0"
+  },
+  {
+   "label": "Download",
+   "value": "None yet"
+  }
+ ],
+ "sections": [
+  {
+   "id": "whats-new",
+   "title": "What is new",
+   "intro": "Everything in this preview is new.",
+   "items": [
+    {
+     "tag": "new",
+     "title": "Enrolment with a single-use token",
+     "body": "An administrator creates a one-time token for a tenant. The agent generates its own key on the endpoint, sends a certificate request with the token, and receives a certificate signed by the Nexwall Endpoint certificate authority.",
+     "bullets": [
+      "The private key never leaves the endpoint.",
+      "The tenant and the device are written into the certificate by the service; nothing in the request can choose them.",
+      "A token works once and expires; a reused or unknown token is refused.",
+      "Verified end to end on Windows 10 and Linux."
+     ]
+    },
+    {
+     "tag": "new",
+     "title": "Tenant isolation at ingest",
+     "body": "Events are accepted over mutual TLS (TLS 1.3). The tenant and the device come only from the certificate. An event that names another tenant or device is rejected with 403, and the request size is limited to 1 MiB."
+    },
+    {
+     "tag": "new",
+     "title": "OCSF 1.10.0 event model",
+     "body": "Every event is wrapped in a versioned envelope and described with the Open Cybersecurity Schema Framework, version 1.10.0. This preview maps process, file, network and DNS activity. The class numbers are pinned and checked by the tests."
+    },
+    {
+     "tag": "new",
+     "title": "Windows sensor verified in the lab",
+     "body": "On a Windows 10 22H2 lab machine with Defender on, 11 stock behaviour rules of the Windows sensor fired as expected. A 25-minute soak test ran 115 loops with no crash and a peak of 121 MB of memory.",
+     "note": "Lab results on one operating system; the wider matrix is still to be tested."
+    }
+   ]
+  },
+  {
+   "id": "improvements",
+   "title": "Improvements and changes",
+   "intro": "",
+   "items": [
+    {
+     "tag": "improved",
+     "title": "Licence check in every build",
+     "body": "Each build scans its dependencies and fails when a licence is incompatible with the product, and keeps a record of where every detection rule and component comes from."
+    }
+   ]
+  }
+ ],
+ "components": {
+  "intro": "Versions of the parts that make up this preview.",
+  "rows": [
+   {
+    "name": "Agent (nx-agent)",
+    "version": "0.1.0-dev1",
+    "note": "Windows and Linux, enrolment and probe commands"
+   },
+   {
+    "name": "Central (nx-central)",
+    "version": "0.1.0-dev1",
+    "note": "Ingest and enrolment service, development mode"
+   },
+   {
+    "name": "Event model",
+    "version": "OCSF 1.10.0",
+    "note": "Envelope schema version 1"
+   }
+  ]
+ },
+ "timeline": {
+  "intro": "Development history of this preview.",
+  "entries": [
+   {
+    "date": "2026-11-24",
+    "title": "First development preview",
+    "text": "Enrolment, tenant-bound ingest and the first OCSF mappers, verified on Windows 10 22H2 and Linux."
+   }
+  ]
+ },
+ "requirements": [
+  "There is nothing to install yet: the preview is not published for download.",
+  "Later releases will state the supported Windows, Linux and macOS versions here."
+ ],
+ "upgrade": [
+  "There is no upgrade path yet. Development previews are not meant to be installed by customers."
+ ],
+ "open_source": "Nexwall Endpoint combines open-source components with Nexwall code. The list of components, versions and licences will be published with the first release, together with the software bill of materials. Every build already runs a licence check."
+}

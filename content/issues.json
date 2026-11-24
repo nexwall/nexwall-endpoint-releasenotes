@@ -1,0 +1,87 @@
+{
+ "areas": {
+  "enrolment": {
+   "en": "Enrolment",
+   "es": "Registro",
+   "pt-BR": "Cadastro"
+  },
+  "ingest": {
+   "en": "Ingest",
+   "es": "Ingesta",
+   "pt-BR": "Ingestão"
+  },
+  "platform": {
+   "en": "Platform",
+   "es": "Plataforma",
+   "pt-BR": "Plataforma"
+  }
+ },
+ "issues": [
+  {
+   "id": "NXE-2001",
+   "type": "known",
+   "introduced": "0.1.0-dev1",
+   "fixed": null,
+   "area": "enrolment",
+   "title": {
+    "en": "Development CA is kept in memory",
+    "es": "La CA de desarrollo se guarda en memoria",
+    "pt-BR": "A CA de desenvolvimento fica em memória"
+   },
+   "body": {
+    "en": "Agent certificates come from a development certificate authority that lives in memory and lasts 24 hours. When Central restarts, issued certificates stop working.",
+    "es": "Los certificados del agente salen de una autoridad certificadora de desarrollo que vive en memoria y dura 24 horas. Al reiniciar Central, los certificados emitidos dejan de funcionar.",
+    "pt-BR": "Os certificados do agente vêm de uma autoridade certificadora de desenvolvimento que fica em memória e dura 24 horas. Ao reiniciar o Central, os certificados emitidos deixam de funcionar."
+   },
+   "workaround": {
+    "en": "Enrol the agent again with a new token.",
+    "es": "Registre el agente de nuevo con un token nuevo.",
+    "pt-BR": "Cadastre o agente novamente com um novo token."
+   }
+  },
+  {
+   "id": "NXE-2002",
+   "type": "known",
+   "introduced": "0.1.0-dev1",
+   "fixed": null,
+   "area": "ingest",
+   "title": {
+    "en": "Events are not stored",
+    "es": "Los eventos no se guardan",
+    "pt-BR": "Os eventos não são armazenados"
+   },
+   "body": {
+    "en": "Central accepts and checks events but keeps them in memory only. There is no database or search yet.",
+    "es": "Central acepta y verifica los eventos, pero solo los mantiene en memoria. Todavía no hay base de datos ni búsqueda.",
+    "pt-BR": "O Central aceita e verifica os eventos, mas só os mantém em memória. Ainda não há banco de dados nem busca."
+   },
+   "workaround": {
+    "en": "None in this preview.",
+    "es": "Ninguno en esta vista previa.",
+    "pt-BR": "Nenhum nesta prévia."
+   }
+  },
+  {
+   "id": "NXE-2003",
+   "type": "known",
+   "introduced": "0.1.0-dev1",
+   "fixed": null,
+   "area": "platform",
+   "title": {
+    "en": "Only Windows 10 22H2 and Linux were tested",
+    "es": "Solo se probaron Windows 10 22H2 y Linux",
+    "pt-BR": "Somente Windows 10 22H2 e Linux foram testados"
+   },
+   "body": {
+    "en": "Other Windows versions and macOS have not been tested.",
+    "es": "No se han probado otras versiones de Windows ni macOS.",
+    "pt-BR": "Outras versões do Windows e o macOS não foram testados."
+   },
+   "workaround": {
+    "en": "Use the tested systems only.",
+    "es": "Use solo los sistemas probados.",
+    "pt-BR": "Use apenas os sistemas testados."
+   }
+  }
+ ]
+}

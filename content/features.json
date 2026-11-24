@@ -1,0 +1,56 @@
+{
+ "en": {
+  "title": "What Nexwall Endpoint includes",
+  "new_title": "In this preview",
+  "base_title": "Planned for the first release",
+  "new": [
+   "Enrolment with a single-use token and a tenant-bound certificate",
+   "Mutual TLS ingest that rejects events of another tenant",
+   "OCSF 1.10.0 events for process, file, network and DNS activity",
+   "Windows sensor verified in the lab"
+  ],
+  "base": [
+   "Detection and response on Windows, Linux and macOS",
+   "Isolation of an endpoint through Nexwall Firewall",
+   "Central console with one tenant per customer",
+   "Signed policies and staged agent updates",
+   "Detection rules with their author and licence recorded"
+  ]
+ },
+ "es": {
+  "title": "Qué incluye Nexwall Endpoint",
+  "new_title": "En esta vista previa",
+  "base_title": "Previsto para la primera versión",
+  "new": [
+   "Registro con token de un solo uso y certificado ligado al tenant",
+   "Ingesta por TLS mutuo que rechaza eventos de otro tenant",
+   "Eventos OCSF 1.10.0 de procesos, archivos, red y DNS",
+   "Sensor de Windows verificado en laboratorio"
+  ],
+  "base": [
+   "Detección y respuesta en Windows, Linux y macOS",
+   "Aislamiento de un endpoint mediante Nexwall Firewall",
+   "Consola central con un tenant por cliente",
+   "Políticas firmadas y actualizaciones del agente por etapas",
+   "Reglas de detección con su autor y licencia registrados"
+  ]
+ },
+ "pt-BR": {
+  "title": "O que o Nexwall Endpoint inclui",
+  "new_title": "Nesta prévia",
+  "base_title": "Previsto para a primeira versão",
+  "new": [
+   "Cadastro com token de uso único e certificado vinculado ao tenant",
+   "Ingestão por TLS mútuo que rejeita eventos de outro tenant",
+   "Eventos OCSF 1.10.0 de processos, arquivos, rede e DNS",
+   "Sensor do Windows verificado em laboratório"
+  ],
+  "base": [
+   "Detecção e resposta em Windows, Linux e macOS",
+   "Isolamento de um endpoint pelo Nexwall Firewall",
+   "Console central com um tenant por cliente",
+   "Políticas assinadas e atualizações do agente em etapas",
+   "Regras de detecção com autor e licença registrados"
+  ]
+ }
+}
