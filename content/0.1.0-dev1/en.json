@@ -56,6 +56,26 @@
      "title": "Windows sensor verified in the lab",
      "body": "On a Windows 10 22H2 lab machine with Defender on, 11 stock behaviour rules of the Windows sensor fired as expected. A 25-minute soak test ran 115 loops with no crash and a peak of 121 MB of memory.",
      "note": "Lab results on one operating system; the wider matrix is still to be tested."
+    },
+    {
+     "tag": "new",
+     "title": "Signed policies with rollback",
+     "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
+     "bullets": [
+      "Keys can be rotated without re-enrolling.",
+      "Each tenant has its own policy and its own revision counter.",
+      "Verified on Windows 10 and Linux, including a wrong-key refusal."
+     ]
+    },
+    {
+     "tag": "new",
+     "title": "Sensor channel",
+     "body": "Detection sensors run as separate processes and send events to the agent over a local channel that only the system and administrators can open. If the agent restarts it asks the sensor to resume after the last event it received, and lost events are counted."
+    },
+    {
+     "tag": "new",
+     "title": "Durable event queue",
+     "body": "Events wait on disk until the Controller confirms them, so a restart or a network outage does not lose them. The queue has a size limit; when it is full the oldest events are dropped and the number dropped is counted. Damaged records are detected and skipped."
     }
    ]
   },
@@ -81,7 +101,7 @@
     "note": "Windows and Linux, enrolment and probe commands"
    },
    {
-    "name": "Central (nx-central)",
+    "name": "Controller (nx-controller)",
     "version": "0.1.0-dev1",
     "note": "Ingest and enrolment service, development mode"
    },
@@ -95,6 +115,11 @@
  "timeline": {
   "intro": "Development history of this preview.",
   "entries": [
+   {
+    "date": "2026-11-24",
+    "title": "Policies, sensor channel and event queue",
+    "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
    {
     "date": "2026-11-24",
     "title": "First development preview",

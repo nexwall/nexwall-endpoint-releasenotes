@@ -12,7 +12,7 @@
   "base": [
    "Detection and response on Windows, Linux and macOS",
    "Isolation of an endpoint through Nexwall Firewall",
-   "Central console with one tenant per customer",
+   "Controller console with one tenant per customer",
    "Signed policies and staged agent updates",
    "Detection rules with their author and licence recorded"
   ]
@@ -30,7 +30,7 @@
   "base": [
    "Detección y respuesta en Windows, Linux y macOS",
    "Aislamiento de un endpoint mediante Nexwall Firewall",
-   "Consola central con un tenant por cliente",
+   "Consola Controller con un tenant por cliente",
    "Políticas firmadas y actualizaciones del agente por etapas",
    "Reglas de detección con su autor y licencia registrados"
   ]
@@ -48,7 +48,7 @@
   "base": [
    "Detecção e resposta em Windows, Linux e macOS",
    "Isolamento de um endpoint pelo Nexwall Firewall",
-   "Console central com um tenant por cliente",
+   "Console Controller com um tenant por cliente",
    "Políticas assinadas e atualizações do agente em etapas",
    "Regras de detecção com autor e licença registrados"
   ]

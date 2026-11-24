@@ -56,6 +56,26 @@
      "title": "Sensor de Windows verificado en laboratorio",
      "body": "En una máquina de laboratorio con Windows 10 22H2 y Defender activo, 11 reglas de comportamiento estándar del sensor de Windows se activaron como se esperaba. Una prueba de resistencia de 25 minutos ejecutó 115 ciclos sin fallos y con un pico de 121 MB de memoria.",
      "note": "Resultados de laboratorio en un solo sistema operativo; la matriz más amplia aún debe probarse."
+    },
+    {
+     "tag": "new",
+     "title": "Políticas firmadas con reversión",
+     "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
+     "bullets": [
+      "Las claves se pueden rotar sin volver a registrar el agente.",
+      "Cada tenant tiene su propia política y su propio contador de revisiones.",
+      "Verificado en Windows 10 y Linux, incluido el rechazo de una clave incorrecta."
+     ]
+    },
+    {
+     "tag": "new",
+     "title": "Canal de sensores",
+     "body": "Los sensores de detección se ejecutan como procesos separados y envían eventos al agente por un canal local que solo pueden abrir el sistema y los administradores. Si el agente se reinicia, pide al sensor que continúe después del último evento recibido, y los eventos perdidos se cuentan."
+    },
+    {
+     "tag": "new",
+     "title": "Cola de eventos duradera",
+     "body": "Los eventos esperan en disco hasta que el Controller los confirma, así que un reinicio o una caída de red no los pierde. La cola tiene un límite de tamaño; cuando se llena se descartan los eventos más antiguos y se cuenta cuántos. Los registros dañados se detectan y se omiten."
     }
    ]
   },
@@ -81,7 +101,7 @@
     "note": "Windows y Linux, comandos de registro y de prueba"
    },
    {
-    "name": "Central (nx-central)",
+    "name": "Controller (nx-controller)",
     "version": "0.1.0-dev1",
     "note": "Servicio de ingesta y registro, modo de desarrollo"
    },
@@ -95,6 +115,11 @@
  "timeline": {
   "intro": "Historia de desarrollo de esta vista previa.",
   "entries": [
+   {
+    "date": "2026-11-24",
+    "title": "Políticas, canal de sensores y cola de eventos",
+    "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
    {
     "date": "2026-11-24",
     "title": "Primera vista previa de desarrollo",

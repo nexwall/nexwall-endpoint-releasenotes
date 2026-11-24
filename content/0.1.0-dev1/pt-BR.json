@@ -56,6 +56,26 @@
      "title": "Sensor do Windows verificado em laboratório",
      "body": "Em uma máquina de laboratório com Windows 10 22H2 e Defender ligado, 11 regras de comportamento padrão do sensor do Windows dispararam como esperado. Um teste de resistência de 25 minutos executou 115 ciclos sem falhas e com pico de 121 MB de memória.",
      "note": "Resultados de laboratório em um único sistema operacional; a matriz mais ampla ainda será testada."
+    },
+    {
+     "tag": "new",
+     "title": "Políticas assinadas com reversão",
+     "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
+     "bullets": [
+      "As chaves podem ser trocadas sem recadastrar o agente.",
+      "Cada tenant tem sua própria política e seu próprio contador de revisões.",
+      "Verificado no Windows 10 e no Linux, incluindo a recusa de uma chave incorreta."
+     ]
+    },
+    {
+     "tag": "new",
+     "title": "Canal de sensores",
+     "body": "Os sensores de detecção rodam como processos separados e enviam eventos ao agente por um canal local que só o sistema e os administradores podem abrir. Se o agente reinicia, pede ao sensor que continue depois do último evento recebido, e os eventos perdidos são contados."
+    },
+    {
+     "tag": "new",
+     "title": "Fila de eventos durável",
+     "body": "Os eventos aguardam em disco até o Controller confirmá-los, então uma reinicialização ou queda de rede não os perde. A fila tem limite de tamanho; quando enche, os eventos mais antigos são descartados e a quantidade é contada. Registros danificados são detectados e ignorados."
     }
    ]
   },
@@ -81,7 +101,7 @@
     "note": "Windows e Linux, comandos de cadastro e de teste"
    },
    {
-    "name": "Central (nx-central)",
+    "name": "Controller (nx-controller)",
     "version": "0.1.0-dev1",
     "note": "Serviço de ingestão e cadastro, modo de desenvolvimento"
    },
@@ -95,6 +115,11 @@
  "timeline": {
   "intro": "Histórico de desenvolvimento desta prévia.",
   "entries": [
+   {
+    "date": "2026-11-24",
+    "title": "Políticas, canal de sensores e fila de eventos",
+    "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
    {
     "date": "2026-11-24",
     "title": "Primeira prévia de desenvolvimento",

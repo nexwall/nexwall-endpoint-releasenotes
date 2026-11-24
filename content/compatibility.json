@@ -8,8 +8,8 @@
     "label": "Endpoint systems"
    },
    {
-    "id": "central",
-    "label": "Central service"
+    "id": "controller",
+    "label": "Controller service"
    }
   ],
   "sections": [
@@ -41,9 +41,9 @@
     ]
    },
    {
-    "id": "central",
-    "tab": "central",
-    "title": "Central service",
+    "id": "controller",
+    "tab": "controller",
+    "title": "Controller service",
     "head": [
      "System",
      "Status"
@@ -61,7 +61,7 @@
    },
    {
     "id": "notes",
-    "tab": "central",
+    "tab": "controller",
     "title": "Notes",
     "items": [
      "Results come from lab machines, not from customer networks.",
@@ -79,8 +79,8 @@
     "label": "Sistemas de endpoint"
    },
    {
-    "id": "central",
-    "label": "Servicio Central"
+    "id": "controller",
+    "label": "Servicio Controller"
    }
   ],
   "sections": [
@@ -112,9 +112,9 @@
     ]
    },
    {
-    "id": "central",
-    "tab": "central",
-    "title": "Servicio Central",
+    "id": "controller",
+    "tab": "controller",
+    "title": "Servicio Controller",
     "head": [
      "Sistema",
      "Estado"
@@ -132,7 +132,7 @@
    },
    {
     "id": "notes",
-    "tab": "central",
+    "tab": "controller",
     "title": "Notas",
     "items": [
      "Los resultados vienen de máquinas de laboratorio, no de redes de clientes.",
@@ -150,8 +150,8 @@
     "label": "Sistemas de endpoint"
    },
    {
-    "id": "central",
-    "label": "Serviço Central"
+    "id": "controller",
+    "label": "Serviço Controller"
    }
   ],
   "sections": [
@@ -183,9 +183,9 @@
     ]
    },
    {
-    "id": "central",
-    "tab": "central",
-    "title": "Serviço Central",
+    "id": "controller",
+    "tab": "controller",
+    "title": "Serviço Controller",
     "head": [
      "Sistema",
      "Status"
@@ -203,7 +203,7 @@
    },
    {
     "id": "notes",
-    "tab": "central",
+    "tab": "controller",
     "title": "Notas",
     "items": [
      "Os resultados vêm de máquinas de laboratório, não de redes de clientes.",
