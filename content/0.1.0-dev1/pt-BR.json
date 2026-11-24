@@ -109,6 +109,12 @@
     },
     {
      "tag": "new",
+     "title": "Mais tipos de eventos no formato comum",
+     "body": "Os eventos agora podem descrever alterações em chaves e valores do registro, módulos (DLLs e bibliotecas) carregados ou descarregados, operações de memória entre processos, logins e logoffs, e achados de detecção com a regra e a técnica MITRE ATT&CK que os gerou. Eles usam o mesmo esquema aberto (OCSF 1.10.0) dos eventos de processo, arquivo, rede e DNS, então podem ser pesquisados e correlacionados juntos.",
+     "note": "Os sensores que produzem esses eventos ainda estão sendo conectados; o formato já está pronto para eles."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -179,6 +185,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Mais tipos de eventos",
+    "text": "Eventos de registro, módulos, memória, login e achados de detecção no formato OCSF 1.10.0."
    },
    {
     "date": "2026-11-24",

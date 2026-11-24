@@ -109,6 +109,12 @@
     },
     {
      "tag": "new",
+     "title": "More event types in the common format",
+     "body": "Events can now describe registry key and value changes, modules (DLLs and libraries) being loaded or unloaded, memory operations between processes, sign-ins and sign-outs, and detection findings with the rule and the MITRE ATT&CK technique that raised them. They use the same open schema (OCSF 1.10.0) as process, file, network and DNS events, so they can be searched and correlated together.",
+     "note": "The sensors that produce these events are still being connected; the format is ready for them."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -179,6 +185,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "More event types",
+    "text": "Registry, module, memory, sign-in and detection-finding events in the OCSF 1.10.0 format."
    },
    {
     "date": "2026-11-24",
