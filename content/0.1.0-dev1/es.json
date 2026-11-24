@@ -59,6 +59,17 @@
     },
     {
      "tag": "new",
+     "title": "Ingesta por lotes",
+     "body": "El agente envía los eventos al Controller en lotes de hasta 50. El Controller rechaza el lote entero si algún evento nombra otro tenant o dispositivo distinto del certificado, de modo que nada de un lote rechazado se almacena. Si el Controller no está disponible, los eventos quedan en disco y se entregan después; un evento que el Controller rechaza definitivamente se cuenta y se omite sin bloquear a los demás."
+    },
+    {
+     "tag": "new",
+     "title": "Actualizaciones por etapas (lado del agente)",
+     "body": "El agente puede verificar un manifiesto de actualización firmado, rechazar uno más antiguo, ubicar cada dispositivo en un anillo canario, temprano o general, instalar solo tras comprobar el tamaño y el SHA-256, verificar que la nueva versión funciona y volver a la anterior si no es así. Un interruptor de parada del Controller detiene a todos los dispositivos y un manifiesto más antiguo no puede levantarlo.",
+     "note": "El servicio de actualización y los instaladores todavía no existen; esta vista previa solo incluye la lógica del agente."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -115,6 +126,11 @@
  "timeline": {
   "intro": "Historia de desarrollo de esta vista previa.",
   "entries": [
+   {
+    "date": "2026-11-24",
+    "title": "Ingesta por lotes y lógica de actualización",
+    "text": "El bucle de ejecución del agente, la ingesta por lotes y la lógica de actualización por etapas, verificados en Windows 10 y Linux."
+   },
    {
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",

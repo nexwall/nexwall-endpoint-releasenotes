@@ -59,6 +59,17 @@
     },
     {
      "tag": "new",
+     "title": "Ingestão em lotes",
+     "body": "O agente envia os eventos ao Controller em lotes de até 50. O Controller recusa o lote inteiro se algum evento citar outro tenant ou dispositivo diferente do certificado, então nada de um lote recusado é armazenado. Se o Controller estiver inacessível, os eventos ficam em disco e são entregues depois; um evento que o Controller recusa em definitivo é contado e ignorado sem bloquear os demais."
+    },
+    {
+     "tag": "new",
+     "title": "Atualizações em etapas (lado do agente)",
+     "body": "O agente consegue verificar um manifesto de atualização assinado, recusar um mais antigo, colocar cada dispositivo em um anel canário, inicial ou geral, instalar somente após conferir tamanho e SHA-256, verificar se a nova versão está saudável e voltar à anterior se não estiver. Uma chave de parada do Controller segura todos os dispositivos e um manifesto mais antigo não consegue liberá-la.",
+     "note": "O serviço de atualização e os instaladores ainda não foram construídos; esta prévia traz apenas a lógica do agente."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -115,6 +126,11 @@
  "timeline": {
   "intro": "Histórico de desenvolvimento desta prévia.",
   "entries": [
+   {
+    "date": "2026-11-24",
+    "title": "Ingestão em lotes e lógica de atualização",
+    "text": "O laço de execução do agente, a ingestão em lotes e a lógica de atualização em etapas, verificados no Windows 10 e no Linux."
+   },
    {
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",

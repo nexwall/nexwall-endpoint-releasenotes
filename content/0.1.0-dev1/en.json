@@ -59,6 +59,17 @@
     },
     {
      "tag": "new",
+     "title": "Batch ingestion",
+     "body": "The agent sends events to the Controller in batches of up to 50. The Controller refuses a whole batch if any event in it names another tenant or device than the certificate, so nothing from a refused batch is stored. If the Controller is unreachable the events stay on disk and are delivered later; an event the Controller refuses for good is counted and skipped without blocking the others."
+    },
+    {
+     "tag": "new",
+     "title": "Staged updates (agent side)",
+     "body": "The agent can verify a signed update manifest, refuse an older one, place each device in a canary, early or general ring, install only after checking size and SHA-256, check that the new version is healthy, and go back to the previous version if it is not. A stop switch from the Controller holds every device, and an older manifest cannot lift it.",
+     "note": "The update service and the installers are not built yet; this preview has the agent logic only."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -115,6 +126,11 @@
  "timeline": {
   "intro": "Development history of this preview.",
   "entries": [
+   {
+    "date": "2026-11-24",
+    "title": "Batch ingestion and update logic",
+    "text": "The agent run loop, batch ingestion and the staged-update logic, verified on Windows 10 and Linux."
+   },
    {
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
