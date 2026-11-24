@@ -70,6 +70,27 @@
     },
     {
      "tag": "new",
+     "title": "Renovación y revocación de certificados",
+     "body": "Los certificados de los agentes son de corta duración. El agente renueva su certificado antes de que venza y rota su clave al mismo tiempo, sin reiniciar. Un administrador puede revocar un dispositivo o un tenant completo; una identidad revocada se rechaza de inmediato en todas las rutas, incluida la renovación, aunque su certificado aún no haya vencido.",
+     "bullets": [
+      "La clave y el certificado se reemplazan como un par, y una renovación interrumpida se repara en el siguiente inicio.",
+      "Los eventos en cola de un dispositivo revocado se conservan, no se descartan."
+     ]
+    },
+    {
+     "tag": "new",
+     "title": "Registro de auditoría a prueba de manipulación",
+     "body": "Los registros de altas, renovaciones de certificado, revocaciones y publicaciones de actualización se escriben en un log de solo agregar, donde cada registro incluye el hash del anterior. Se detecta cualquier edición, borrado, inserción o reordenamiento, y los puntos de control firmados detectan un log recortado. Si no se puede escribir un registro, la acción se rechaza.",
+     "note": "La firma de puntos de control con una clave gestionada y una vista del log para cada tenant todavía no existen."
+    },
+    {
+     "tag": "new",
+     "title": "Servicio de actualizaciones",
+     "body": "El Controller firma los manifiestos de actualización y sirve los archivos. Una versión se abre anillo por anillo (canario, temprano, general), y un interruptor de parada detiene una línea de versiones o todas a la vez. Una parada no puede deshacerse reenviando un manifiesto más antiguo.",
+     "note": "En esta vista previa la actualización la aplica un instalador de archivos genérico en laboratorio; los instaladores que reemplazan el agente en ejecución en Windows, Linux y macOS todavía no existen."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -130,6 +151,11 @@
     "date": "2026-11-24",
     "title": "Ingesta por lotes y lógica de actualización",
     "text": "El bucle de ejecución del agente, la ingesta por lotes y la lógica de actualización por etapas, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Renovación, revocación, auditoría y servicio de actualizaciones",
+    "text": "Renovación y revocación de certificados, registro de auditoría y servicio de actualizaciones, verificados de extremo a extremo."
    },
    {
     "date": "2026-11-24",

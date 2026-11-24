@@ -70,6 +70,27 @@
     },
     {
      "tag": "new",
+     "title": "Renovação e revogação de certificados",
+     "body": "Os certificados dos agentes têm vida curta. O agente renova o certificado antes de vencer e troca a chave ao mesmo tempo, sem reiniciar. Um administrador pode revogar um dispositivo ou um tenant inteiro; uma identidade revogada é recusada imediatamente em todas as rotas, inclusive na renovação, mesmo que o certificado ainda não tenha vencido.",
+     "bullets": [
+      "A chave e o certificado são trocados como um par, e uma renovação interrompida é reparada na próxima inicialização.",
+      "Os eventos em fila de um dispositivo revogado são mantidos, não descartados."
+     ]
+    },
+    {
+     "tag": "new",
+     "title": "Registro de auditoria à prova de adulteração",
+     "body": "Cadastros, renovações de certificado, revogações e publicações de atualização são gravados em um log somente de acréscimo, em que cada registro inclui o hash do anterior. Qualquer edição, exclusão, inserção ou reordenação é detectada, e pontos de verificação assinados detectam um log cortado. Se um registro não puder ser gravado, a ação é recusada.",
+     "note": "A assinatura dos pontos de verificação com uma chave gerenciada e uma visão do log para cada tenant ainda não existem."
+    },
+    {
+     "tag": "new",
+     "title": "Serviço de atualizações",
+     "body": "O Controller assina os manifestos de atualização e entrega os arquivos. Uma versão é aberta anel por anel (canário, inicial, geral), e uma chave de parada interrompe uma linha de versões ou todas de uma vez. Uma parada não pode ser desfeita reenviando um manifesto mais antigo.",
+     "note": "Nesta prévia a atualização é aplicada por um instalador de arquivos genérico em laboratório; os instaladores que substituem o agente em execução no Windows, Linux e macOS ainda não foram construídos."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -130,6 +151,11 @@
     "date": "2026-11-24",
     "title": "Ingestão em lotes e lógica de atualização",
     "text": "O laço de execução do agente, a ingestão em lotes e a lógica de atualização em etapas, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Renovação, revogação, auditoria e serviço de atualizações",
+    "text": "Renovação e revogação de certificados, registro de auditoria e serviço de atualizações, verificados de ponta a ponta."
    },
    {
     "date": "2026-11-24",

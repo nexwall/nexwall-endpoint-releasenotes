@@ -70,6 +70,27 @@
     },
     {
      "tag": "new",
+     "title": "Certificate renewal and revocation",
+     "body": "Agent certificates are short-lived. The agent renews its certificate before it expires and rotates its key at the same time, without a restart. An administrator can revoke a single device or a whole tenant; a revoked identity is refused immediately on every route, including renewal, even though its certificate has not yet expired.",
+     "bullets": [
+      "The key and certificate are replaced as a pair, and an interrupted renewal is repaired at the next start.",
+      "Events queued on a revoked device are kept, not discarded."
+     ]
+    },
+    {
+     "tag": "new",
+     "title": "Tamper-evident audit log",
+     "body": "Enrolments, certificate renewals, revocations and update releases are written to an append-only log in which every record includes the hash of the previous one. Editing, deleting, inserting or reordering records is detected, and signed checkpoints detect a log that was cut short. If a record cannot be written, the action is refused.",
+     "note": "Checkpoint signing with a managed key and a tenant-facing view of the log are not built yet."
+    },
+    {
+     "tag": "new",
+     "title": "Update service",
+     "body": "The Controller signs update manifests and serves the update files. A release is opened ring by ring (canary, early, general), and a stop switch halts one release stream or all of them at once. A stop cannot be undone by replaying an older manifest.",
+     "note": "In this preview the update is applied by a generic file installer in the lab; installers that replace the running agent on Windows, Linux and macOS are not built yet."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -130,6 +151,11 @@
     "date": "2026-11-24",
     "title": "Batch ingestion and update logic",
     "text": "The agent run loop, batch ingestion and the staged-update logic, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Renewal, revocation, audit log, update service",
+    "text": "Certificate renewal and revocation, the tamper-evident audit log and the Controller update service, verified end to end."
    },
    {
     "date": "2026-11-24",
