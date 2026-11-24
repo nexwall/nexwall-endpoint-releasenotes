@@ -91,6 +91,12 @@
     },
     {
      "tag": "new",
+     "title": "Canal de eventos durável",
+     "body": "Os eventos aceitos pelo Controller são publicados em um barramento de mensagens (NATS JetStream) antes de avisar o agente de que foram aceitos, então um evento aceito já está em disco. O tenant e o dispositivo vêm do certificado e são gravados em cada evento. Um indexador guarda os eventos em uma área separada para cada tenant e envia para quarentena, em vez de guardar, qualquer mensagem cujo conteúdo não corresponda ao seu tenant. Um agente que reenvia o mesmo evento não cria duplicata.",
+     "note": "Esta prévia guarda os eventos em arquivos para desenvolvimento. Os armazenamentos de busca e análise (OpenSearch, ClickHouse) ainda não foram construídos."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -161,6 +167,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Canal de eventos durável",
+    "text": "Os eventos são persistidos em um barramento de mensagens antes de serem aceitos e indexados por tenant, com quarentena para os que não correspondem."
    },
    {
     "date": "2026-11-24",

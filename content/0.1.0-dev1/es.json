@@ -91,6 +91,12 @@
     },
     {
      "tag": "new",
+     "title": "Canal de eventos duradero",
+     "body": "Los eventos que acepta el Controller se publican en un bus de mensajes (NATS JetStream) antes de avisar al agente de que fueron aceptados, de modo que un evento aceptado ya está en disco. El tenant y el dispositivo se toman del certificado y se escriben en cada evento. Un indexador guarda los eventos en un área separada para cada tenant y envía a cuarentena, en lugar de guardarlo, cualquier mensaje cuyo contenido no coincida con su tenant. Un agente que reenvía el mismo evento no crea un duplicado.",
+     "note": "Esta vista previa guarda los eventos en archivos para desarrollo. Los almacenes de búsqueda y análisis (OpenSearch, ClickHouse) todavía no existen."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -161,6 +167,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Canal de eventos duradero",
+    "text": "Los eventos se persisten en un bus de mensajes antes de aceptarse y se indexan por tenant, con cuarentena para los que no coinciden."
    },
    {
     "date": "2026-11-24",
