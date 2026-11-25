@@ -193,6 +193,12 @@
     },
     {
      "tag": "new",
+     "title": "Active Directory sync for groups and OUs",
+     "body": "A new program, nx-dirsync, reads computers, security groups (including nested groups) and organisational units from Active Directory over LDAP and sends them to the Controller, so policy scopes by group and OU follow the directory. Computers are matched to devices by the label of their enrolment token or by an optional mapping file, and a name that matches more than one machine is skipped, never guessed. Disabled accounts are left out. A safety guard refuses a snapshot that is empty or has lost more than 30% of the previous one, so an unreachable domain controller cannot strip groups from every device. Connections require ldaps or StartTLS, and passwords and tokens are read only from protected files.",
+     "note": "Preview. Tested against a simulated directory; a test against a real domain controller is still to come."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -263,6 +269,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Active Directory sync",
+    "text": "Groups and OUs now follow Active Directory through the nx-dirsync connector."
    },
    {
     "date": "2026-11-24",

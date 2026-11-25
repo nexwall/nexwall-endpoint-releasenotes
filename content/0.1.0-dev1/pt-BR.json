@@ -193,6 +193,12 @@
     },
     {
      "tag": "new",
+     "title": "Sincronização com o Active Directory para grupos e UOs",
+     "body": "Um novo programa, nx-dirsync, lê computadores, grupos de segurança (inclusive aninhados) e unidades organizacionais do Active Directory por LDAP e os envia ao Controller, de modo que os escopos de política por grupo e UO acompanham o diretório. Os computadores são associados aos dispositivos pelo rótulo do token de inscrição ou por um arquivo de mapeamento opcional, e um nome que corresponde a mais de uma máquina é ignorado, nunca adivinhado. Contas desabilitadas ficam de fora. Uma proteção recusa um instantâneo vazio ou que perdeu mais de 30% do anterior, para que um controlador de domínio inacessível não remova os grupos de todos os dispositivos. As conexões exigem ldaps ou StartTLS, e senhas e tokens são lidos apenas de arquivos protegidos.",
+     "note": "Prévia. Testado com um diretório simulado; falta o teste contra um controlador de domínio real."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -263,6 +269,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Sincronização com o Active Directory",
+    "text": "Grupos e UOs agora acompanham o Active Directory pelo conector nx-dirsync."
    },
    {
     "date": "2026-11-24",
