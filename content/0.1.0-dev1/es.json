@@ -145,6 +145,12 @@
     },
     {
      "tag": "new",
+     "title": "Contratos de API publicados para agentes y administradores",
+     "body": "Las dos interfaces del Controller, la que usan los agentes y la que usan los administradores del tenant, ahora tienen descripciones OpenAPI 3.1. La compilación las comprueba contra el código en ejecución, de modo que una ruta que se sirve pero no está documentada, que está documentada pero no se sirve, o que está documentada con el rol equivocado, hace fallar la compilación. Los documentos indican, para cada llamada, qué hace, quién puede usarla y qué significa cada error, incluido que los objetos de otro tenant siempre responden \"no encontrado\".",
+     "note": "Vista previa. El contrato puede cambiar antes del lanzamiento."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -215,6 +221,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Contratos de API",
+    "text": "Descripciones OpenAPI 3.1 de las APIs de agente y administración, verificadas contra el código en cada compilación."
    },
    {
     "date": "2026-11-24",
