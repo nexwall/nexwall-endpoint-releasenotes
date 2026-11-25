@@ -223,6 +223,12 @@
     },
     {
      "tag": "new",
+     "title": "Busque sus eventos guardados mediante la API de administración",
+     "body": "Los administradores y los usuarios de solo lectura ahora pueden leer los eventos guardados de su organización mediante la API de administración: filtrar por dispositivo y por intervalo de tiempo, y recorrer los resultados del más antiguo al más reciente. Un token solo llega a su propia organización, y una solicitud que intente nombrar otra se rechaza. Si el almacén de eventos no está disponible, la API responde que no está disponible y no muestra nada parcial.",
+     "note": "Vista previa. La búsqueda de texto libre, las búsquedas guardadas y las pantallas web llegarán más adelante."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -293,6 +299,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "API de búsqueda de eventos",
+    "text": "Lea sus eventos guardados mediante la API de administración, por dispositivo e intervalo de tiempo."
    },
    {
     "date": "2026-11-24",
