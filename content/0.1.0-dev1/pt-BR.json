@@ -199,6 +199,12 @@
     },
     {
      "tag": "new",
+     "title": "Microsoft Entra ID como fonte de diretório",
+     "body": "O conector de diretório agora pode ler dispositivos e grupos de segurança do Microsoft Entra ID, além do Active Directory (nx-dirsync com a fonte entra). Ele entra como um aplicativo somente leitura, deixa a Microsoft resolver os grupos aninhados, ignora dispositivos desabilitados e nomes compartilhados por vários dispositivos. Os links de paginação só são seguidos no host da Microsoft, a limitação de requisições é respeitada e qualquer falha interrompe o ciclo antes de enviar algo, com a mesma proteção contra quedas da fonte do Active Directory.",
+     "note": "Prévia. Testado com um Microsoft Graph simulado; falta o teste com um tenant real."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -269,6 +275,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Fonte de diretório Entra ID",
+    "text": "Os grupos agora podem acompanhar o Microsoft Entra ID além do Active Directory."
    },
    {
     "date": "2026-11-24",

@@ -199,6 +199,12 @@
     },
     {
      "tag": "new",
+     "title": "Microsoft Entra ID as a directory source",
+     "body": "The directory connector can now read devices and security groups from Microsoft Entra ID as well as Active Directory (nx-dirsync with the entra source). It signs in as a read-only application, lets Microsoft resolve nested group membership, leaves out disabled devices and skips display names shared by several devices. Paging links are followed only on the Microsoft host, throttling is respected, and any failure stops the cycle before anything is sent, with the same drop guard as the Active Directory source.",
+     "note": "Preview. Tested against a simulated Microsoft Graph; a test against a real tenant is still to come."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -269,6 +275,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Entra ID directory source",
+    "text": "Groups can now follow Microsoft Entra ID as well as Active Directory."
    },
    {
     "date": "2026-11-24",
