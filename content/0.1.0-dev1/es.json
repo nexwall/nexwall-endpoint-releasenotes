@@ -175,6 +175,12 @@
     },
     {
      "tag": "new",
+     "title": "Verifique su propio registro de auditoría",
+     "body": "Cada tenant ahora puede comprobar que nada de lo registrado sobre él fue editado, eliminado o reordenado. Tres llamadas de solo lectura (rol de visor) publican la clave que firma los puntos de control de auditoría, permiten que el Controller compruebe su cadena y entregan los puntos de control firmados. Una nueva herramienta sin conexión, nx-auditverify, recalcula cada hash, enlace y firma a partir de los registros descargados, de modo que no es necesario confiar en la respuesta del propio Controller. Un registro modificado o recortado se informa como no verificado.",
+     "note": "Vista previa. Disponible en Controllers de producción (registro de auditoría en base de datos). Los registros posteriores al último punto de control están enlazados, pero solo los firma el siguiente punto de control, escrito en el plazo de un minuto de actividad."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -245,6 +251,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Verifique su auditoría",
+    "text": "Los tenants pueden comprobar su registro de auditoría en el servidor o sin conexión con nx-auditverify."
    },
    {
     "date": "2026-11-24",

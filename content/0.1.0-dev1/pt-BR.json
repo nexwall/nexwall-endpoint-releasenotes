@@ -175,6 +175,12 @@
     },
     {
      "tag": "new",
+     "title": "Verifique a sua própria trilha de auditoria",
+     "body": "Cada tenant agora pode conferir que nada do que foi registrado sobre ele foi editado, removido ou reordenado. Três chamadas somente leitura (papel de visualizador) publicam a chave que assina os pontos de controle da auditoria, deixam o Controller conferir a sua cadeia e entregam os pontos de controle assinados. Uma nova ferramenta offline, nx-auditverify, recalcula cada hash, vínculo e assinatura a partir dos registros baixados, então não é preciso confiar na resposta do próprio Controller. Uma trilha alterada ou cortada é informada como não verificada.",
+     "note": "Prévia. Disponível em Controllers de produção (registro de auditoria em banco de dados). Os registros mais novos que o último ponto de controle estão encadeados, mas só o próximo ponto de controle, gravado em até um minuto de atividade, os assina."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -245,6 +251,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Verifique sua auditoria",
+    "text": "Os tenants podem conferir a trilha de auditoria no servidor ou offline com o nx-auditverify."
    },
    {
     "date": "2026-11-24",
