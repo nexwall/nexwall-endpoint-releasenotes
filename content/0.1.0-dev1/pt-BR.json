@@ -234,6 +234,12 @@
      "note": "Prévia. Por enquanto o operador define os períodos de retenção em um arquivo; uma opção no portal virá depois."
     },
     {
+     "tag": "improved",
+     "title": "Conexões seguras e restritas ao barramento de mensagens",
+     "body": "O Controller e o indexador agora podem se conectar ao barramento de mensagens NATS por TLS, com usuário e senha, um arquivo de credenciais ou um certificado de cliente. Cada um recebe somente os direitos de que precisa: o Controller pode publicar eventos, mas não lê-los, e o indexador pode ler eventos, mas não publicá-los, de modo que uma credencial roubada não serve para ler nem forjar eventos de outra organização. Nenhum dos dois pode criar ou alterar o fluxo de eventos. Conexões a outro servidor sem TLS ou sem credencial são recusadas na inicialização.",
+     "note": "Prévia. Testado com um servidor NATS real com TLS e TLS mútuo."
+    },
+    {
      "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
@@ -305,6 +311,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Conexões seguras ao barramento de mensagens",
+    "text": "TLS, credenciais e acesso de privilégio mínimo ao barramento de eventos."
    },
    {
     "date": "2026-11-24",

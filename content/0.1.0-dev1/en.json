@@ -234,6 +234,12 @@
      "note": "Preview. Retention periods are set by the operator in a file for now; a setting in the portal comes later."
     },
     {
+     "tag": "improved",
+     "title": "Secure, restricted connections to the message bus",
+     "body": "The Controller and the indexer can now connect to the NATS message bus over TLS, with a user and password, a credentials file, or a client certificate. Each of them gets only the rights it needs: the Controller can publish events but cannot read them back, and the indexer can read events but cannot publish them, so a stolen credential cannot be used to read or forge another organisation's events. Neither may create or change the event stream. Connections to another host without TLS or without a credential are refused at start.",
+     "note": "Preview. Tested against a real NATS server with TLS and mutual TLS."
+    },
+    {
      "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
@@ -305,6 +311,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Secure message bus connections",
+    "text": "TLS, credentials and least-privilege access to the event bus."
    },
    {
     "date": "2026-11-24",
