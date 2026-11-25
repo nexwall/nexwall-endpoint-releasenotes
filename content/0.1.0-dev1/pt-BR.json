@@ -121,6 +121,12 @@
     },
     {
      "tag": "new",
+     "title": "Política guardada em banco de dados com isolamento por tenant",
+     "body": "A política e os atributos dos dispositivos agora ficam no PostgreSQL em vez da memória, então sobrevivem a uma reinicialização e vários Controllers podem compartilhá-los. O próprio banco de dados mantém os tenants separados: cada tabela de dados de tenant tem segurança em nível de linha que a aplicação não consegue desligar, e cada requisição trabalha dentro de uma transação ligada a um único tenant. Se o banco estiver indisponível, os dispositivos mantêm a última política válida e o Controller informa o problema em vez de dizer que não há política.",
+     "note": "Prévia. Registros de dispositivos, tokens de inscrição, revogações e o log de auditoria ainda não estão no banco de dados."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -191,6 +197,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Política em banco de dados",
+    "text": "A política e os atributos dos dispositivos sobrevivem a reinicializações; o banco impõe o isolamento por tenant com segurança em nível de linha."
    },
    {
     "date": "2026-11-24",

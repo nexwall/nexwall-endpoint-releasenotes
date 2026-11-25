@@ -121,6 +121,12 @@
     },
     {
      "tag": "new",
+     "title": "Política guardada en una base de datos con aislamiento por tenant",
+     "body": "La política y los atributos de los dispositivos ahora se guardan en PostgreSQL en lugar de la memoria, de modo que sobreviven a un reinicio y varios Controllers pueden compartirlos. La propia base de datos mantiene separados a los tenants: cada tabla de datos de tenant tiene seguridad a nivel de fila que la aplicación no puede desactivar, y cada solicitud trabaja dentro de una transacción ligada a un solo tenant. Si la base de datos no está disponible, los dispositivos conservan su última política válida y el Controller informa del problema en lugar de decir que no hay política.",
+     "note": "Vista previa. Los registros de dispositivos, los tokens de inscripción, las revocaciones y el registro de auditoría todavía no están en la base de datos."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -191,6 +197,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Política en una base de datos",
+    "text": "La política y los atributos de dispositivos sobreviven a reinicios; la base de datos impone el aislamiento por tenant con seguridad a nivel de fila."
    },
    {
     "date": "2026-11-24",
