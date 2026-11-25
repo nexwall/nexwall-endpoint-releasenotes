@@ -157,6 +157,12 @@
     },
     {
      "tag": "new",
+     "title": "Las actualizaciones del agente sobreviven a los reinicios y solo las publica un operador",
+     "body": "Las versiones de actualización, sus anillos de despliegue y el interruptor de parada ahora se guardan en la base de datos, de modo que reiniciar un Controller ya no hace que los agentes ignoren versiones posteriores, y varios Controllers sirven las mismas. El Controller ya no tiene la clave de firma de actualizaciones y su cuenta de base de datos solo puede leer versiones: publicar, ampliar un anillo, detener o reanudar todas las actualizaciones lo hace un operador con la clave de firma y las credenciales del propietario, y cada acción se registra en la auditoría antes de aplicarse.",
+     "note": "Vista previa. Los artefactos grandes pasarán después a almacenamiento de objetos."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -227,6 +233,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Actualizaciones duraderas, solo operador",
+    "text": "Versiones de actualización en la base de datos; solo un operador puede publicar, ampliar o detener."
    },
    {
     "date": "2026-11-24",

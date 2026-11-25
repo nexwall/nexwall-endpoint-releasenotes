@@ -157,6 +157,12 @@
     },
     {
      "tag": "new",
+     "title": "Agent updates survive restarts and can only be published by an operator",
+     "body": "Update releases, their rollout rings and the stop switch are now stored in the database, so a Controller restart no longer makes agents ignore later releases, and several Controllers serve the same ones. The Controller no longer holds the update signing key and its database account can only read releases: publishing, widening a ring, halting or resuming all updates are done by an operator with the signing key and the owner credentials, and each action is written to the audit log before it takes effect.",
+     "note": "Preview. Large artifacts will move to object storage later."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -227,6 +233,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Durable, operator-only updates",
+    "text": "Update releases stored in the database; only an operator can publish, widen or halt."
    },
    {
     "date": "2026-11-24",
