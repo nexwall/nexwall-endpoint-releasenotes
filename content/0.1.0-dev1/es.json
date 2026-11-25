@@ -258,6 +258,12 @@
      "note": "Vista previa."
     },
     {
+     "tag": "improved",
+     "title": "Prueba de laboratorio con 10.000 endpoints simulados",
+     "body": "Añadimos una herramienta de prueba de carga que registra miles de endpoints simulados en un Controller, envía eventos y solicitudes de política como lo hacen los agentes reales, y luego comprueba que cada evento confirmado pueda leerse de vuelta. En nuestra primera prueba de laboratorio, 10.000 endpoints se registraron en menos de un minuto y se entregaron unos 400.000 eventos sin pérdidas, sin duplicados y sin errores en un solo Controller de prueba. Además, recorrer los eventos página por página en el almacén de desarrollo es mucho más rápido.",
+     "note": "Resultado de laboratorio en un Controller de prueba con un almacén de desarrollo; las pruebas a escala de producción y de larga duración aún están por venir."
+    },
+    {
      "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
@@ -329,6 +335,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Prueba de carga con 10.000 endpoints simulados",
+    "text": "Primer resultado de laboratorio: sin pérdida de eventos en un Controller de prueba."
    },
    {
     "date": "2026-11-24",

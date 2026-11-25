@@ -258,6 +258,12 @@
      "note": "Preview."
     },
     {
+     "tag": "improved",
+     "title": "Lab test with 10,000 simulated endpoints",
+     "body": "We added a load-test tool that enrols thousands of simulated endpoints against a Controller, sends events and policy requests as real agents do, and then checks that every acknowledged event can be read back. In our first lab run, 10,000 endpoints enrolled in under a minute and about 400,000 events were delivered with no loss, no duplicates and no errors on a single test Controller. Browsing events page by page in the development store is also much faster.",
+     "note": "Lab result on one test Controller with a development store; production-scale and long-duration tests are still to come."
+    },
+    {
      "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
@@ -329,6 +335,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Load test with 10,000 simulated endpoints",
+    "text": "First lab result: no event loss on one test Controller."
    },
    {
     "date": "2026-11-24",
