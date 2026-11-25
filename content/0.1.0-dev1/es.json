@@ -205,6 +205,12 @@
     },
     {
      "tag": "new",
+     "title": "Análisis de vulnerabilidades en Windows y macOS",
+     "body": "El analizador de vulnerabilidades ahora también lee el software instalado en Windows (los programas registrados del equipo, sin actualizaciones ni componentes ocultos del sistema) y en macOS (paquetes de aplicaciones en las carpetas Applications). Los avisos para estos sistemas usan un nuevo formato numérico estricto de versión, de modo que una versión se compara con exactitud o se informa como no comparable, y nunca se supone corregida. Un nuevo comando, nx-advisory name, entrega el nombre exacto del programa para un aviso de Windows.",
+     "note": "Vista previa. El lector de Windows aún necesita una prueba en un equipo Windows real; los programas instalados por usuario y los ecosistemas de paquetes de lenguajes todavía no están cubiertos."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -275,6 +281,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Análisis en Windows y macOS",
+    "text": "El análisis de vulnerabilidades ahora cubre programas de Windows y aplicaciones de macOS."
    },
    {
     "date": "2026-11-24",

@@ -205,6 +205,12 @@
     },
     {
      "tag": "new",
+     "title": "Vulnerability scanning on Windows and macOS",
+     "body": "The vulnerability scanner now also reads installed software on Windows (the registered programs of the machine, without updates and hidden system components) and on macOS (application bundles in the Applications folders). Advisories for these systems use a new strict numeric version format, so a version is either compared exactly or reported as not comparable and never assumed to be fixed. A new command, nx-advisory name, gives the exact program name to use in a Windows advisory.",
+     "note": "Preview. The Windows reader still needs a live test on a Windows device; programs installed per user and language package ecosystems are not covered yet."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -275,6 +281,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Scanning on Windows and macOS",
+    "text": "Vulnerability scanning now covers Windows programs and macOS applications."
    },
    {
     "date": "2026-11-24",
