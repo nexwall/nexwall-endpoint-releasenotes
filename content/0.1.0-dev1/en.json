@@ -187,6 +187,12 @@
     },
     {
      "tag": "new",
+     "title": "Advisory lists delivered through the update channel",
+     "body": "The signed vulnerability advisory list now reaches devices the same way agent updates do: it is published by the operator as its own update component, released in stages (canary, early, general), covered by the global stop switch, and rolled back automatically if the installed list does not verify. A device checks the list twice, with the update key for the release and with a separate advisory key for the content, and refuses a list that is unsigned, expired, or numbered differently from its release. A new list makes the scanner run immediately.",
+     "note": "Preview. Enable on the agent with the advisory update option together with the update and advisory keys."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -257,6 +263,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Advisory lists by update",
+    "text": "Vulnerability advisory lists are released in stages through the update channel."
    },
    {
     "date": "2026-11-24",

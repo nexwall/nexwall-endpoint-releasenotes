@@ -187,6 +187,12 @@
     },
     {
      "tag": "new",
+     "title": "Listas de avisos entregadas por el canal de actualizaciones",
+     "body": "La lista firmada de avisos de vulnerabilidades ahora llega a los dispositivos igual que las actualizaciones del agente: el operador la publica como componente de actualización propio, se libera por etapas (canary, early, general), queda cubierta por el interruptor de parada global y se revierte automáticamente si la lista instalada no se verifica. El dispositivo comprueba la lista dos veces, con la clave de actualización para la versión y con una clave de avisos independiente para el contenido, y rechaza una lista sin firma, vencida o numerada distinto de su versión. Una lista nueva hace que el análisis se ejecute de inmediato.",
+     "note": "Vista previa. Se activa en el agente con la opción de actualización de avisos junto con las claves de actualización y de avisos."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -257,6 +263,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Listas de avisos por actualización",
+    "text": "Las listas de avisos de vulnerabilidades se liberan por etapas mediante el canal de actualizaciones."
    },
    {
     "date": "2026-11-24",
