@@ -163,6 +163,12 @@
     },
     {
      "tag": "new",
+     "title": "Los grupos y las UO del directorio pueden dirigir la política de los dispositivos",
+     "body": "Un conector de directorio ahora puede enviar al Controller una instantánea de qué dispositivos pertenecen a qué grupos y unidades organizativas. Se aplica de una sola vez, todo o nada, y la política de cada dispositivo afectado la sigue en su próxima consulta. Los valores del directorio y los fijados por administradores se mantienen separados, de modo que ninguno sobrescribe al otro; una instantánea que no cambia nada no genera una nueva revisión de política, y una instantánea completa elimina las pertenencias que el directorio ya no informa.",
+     "note": "Vista previa. Los conectores de Active Directory y Entra ID aún no están construidos."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -233,6 +239,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Política guiada por el directorio",
+    "text": "Los grupos y UO de una instantánea del directorio seleccionan capas de política; los valores manuales y del directorio se mantienen separados."
    },
    {
     "date": "2026-11-24",

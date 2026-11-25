@@ -163,6 +163,12 @@
     },
     {
      "tag": "new",
+     "title": "Directory groups and OUs can drive device policy",
+     "body": "A directory connector can now send the Controller a snapshot of which devices belong to which groups and organizational units. It is applied in one step, all or nothing, and the policy of every affected device follows at its next check. Values from the directory and values set by administrators are kept apart, so neither overwrites the other; a snapshot that changes nothing causes no new policy revision, and a complete snapshot removes memberships the directory no longer reports.",
+     "note": "Preview. The Active Directory and Entra ID connectors themselves are not built yet."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -233,6 +239,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Directory-driven policy",
+    "text": "Device groups and OUs from a directory snapshot select policy layers; manual and directory values are kept apart."
    },
    {
     "date": "2026-11-24",

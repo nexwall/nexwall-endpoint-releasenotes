@@ -163,6 +163,12 @@
     },
     {
      "tag": "new",
+     "title": "Grupos e UOs do diretório podem conduzir a política dos dispositivos",
+     "body": "Um conector de diretório agora pode enviar ao Controller um retrato de quais dispositivos pertencem a quais grupos e unidades organizacionais. Ele é aplicado de uma vez, tudo ou nada, e a política de cada dispositivo afetado o acompanha na próxima consulta. Os valores do diretório e os definidos por administradores ficam separados, então um não sobrescreve o outro; um retrato que não muda nada não gera nova revisão de política, e um retrato completo remove os vínculos que o diretório não informa mais.",
+     "note": "Prévia. Os conectores de Active Directory e Entra ID ainda não foram construídos."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -233,6 +239,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Política guiada pelo diretório",
+    "text": "Grupos e UOs de um retrato do diretório selecionam camadas de política; valores manuais e do diretório ficam separados."
    },
    {
     "date": "2026-11-24",
