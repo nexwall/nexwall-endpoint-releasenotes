@@ -265,6 +265,12 @@
     },
     {
      "tag": "new",
+     "title": "Lista de materiales de software y avisos de licencias",
+     "body": "Cada versión ahora puede acompañarse de una lista de materiales de software (CycloneDX) para cada programa que distribuimos y cada sistema operativo en el que se ejecuta, con los componentes de terceros que contiene, sus versiones, sumas de verificación y licencias. Los paquetes del agente de Linux ahora incluyen los avisos completos de licencias de terceros. Nuestras comprobaciones rechazan una versión cuya lista tenga una licencia ausente o no permitida.",
+     "note": "Vista previa. Las listas de materiales aún no están firmadas, y los instaladores de Windows y macOS llegarán más adelante."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -335,6 +341,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Lista de materiales de software",
+    "text": "SBOM CycloneDX y avisos de licencias para cada versión."
    },
    {
     "date": "2026-11-24",
