@@ -133,6 +133,12 @@
     },
     {
      "tag": "new",
+     "title": "Controller can start in production mode",
+     "body": "The Controller now has a production start path: a one-time offline command creates the signing keys (agent certificate authority, policy, updates and audit log), and the Controller refuses to start if a key file can be read by other users, if a key does not match its certificate, or if no database is configured. It never generates keys or falls back to memory on its own. After a restart, certificates issued earlier still work, revoked devices stay revoked, used enrolment tokens stay used and policy is unchanged. The audit log can be verified at any time with the public key from the same ceremony.",
+     "note": "Preview. Keys are held in protected files for now; a hardware or cloud key service will replace them before release."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -203,6 +209,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Production start path",
+    "text": "Offline key ceremony, protected key files, database required; restarts keep certificates, revocations and policy."
    },
    {
     "date": "2026-11-24",

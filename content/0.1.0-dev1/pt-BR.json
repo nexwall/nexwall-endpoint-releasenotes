@@ -133,6 +133,12 @@
     },
     {
      "tag": "new",
+     "title": "O Controller pode iniciar em modo de produção",
+     "body": "O Controller agora tem uma inicialização de produção: um comando único e offline cria as chaves de assinatura (autoridade certificadora dos agentes, política, atualizações e log de auditoria), e o Controller se recusa a iniciar se um arquivo de chave puder ser lido por outros usuários, se uma chave não corresponder ao seu certificado ou se não houver banco de dados configurado. Ele nunca gera chaves nem recorre à memória por conta própria. Após uma reinicialização, os certificados emitidos antes continuam funcionando, dispositivos revogados continuam revogados, tokens de inscrição usados continuam usados e a política não muda. O log de auditoria pode ser verificado a qualquer momento com a chave pública da mesma cerimônia.",
+     "note": "Prévia. Por enquanto as chaves ficam em arquivos protegidos; um serviço de chaves em hardware ou na nuvem as substituirá antes do lançamento."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -203,6 +209,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Inicialização de produção",
+    "text": "Cerimônia de chaves offline, arquivos de chave protegidos, banco de dados obrigatório; reinicializações preservam certificados, revogações e política."
    },
    {
     "date": "2026-11-24",

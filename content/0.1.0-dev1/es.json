@@ -133,6 +133,12 @@
     },
     {
      "tag": "new",
+     "title": "El Controller puede iniciar en modo de producción",
+     "body": "El Controller ahora tiene un arranque de producción: un comando único y sin conexión crea las claves de firma (autoridad de certificación de agentes, política, actualizaciones y registro de auditoría), y el Controller se niega a iniciar si otros usuarios pueden leer un archivo de clave, si una clave no corresponde a su certificado o si no hay base de datos configurada. Nunca genera claves ni recurre a la memoria por su cuenta. Tras un reinicio, los certificados emitidos antes siguen funcionando, los dispositivos revocados siguen revocados, los tokens de inscripción usados siguen usados y la política no cambia. El registro de auditoría se puede verificar en cualquier momento con la clave pública de la misma ceremonia.",
+     "note": "Vista previa. Por ahora las claves están en archivos protegidos; un servicio de claves en hardware o en la nube las reemplazará antes del lanzamiento."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -203,6 +209,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Arranque de producción",
+    "text": "Ceremonia de claves sin conexión, archivos de clave protegidos, base de datos obligatoria; los reinicios conservan certificados, revocaciones y política."
    },
    {
     "date": "2026-11-24",
