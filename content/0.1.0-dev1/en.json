@@ -151,6 +151,12 @@
     },
     {
      "tag": "new",
+     "title": "Sign in to the administration API with your identity provider",
+     "body": "Administrators can now call the Controller with access tokens from the partner portal's identity service instead of, or next to, static tokens. Tokens are checked strictly: signature against the provider's published keys, issuer, audience, expiry, and an exact tenant and role. Anything unclear is refused, and the audit log records who acted as \"oidc:\" plus the user.",
+     "note": "Preview. Needs the identity service to put the tenant and role into the token."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -221,6 +227,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Identity provider sign-in",
+    "text": "OIDC access tokens accepted by the administration API, strictly verified and audited."
    },
    {
     "date": "2026-11-24",

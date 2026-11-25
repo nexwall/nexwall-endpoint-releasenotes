@@ -151,6 +151,12 @@
     },
     {
      "tag": "new",
+     "title": "Acceso a la API de administración con su proveedor de identidad",
+     "body": "Los administradores ahora pueden llamar al Controller con tokens de acceso del servicio de identidad del portal de partners, en lugar de los tokens estáticos o junto a ellos. Los tokens se verifican de forma estricta: firma con las claves publicadas del proveedor, emisor, audiencia, caducidad, y un tenant y rol exactos. Todo lo dudoso se rechaza, y el registro de auditoría anota quién actuó como \"oidc:\" más el usuario.",
+     "note": "Vista previa. Requiere que el servicio de identidad incluya el tenant y el rol en el token."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -221,6 +227,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Acceso con proveedor de identidad",
+    "text": "Tokens de acceso OIDC aceptados por la API de administración, verificados con rigor y auditados."
    },
    {
     "date": "2026-11-24",
