@@ -229,6 +229,12 @@
     },
     {
      "tag": "new",
+     "title": "Event retention and erasure for each organisation",
+     "body": "Operators can now set how long each organisation's stored events are kept, with a default and per-organisation exceptions, including keeping an organisation's events indefinitely. A daily job removes older events from OpenSearch and ClickHouse. It first reports what it would remove, and a minimum period prevents a mistyped value from wiping history. An organisation's events can also be erased completely on request, with a confirmation that must repeat its name. One organisation's clean-up never touches another's.",
+     "note": "Preview. Retention periods are set by the operator in a file for now; a setting in the portal comes later."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -299,6 +305,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Event retention and erasure",
+    "text": "Set how long each organisation's events are kept, and erase an organisation on request."
    },
    {
     "date": "2026-11-24",

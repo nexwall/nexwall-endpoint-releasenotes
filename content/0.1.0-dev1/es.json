@@ -229,6 +229,12 @@
     },
     {
      "tag": "new",
+     "title": "Retención y borrado de eventos para cada organización",
+     "body": "Los operadores ahora pueden definir cuánto tiempo se conservan los eventos guardados de cada organización, con un valor por defecto y excepciones por organización, incluida la conservación indefinida. Una tarea diaria elimina los eventos más antiguos de OpenSearch y ClickHouse. Primero informa de lo que eliminaría, y un período mínimo evita que un valor mal escrito borre el historial. Los eventos de una organización también pueden borrarse por completo a petición, con una confirmación que debe repetir su nombre. La limpieza de una organización nunca afecta a otra.",
+     "note": "Vista previa. Por ahora el operador define los períodos de retención en un archivo; una opción en el portal llegará más adelante."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -299,6 +305,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Retención y borrado de eventos",
+    "text": "Defina cuánto tiempo se conservan los eventos de cada organización y borre una organización a petición."
    },
    {
     "date": "2026-11-24",
