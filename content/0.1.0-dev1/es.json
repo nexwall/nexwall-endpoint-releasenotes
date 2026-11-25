@@ -217,6 +217,12 @@
     },
     {
      "tag": "new",
+     "title": "Los eventos pueden guardarse en OpenSearch y ClickHouse",
+     "body": "La canalización de eventos ahora puede escribir en OpenSearch, ClickHouse o en ambos. Cada inquilino tiene sus propios índices (OpenSearch) o su propio rango de claves (ClickHouse), la estructura de los eventos guardados es fija para que un dispositivo no pueda ampliarla, escribir dos veces el mismo evento lo guarda una sola vez, y los eventos se devuelven en un orden estable que se puede paginar. Si un almacén falla se reintenta sin perder eventos, y un evento que un almacén rechaza de forma definitiva se aparta para su revisión. Los textos muy largos se acortan en la copia de búsqueda, mientras que el evento completo se conserva.",
+     "note": "Vista previa. Probado con servidores reales en el laboratorio. Faltan las pantallas de búsqueda, las reglas de retención y el acceso por inquilino en el bus de mensajes."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -287,6 +293,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Eventos en OpenSearch y ClickHouse",
+    "text": "Los eventos pueden guardarse por inquilino en OpenSearch, ClickHouse o en ambos."
    },
    {
     "date": "2026-11-24",

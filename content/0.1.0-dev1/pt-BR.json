@@ -217,6 +217,12 @@
     },
     {
      "tag": "new",
+     "title": "Os eventos podem ser guardados no OpenSearch e no ClickHouse",
+     "body": "O pipeline de eventos agora pode gravar no OpenSearch, no ClickHouse ou em ambos. Cada tenant tem seus próprios índices (OpenSearch) ou sua própria faixa de chaves (ClickHouse), a estrutura dos eventos guardados é fixa para que um dispositivo não possa ampliá-la, gravar o mesmo evento duas vezes o guarda uma só vez, e os eventos voltam em uma ordem estável que pode ser paginada. Se um armazenamento falha, a gravação é repetida sem perder eventos, e um evento que um armazenamento recusa em definitivo é separado para revisão. Textos muito longos são encurtados na cópia de busca, enquanto o evento completo é mantido.",
+     "note": "Prévia. Testado com servidores reais no laboratório. Ainda faltam as telas de busca, as regras de retenção e o acesso por tenant no barramento de mensagens."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -287,6 +293,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Eventos no OpenSearch e no ClickHouse",
+    "text": "Os eventos podem ser guardados por tenant no OpenSearch, no ClickHouse ou em ambos."
    },
    {
     "date": "2026-11-24",

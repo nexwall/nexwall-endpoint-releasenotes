@@ -217,6 +217,12 @@
     },
     {
      "tag": "new",
+     "title": "Events can be stored in OpenSearch and ClickHouse",
+     "body": "The event pipeline can now write to OpenSearch, ClickHouse or both. Each tenant has its own indices (OpenSearch) or its own key range (ClickHouse), the layout of stored events is fixed so a device cannot grow it, writing the same event twice stores it once, and events come back in a stable order that can be paged. A failing store is retried without losing events, and an event a store refuses for good is set aside for review. Very long text values are shortened in the searchable copy while the full event is kept.",
+     "note": "Preview. Tested against real servers in the lab. Search screens, retention rules and per-tenant access on the message bus are still to come."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -287,6 +293,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Events in OpenSearch and ClickHouse",
+    "text": "Events can be stored per tenant in OpenSearch, ClickHouse or both."
    },
    {
     "date": "2026-11-24",
