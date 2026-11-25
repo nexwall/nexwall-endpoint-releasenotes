@@ -115,6 +115,12 @@
     },
     {
      "tag": "new",
+     "title": "Policy by group, OU, tag and device",
+     "body": "Policy can now be set at several levels: for the whole tenant, for a directory group, an organisational unit, a tag, or a single device. For each device the levels are combined in that order and a more specific level replaces a module of a broader one, unless the broader level locked it. Each device receives its own signed policy, and an agent refuses a policy made for another device. An administrator can preview exactly what a device will get, including any override that a lock blocked. Which groups, OUs and tags a device has is decided in the Controller, never by the device itself.",
+     "note": "Preview. Administration is by API with access tokens; sign-in through the identity service and a management screen come later. Every change is recorded in the tenant audit trail."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -185,6 +191,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Policy by group, OU, tag, device",
+    "text": "Layered policy with locks, signed per device, managed through a tenant administration API."
    },
    {
     "date": "2026-11-24",

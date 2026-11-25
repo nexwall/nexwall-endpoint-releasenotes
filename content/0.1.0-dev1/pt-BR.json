@@ -115,6 +115,12 @@
     },
     {
      "tag": "new",
+     "title": "Política por grupo, UO, etiqueta e dispositivo",
+     "body": "A política agora pode ser definida em vários níveis: para todo o tenant, para um grupo do diretório, uma unidade organizacional, uma etiqueta ou um único dispositivo. Para cada dispositivo os níveis são combinados nessa ordem e um nível mais específico substitui um módulo de um mais amplo, a menos que o mais amplo o tenha bloqueado. Cada dispositivo recebe a sua própria política assinada, e um agente recusa uma política feita para outro dispositivo. Um administrador pode ver antecipadamente o que um dispositivo receberá, incluindo qualquer substituição que um bloqueio tenha impedido. Os grupos, UOs e etiquetas de um dispositivo são decididos pelo Controller, nunca pelo próprio dispositivo.",
+     "note": "Prévia. A administração é feita por API com tokens de acesso; o login pelo serviço de identidade e uma tela de gestão virão depois. Cada alteração fica registrada na auditoria do tenant."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -185,6 +191,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Política por grupo, UO, etiqueta, dispositivo",
+    "text": "Política em camadas com bloqueios, assinada por dispositivo e gerenciada por uma API de administração do tenant."
    },
    {
     "date": "2026-11-24",
