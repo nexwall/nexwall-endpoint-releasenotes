@@ -241,6 +241,12 @@
     },
     {
      "tag": "new",
+     "title": "Linux packages for the agent (DEB and RPM)",
+     "body": "The Linux agent now comes as DEB and RPM packages for Intel/AMD and ARM 64-bit systems. A single command installs it, enrols it with your Nexwall Controller using a one-time token and starts it as a service; for a fleet the Controller address and the token can be supplied when the install command runs. The token is used once and then removed from the device. The service runs with restricted permissions, and removing the package keeps the device identity so a reinstall does not need a new token, while purging it deletes everything.",
+     "note": "Preview. The packages are not yet signed, and installers for Windows and macOS come later."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -311,6 +317,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Linux agent packages",
+    "text": "DEB and RPM packages with silent, token-based enrolment."
    },
    {
     "date": "2026-11-24",

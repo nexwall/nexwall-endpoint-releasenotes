@@ -241,6 +241,12 @@
     },
     {
      "tag": "new",
+     "title": "Paquetes de Linux para el agente (DEB y RPM)",
+     "body": "El agente de Linux ahora se entrega en paquetes DEB y RPM para sistemas de 64 bits Intel/AMD y ARM. Un solo comando lo instala, lo registra en su Controller de Nexwall con un token de un solo uso y lo inicia como servicio; para una flota, la dirección del Controller y el token pueden indicarse al ejecutar el comando de instalación. El token se usa una vez y luego se elimina del equipo. El servicio se ejecuta con permisos restringidos, y al desinstalar el paquete se conserva la identidad del equipo, de modo que reinstalar no requiere un token nuevo, mientras que purgarlo lo elimina todo.",
+     "note": "Vista previa. Los paquetes aún no están firmados, y los instaladores para Windows y macOS llegarán más adelante."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -311,6 +317,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Paquetes Linux del agente",
+    "text": "Paquetes DEB y RPM con registro silencioso mediante token."
    },
    {
     "date": "2026-11-24",
