@@ -181,6 +181,12 @@
     },
     {
      "tag": "new",
+     "title": "Hallazgos de vulnerabilidades del software instalado",
+     "body": "En dispositivos Linux el agente ahora puede comparar el software instalado mediante el gestor de paquetes del sistema (Debian y Ubuntu, Alpine, distribuciones basadas en RPM) con una lista firmada de vulnerabilidades conocidas e informar un hallazgo por cada vulnerabilidad que aplica: creado cuando un paquete queda afectado, actualizado cuando cambian los paquetes afectados y cerrado cuando se actualiza o se elimina. El análisis está desactivado hasta que la política del tenant lo activa. Una lista ausente, vencida, más antigua que la que se usa o no firmada por una clave de confianza se rechaza por completo, y en ese caso nunca se cierra ningún hallazgo. La nueva herramienta nx-advisory firma y comprueba las listas.",
+     "note": "Vista previa. Requiere una lista de avisos firmada en el dispositivo; la entrega por el canal de actualizaciones y los inventarios de software de Windows y macOS vendrán después."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -251,6 +257,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Hallazgos de vulnerabilidades",
+    "text": "El agente informa vulnerabilidades conocidas del software Linux instalado, a partir de una lista de avisos firmada."
    },
    {
     "date": "2026-11-24",

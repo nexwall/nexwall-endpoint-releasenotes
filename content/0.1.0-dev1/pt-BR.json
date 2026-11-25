@@ -181,6 +181,12 @@
     },
     {
      "tag": "new",
+     "title": "Achados de vulnerabilidades do software instalado",
+     "body": "Em dispositivos Linux o agente agora pode comparar o software instalado pelo gerenciador de pacotes do sistema (Debian e Ubuntu, Alpine, distribuições baseadas em RPM) com uma lista assinada de vulnerabilidades conhecidas e informar um achado para cada vulnerabilidade que se aplica: criado quando um pacote passa a ser afetado, atualizado quando os pacotes afetados mudam e encerrado quando é atualizado ou removido. A varredura fica desligada até a política do tenant ligá-la. Uma lista ausente, vencida, mais antiga que a em uso ou não assinada por uma chave confiável é recusada por inteiro, e nesse caso nenhum achado é encerrado. A nova ferramenta nx-advisory assina e confere as listas.",
+     "note": "Prévia. Precisa de uma lista de avisos assinada no dispositivo; a entrega pelo canal de atualização e os inventários de software de Windows e macOS virão depois."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -251,6 +257,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Achados de vulnerabilidades",
+    "text": "O agente informa vulnerabilidades conhecidas do software Linux instalado, a partir de uma lista de avisos assinada."
    },
    {
     "date": "2026-11-24",

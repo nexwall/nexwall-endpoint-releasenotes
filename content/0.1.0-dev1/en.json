@@ -181,6 +181,12 @@
     },
     {
      "tag": "new",
+     "title": "Vulnerability findings from installed software",
+     "body": "On Linux devices the agent can now compare the software installed through the system package manager (Debian and Ubuntu, Alpine, RPM-based distributions) with a signed list of known vulnerabilities, and report one finding for each vulnerability that applies: created when a package becomes affected, updated when the affected packages change, closed when it is upgraded or removed. The scan is off until the tenant policy turns it on. A list that is missing, expired, older than the one in use or not signed by a trusted key is refused as a whole, and in that case no finding is ever closed. The new nx-advisory tool signs and checks the lists.",
+     "note": "Preview. Needs a signed advisory list on the device; delivery through the update channel and Windows and macOS software inventories follow."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -251,6 +257,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Vulnerability findings",
+    "text": "The agent reports known vulnerabilities in installed Linux software, from a signed advisory list."
    },
    {
     "date": "2026-11-24",
