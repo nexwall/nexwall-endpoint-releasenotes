@@ -127,6 +127,12 @@
     },
     {
      "tag": "new",
+     "title": "Tokens de inscripción, lista de dispositivos y revocación desde la API de administración",
+     "body": "Los administradores de un tenant ahora pueden crear tokens de inscripción de un solo uso, ver los dispositivos inscritos en su tenant y revocar un dispositivo. El token se muestra una sola vez al crearlo y nunca se guarda ni se registra en forma legible; sirve solo para su propio tenant y una sola vez, incluso si varios Controllers comparten la base de datos. Un dispositivo revocado es rechazado de inmediato en todas las rutas, y el mismo número de dispositivo en otro tenant no se ve afectado. Si no se puede acceder a la base de datos, a los dispositivos se les indica reintentar más tarde en lugar de aceptarlos o tratarlos como revocados. Cada acción queda en el registro de auditoría antes y después de ejecutarse.",
+     "note": "Vista previa. Revocar un tenant completo es una acción del operador y no se ofrece a los administradores del tenant."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -197,6 +203,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Tokens, dispositivos y revocación",
+    "text": "Los administradores crean tokens de inscripción de un solo uso, listan dispositivos y los revocan; guardado con aislamiento por tenant."
    },
    {
     "date": "2026-11-24",

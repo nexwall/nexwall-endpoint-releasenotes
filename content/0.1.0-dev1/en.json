@@ -127,6 +127,12 @@
     },
     {
      "tag": "new",
+     "title": "Enrolment tokens, device list and revoke from the administration API",
+     "body": "Tenant administrators can now create single-use enrolment tokens, see the devices enrolled in their tenant, and revoke a device. A token is shown once when it is created and is never stored or logged in readable form; it works for its own tenant only and only once, even if several Controllers share the database. A revoked device is refused on every route right away, and the same device number in another tenant is not affected. If the database cannot be reached, devices are told to retry later instead of being accepted or treated as revoked. Every action is recorded in the audit log before and after it happens.",
+     "note": "Preview. Revoking a whole tenant is an operator action and is not offered to tenant administrators."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -197,6 +203,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Tokens, devices and revocation",
+    "text": "Tenant administrators create one-time enrolment tokens, list devices and revoke them; stored with tenant isolation."
    },
    {
     "date": "2026-11-24",

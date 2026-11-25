@@ -127,6 +127,12 @@
     },
     {
      "tag": "new",
+     "title": "Tokens de inscrição, lista de dispositivos e revogação pela API de administração",
+     "body": "Os administradores de um tenant agora podem criar tokens de inscrição de uso único, ver os dispositivos inscritos no seu tenant e revogar um dispositivo. O token é mostrado uma única vez na criação e nunca é guardado nem registrado de forma legível; vale só para o próprio tenant e uma única vez, mesmo que vários Controllers compartilhem o banco de dados. Um dispositivo revogado é recusado imediatamente em todas as rotas, e o mesmo número de dispositivo em outro tenant não é afetado. Se o banco de dados não puder ser acessado, os dispositivos são instruídos a tentar de novo mais tarde, em vez de serem aceitos ou tratados como revogados. Cada ação é gravada no log de auditoria antes e depois de acontecer.",
+     "note": "Prévia. Revogar um tenant inteiro é uma ação do operador e não é oferecida aos administradores do tenant."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -197,6 +203,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Tokens, dispositivos e revogação",
+    "text": "Os administradores criam tokens de inscrição de uso único, listam dispositivos e os revogam; guardado com isolamento por tenant."
    },
    {
     "date": "2026-11-24",
