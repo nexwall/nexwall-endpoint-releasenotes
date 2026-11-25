@@ -247,6 +247,12 @@
     },
     {
      "tag": "new",
+     "title": "El agente de Linux se actualiza de forma segura",
+     "body": "El agente de Linux ahora puede instalar por sí mismo nuevas versiones firmadas. Comprueba que el archivo descargado sea un programa genuino para el equipo y para la versión anunciada por su Controller, se reemplaza, se reinicia y conserva la versión anterior hasta que la nueva haya contactado correctamente al Controller. Una versión que no arranca es reemplazada automáticamente por la anterior y no se vuelve a intentar en ese equipo; una caída de red por sí sola no provoca una reversión.",
+     "note": "Vista previa. Windows y macOS llegarán después, y la actualización está desactivada salvo que se configure la clave de actualización."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -317,6 +323,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Autoactualización del agente Linux",
+    "text": "Las versiones firmadas se instalan, confirman y revierten automáticamente."
    },
    {
     "date": "2026-11-24",
