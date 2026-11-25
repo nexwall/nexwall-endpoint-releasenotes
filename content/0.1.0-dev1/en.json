@@ -253,6 +253,12 @@
     },
     {
      "tag": "new",
+     "title": "See which agent releases are rolling out",
+     "body": "The administration interface can now list the agent release streams your Controller offers: the current release for each platform, how far it has been opened (canary, early or general) and whether it has been halted. The list is read only; publishing, promoting and halting a release remain controlled operator actions.",
+     "note": "Preview."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -323,6 +329,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Agent release streams in the admin API",
+    "text": "Read-only view of rollout rings and halts."
    },
    {
     "date": "2026-11-24",

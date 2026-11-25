@@ -253,6 +253,12 @@
     },
     {
      "tag": "new",
+     "title": "Vea qué versiones del agente se están desplegando",
+     "body": "La interfaz de administración ahora puede listar los canales de versiones del agente que ofrece su Controller: la versión actual de cada plataforma, hasta dónde se ha abierto (canario, temprano o general) y si se ha detenido. La lista es de solo lectura; publicar, promover y detener una versión siguen siendo acciones controladas del operador.",
+     "note": "Vista previa."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -323,6 +329,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Canales de versiones del agente en la API de administración",
+    "text": "Vista de solo lectura de los anillos de despliegue y detenciones."
    },
    {
     "date": "2026-11-24",
