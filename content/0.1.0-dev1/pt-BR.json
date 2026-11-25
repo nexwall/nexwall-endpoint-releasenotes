@@ -169,6 +169,12 @@
     },
     {
      "tag": "new",
+     "title": "Inventário de dispositivos e achados de desvio de política",
+     "body": "O agente agora pode informar o que cada dispositivo é (nome, sistema operacional, hardware, endereços de rede) e de quais configurações de política ele se desviou. O inventário fica desligado até a política do tenant ligá-lo; então é enviado uma vez, de novo quando algo muda e na periodicidade que você definir. O desvio de política é informado como achados que abrem quando uma configuração deixa de ser atendida e fecham quando volta a ser atendida, então uma frota saudável não gera tráfego. O formato de achado de vulnerabilidades também está pronto para o módulo scanner que vai alimentá-lo.",
+     "note": "Prévia. O Linux informa mais detalhes hoje; os detalhes de Windows e macOS virão com seus adaptadores."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -239,6 +245,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Inventário e achados de desvio",
+    "text": "O agente informa o inventário do dispositivo (ativado por política) e achados de desvio de política em OCSF."
    },
    {
     "date": "2026-11-24",

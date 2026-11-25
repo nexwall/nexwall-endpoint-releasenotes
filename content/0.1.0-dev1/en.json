@@ -169,6 +169,12 @@
     },
     {
      "tag": "new",
+     "title": "Device inventory and policy-drift findings",
+     "body": "The agent can now report what each device is (name, operating system, hardware, network addresses) and which policy settings it has drifted from. The inventory is off until the tenant policy turns it on, then it is sent once, again when something changes, and on a schedule you set. Policy drift is reported as findings that open when a setting stops being met and close when it is met again, so a healthy fleet adds no traffic. The vulnerability finding format is also ready for the scanner module that will feed it.",
+     "note": "Preview. Linux reports the most detail today; Windows and macOS detail follows with their adapters."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -239,6 +245,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Inventory and drift findings",
+    "text": "The agent reports device inventory (opt-in by policy) and policy-drift findings in OCSF."
    },
    {
     "date": "2026-11-24",
