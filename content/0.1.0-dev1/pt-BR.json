@@ -211,6 +211,12 @@
     },
     {
      "tag": "new",
+     "title": "As chaves de assinatura podem ficar em um serviço de assinatura separado",
+     "body": "O Controller agora pode pedir a um serviço de assinatura separado (nx-signer) que assine a política, as versões de atualização e os pontos de controle da auditoria, de modo que nenhuma dessas chaves precise ficar no servidor do Controller. O serviço aceita apenas clientes com um certificado permitido, deixa cada cliente usar somente as suas chaves, limita a chave de auditoria aos pontos de controle, limita a taxa de requisições e registra cada assinatura sem o seu conteúdo. O Controller confere cada assinatura com uma chave pública fixada previamente. Se o serviço estiver inacessível, nenhuma política sem assinatura é entregue e nenhuma atualização é publicada, enquanto as ações auditadas continuam funcionando e o ponto de controle é feito quando o serviço voltar.",
+     "note": "Prévia. As chaves no servidor de assinatura ainda são arquivos; o suporte a um KMS na nuvem ou a um módulo de hardware está planejado e depende do fornecedor escolhido."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -281,6 +287,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Serviço de assinatura separado",
+    "text": "As chaves de política, atualização e auditoria podem ficar em um serviço de assinatura separado."
    },
    {
     "date": "2026-11-24",

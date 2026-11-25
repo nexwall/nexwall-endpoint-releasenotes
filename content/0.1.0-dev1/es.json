@@ -211,6 +211,12 @@
     },
     {
      "tag": "new",
+     "title": "Las claves de firma pueden estar en un servicio de firma separado",
+     "body": "El Controller ahora puede pedir a un servicio de firma separado (nx-signer) que firme la política, las versiones de actualización y los puntos de control de auditoría, de modo que ninguna de esas claves tenga que estar en el servidor del Controller. El servicio acepta solo clientes con un certificado permitido, deja que cada cliente use únicamente sus claves, limita la clave de auditoría a los puntos de control, limita la tasa de solicitudes y registra cada firma sin su contenido. El Controller comprueba cada firma contra una clave pública fijada de antemano. Si el servicio no responde, no se entrega política sin firmar ni se publica ninguna actualización, mientras las acciones auditadas siguen funcionando y el punto de control se hace cuando el servicio vuelve.",
+     "note": "Vista previa. Las claves del servidor de firma siguen siendo archivos; el soporte para un KMS en la nube o un módulo de hardware está planificado y depende del proveedor elegido."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -281,6 +287,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Servicio de firma separado",
+    "text": "Las claves de política, actualización y auditoría pueden estar en un servicio de firma separado."
    },
    {
     "date": "2026-11-24",
