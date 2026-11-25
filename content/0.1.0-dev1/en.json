@@ -139,6 +139,12 @@
     },
     {
      "tag": "new",
+     "title": "Audit log stored in the database, one chain per tenant",
+     "body": "In production the audit log now lives in the same database as the rest of the tenant data, so several Controllers can write to it at once. Each tenant has its own chain of records, linked by hashes, and a tenant never sees anything of another tenant's chain. The database refuses to change or delete records, and signed checkpoints, made with a key that is not stored in the database, reveal a log that was edited, cut short or emptied. An operator can verify any tenant's chain with one command, and a privileged action is still refused if its record cannot be written.",
+     "note": "Preview. A call that lets tenants verify their own audit trail will come with the portal."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -209,6 +215,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Audit log in the database",
+    "text": "One hash chain per tenant, append-only in the database, signed checkpoints, operator verification."
    },
    {
     "date": "2026-11-24",

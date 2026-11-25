@@ -139,6 +139,12 @@
     },
     {
      "tag": "new",
+     "title": "Log de auditoria no banco de dados, uma cadeia por tenant",
+     "body": "Em produção o log de auditoria agora fica no mesmo banco de dados dos demais dados do tenant, então vários Controllers podem gravar nele ao mesmo tempo. Cada tenant tem sua própria cadeia de registros, ligados por hashes, e um tenant nunca vê nada da cadeia de outro. O banco recusa alterar ou apagar registros, e pontos de verificação assinados, feitos com uma chave que não fica no banco, revelam um log editado, cortado ou esvaziado. Um operador pode verificar a cadeia de qualquer tenant com um único comando, e uma ação privilegiada continua sendo recusada se o seu registro não puder ser gravado.",
+     "note": "Prévia. Uma chamada para os tenants verificarem a própria trilha de auditoria virá com o portal."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -209,6 +215,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Log de auditoria no banco de dados",
+    "text": "Uma cadeia de hashes por tenant, somente acréscimo no banco, pontos de verificação assinados, verificação pelo operador."
    },
    {
     "date": "2026-11-24",

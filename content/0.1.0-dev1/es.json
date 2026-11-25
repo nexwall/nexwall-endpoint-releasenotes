@@ -139,6 +139,12 @@
     },
     {
      "tag": "new",
+     "title": "Registro de auditoría en la base de datos, una cadena por tenant",
+     "body": "En producción el registro de auditoría ahora vive en la misma base de datos que el resto de los datos del tenant, de modo que varios Controllers pueden escribir en él a la vez. Cada tenant tiene su propia cadena de registros, enlazados por hashes, y un tenant nunca ve nada de la cadena de otro. La base de datos se niega a modificar o borrar registros, y los puntos de control firmados, hechos con una clave que no se guarda en la base de datos, revelan un registro editado, recortado o vaciado. Un operador puede verificar la cadena de cualquier tenant con un solo comando, y una acción privilegiada sigue rechazándose si no se puede escribir su registro.",
+     "note": "Vista previa. Una llamada para que los tenants verifiquen su propio rastro de auditoría llegará con el portal."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -209,6 +215,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Registro de auditoría en la base de datos",
+    "text": "Una cadena de hashes por tenant, solo anexar en la base de datos, puntos de control firmados, verificación por el operador."
    },
    {
     "date": "2026-11-24",
