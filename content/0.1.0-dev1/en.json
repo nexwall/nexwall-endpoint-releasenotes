@@ -271,6 +271,12 @@
     },
     {
      "tag": "new",
+     "title": "Linux telemetry and runtime detections (osquery and Falco)",
+     "body": "On Linux the agent can now report what is really happening on the machine: processes starting and stopping, network connections and listening ports, logins, and changes to watched files, collected with osquery, plus runtime detections from Falco, each mapped to the open OCSF format and tagged with the rule author, source and licence. A separate optional package, nexwall-agent-sensors, installs both with pinned, signature-checked upstream versions. If either sensor is killed repeatedly the agent keeps running and reports the sensor as degraded until it recovers. All events are checked against the official OCSF 1.10.0 definitions.",
+     "note": "Preview. x86_64 only for now; osquery polls every few seconds, so a process shorter than that is seen by Falco only."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -341,6 +347,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Linux sensors: osquery and Falco",
+    "text": "Real Linux telemetry and detections, mapped to OCSF."
    },
    {
     "date": "2026-11-24",

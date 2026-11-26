@@ -271,6 +271,12 @@
     },
     {
      "tag": "new",
+     "title": "Telemetría y detecciones en tiempo de ejecución en Linux (osquery y Falco)",
+     "body": "En Linux, el agente ahora puede informar lo que realmente ocurre en la máquina: procesos que inician y terminan, conexiones de red y puertos en escucha, inicios de sesión y cambios en archivos vigilados, recopilados con osquery, además de detecciones en tiempo de ejecución de Falco, cada una mapeada al formato abierto OCSF y etiquetada con el autor, el origen y la licencia de la regla. Un paquete opcional aparte, nexwall-agent-sensors, instala ambos con versiones originales fijadas y con firma verificada. Si alguno de los sensores se termina repetidamente, el agente sigue funcionando e informa el sensor como degradado hasta que se recupere. Todos los eventos se validan contra las definiciones oficiales de OCSF 1.10.0.",
+     "note": "Vista previa. Solo x86_64 por ahora; osquery consulta cada pocos segundos, por lo que un proceso más corto solo lo ve Falco."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -341,6 +347,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Sensores Linux: osquery y Falco",
+    "text": "Telemetría y detecciones reales en Linux, mapeadas a OCSF."
    },
    {
     "date": "2026-11-24",
