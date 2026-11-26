@@ -283,6 +283,12 @@
     },
     {
      "tag": "new",
+     "title": "Isolate a machine, with approval (Linux)",
+     "body": "Administrators can now ask a Linux machine to cut itself off the network, release it again, stop a process and everything it started, move a suspicious file into a locked quarantine folder, or collect a list of running processes. Isolating, stopping a process and quarantining need a named approver, and a second person can be required; nothing happens before the approval. Each request carries a key so that repeating it never runs it twice. The machine only obeys orders that are signed by the Controller, meant for that machine and that customer, and still valid; it keeps its own tamper-evident log of every order. An isolated machine can still talk to the Controller, ends the isolation by itself at the set time even if the Controller is gone, and keeps it across an agent restart or a reboot. Every step is recorded in the audit log. When a firewall is connected, an isolated machine can also be blocked at the firewall, and quarantined file fingerprints are passed on to it.",
+     "note": "Preview. Linux only, tested on Debian 12; Windows comes later. In the lab the machine was cut off 11 seconds after approval at the 95th percentile (100 runs, worst 12.1 s). The firewall step was tested against a simulator, not yet against a real firewall. Actions are available through the administration API; the console screen comes later."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -353,6 +359,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Isolate a machine, with approval",
+    "text": "Isolate, stop a process, quarantine a file, collect: approved and audited."
    },
    {
     "date": "2026-11-24",

@@ -283,6 +283,12 @@
     },
     {
      "tag": "new",
+     "title": "Isolar uma máquina, com aprovação (Linux)",
+     "body": "Os administradores agora podem pedir que uma máquina Linux se desconecte da rede, religá-la, encerrar um processo e tudo o que ele iniciou, mover um arquivo suspeito para uma pasta de quarentena protegida ou coletar a lista de processos em execução. Isolar, encerrar um processo e colocar em quarentena exigem um aprovador identificado, e uma segunda pessoa pode ser exigida; nada acontece antes da aprovação. Cada pedido leva uma chave para que repeti-lo nunca o execute duas vezes. A máquina só obedece a ordens assinadas pelo Controller, destinadas a ela e àquele cliente, e ainda válidas; ela também mantém seu próprio registro à prova de adulteração de cada ordem. Uma máquina isolada continua falando com o Controller, encerra o isolamento sozinha no horário definido mesmo que o Controller não esteja disponível, e o mantém após reiniciar o agente ou a máquina. Cada etapa fica no registro de auditoria. Quando há um firewall conectado, a máquina isolada também pode ser bloqueada no firewall, e as impressões digitais dos arquivos em quarentena são repassadas a ele.",
+     "note": "Prévia. Somente Linux, testado no Debian 12; o Windows virá depois. No laboratório a máquina foi isolada 11 segundos após a aprovação no percentil 95 (100 execuções, pior caso 12,1 s). A etapa do firewall foi testada com um simulador, ainda não com um firewall real. As ações estão disponíveis pela API de administração; a tela do console virá depois."
+    },
+    {
+     "tag": "new",
      "title": "Políticas assinadas com reversão",
      "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
      "bullets": [
@@ -353,6 +359,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Isolar uma máquina, com aprovação",
+    "text": "Isolar, encerrar um processo, colocar um arquivo em quarentena e coletar: com aprovação e auditoria."
    },
    {
     "date": "2026-11-24",
