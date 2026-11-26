@@ -284,8 +284,23 @@
     {
      "tag": "new",
      "title": "Aislar una máquina, con aprobación (Linux)",
-     "body": "Los administradores ahora pueden pedir que una máquina Linux se desconecte de la red, volver a conectarla, detener un proceso y todo lo que inició, mover un archivo sospechoso a una carpeta de cuarentena protegida, o recopilar la lista de procesos en ejecución. Aislar, detener un proceso y poner en cuarentena exigen un aprobador identificado, y se puede exigir una segunda persona; nada ocurre antes de la aprobación. Cada solicitud lleva una clave para que repetirla nunca la ejecute dos veces. La máquina solo obedece órdenes firmadas por el Controller, dirigidas a esa máquina y a ese cliente, y todavía vigentes; además lleva su propio registro a prueba de alteraciones de cada orden. Una máquina aislada sigue pudiendo hablar con el Controller, termina el aislamiento sola a la hora fijada aunque el Controller no esté, y lo mantiene tras reiniciar el agente o la máquina. Cada paso queda en el registro de auditoría.",
-     "note": "Vista previa. Solo Linux, probado en Debian 12; Windows llegará después. En el laboratorio la máquina quedó aislada 11 segundos después de la aprobación en el percentil 95 (100 pruebas, peor caso 12,1 s). El bloqueo en el firewall está previsto para una versión posterior. Las acciones están disponibles mediante la API de administración; la pantalla de la consola llegará después."
+     "body": "Los administradores ahora pueden pedir que una máquina Linux se desconecte de la red, volver a conectarla, detener un proceso y todo lo que inició, mover un archivo sospechoso a una carpeta de cuarentena protegida, o recopilar la lista de procesos en ejecución. Aislar, detener un proceso y poner en cuarentena exigen un aprobador identificado, y se puede exigir una segunda persona; nada ocurre antes de la aprobación. Cada solicitud lleva una clave para que repetirla nunca la ejecute dos veces. La máquina solo obedece órdenes firmadas por el Controller, dirigidas a esa máquina y a ese cliente, y todavía vigentes; además lleva su propio registro a prueba de alteraciones de cada orden. Una máquina aislada sigue pudiendo hablar con el Controller, termina el aislamiento sola a la hora fijada aunque el Controller no esté, y lo mantiene tras reiniciar el agente o la máquina. Cada paso queda en el registro de auditoría. Cuando hay un firewall conectado, la máquina aislada también puede bloquearse en el firewall, y las huellas de los archivos en cuarentena se le transmiten.",
+     "note": "Vista previa. Solo Linux, probado en Debian 12; Windows llegará después. En el laboratorio la máquina quedó aislada 11 segundos después de la aprobación en el percentil 95 (100 pruebas, peor caso 12,1 s). El paso del firewall se probó con un simulador, aún no con un firewall real. Las acciones están disponibles mediante la API de administración; la pantalla de la consola llegará después."
+    },
+    {
+     "tag": "new",
+     "title": "Consola de administración en el navegador",
+     "body": "El Controller ahora sirve una consola en /console/. Inicie sesión con un token de API y vea sus dispositivos, busque eventos por campo o texto libre, atienda alertas, solicite y apruebe aislamientos, cree tokens de inscripción con instrucciones de instalación, edite la configuración de protección del endpoint, verifique el registro de auditoría y cambie el idioma entre inglés y portugués de Brasil. Cada pantalla muestra solo su propio tenant."
+    },
+    {
+     "tag": "new",
+     "title": "Configuración de protección del endpoint",
+     "body": "La configuración de protección contra amenazas, control de aplicaciones, control de dispositivos, firewall del host, protección web y exclusiones se puede definir por tenant, grupo o dispositivo, cada una como desactivada, monitorear o aplicar. En esta versión se aplican en la máquina el firewall del host (Linux) y el control de almacenamiento USB. El resto se guarda y se valida, y cada máquina lo informa como \"no aplicado\" hasta que llegue su aplicación, de modo que nada afirma una protección que no está activa. Las configuraciones inseguras, como un firewall que no permite ninguna entrada, se rechazan al guardarlas."
+    },
+    {
+     "tag": "new",
+     "title": "Límite de dispositivos y fin de vigencia por tenant",
+     "body": "Un operador puede definir un número máximo de dispositivos y una fecha de fin para un tenant. La inscripción por encima del límite o después de la fecha se rechaza con un mensaje claro y queda registrada en la auditoría."
     },
     {
      "tag": "new",
@@ -359,6 +374,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Consola y configuración de protección del endpoint",
+    "text": "Una consola en el navegador, configuración de protección del endpoint y límites de dispositivos por tenant."
    },
    {
     "date": "2026-11-24",

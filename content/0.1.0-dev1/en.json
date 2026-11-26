@@ -284,8 +284,23 @@
     {
      "tag": "new",
      "title": "Isolate a machine, with approval (Linux)",
-     "body": "Administrators can now ask a Linux machine to cut itself off the network, release it again, stop a process and everything it started, move a suspicious file into a locked quarantine folder, or collect a list of running processes. Isolating, stopping a process and quarantining need a named approver, and a second person can be required; nothing happens before the approval. Each request carries a key so that repeating it never runs it twice. The machine only obeys orders that are signed by the Controller, meant for that machine and that customer, and still valid; it keeps its own tamper-evident log of every order. An isolated machine can still talk to the Controller, ends the isolation by itself at the set time even if the Controller is gone, and keeps it across an agent restart or a reboot. Every step is recorded in the audit log.",
-     "note": "Preview. Linux only, tested on Debian 12; Windows comes later. In the lab the machine was cut off 11 seconds after approval at the 95th percentile (100 runs, worst 12.1 s). Blocking at the firewall is planned for a later release. Actions are available through the administration API; the console screen comes later."
+     "body": "Administrators can now ask a Linux machine to cut itself off the network, release it again, stop a process and everything it started, move a suspicious file into a locked quarantine folder, or collect a list of running processes. Isolating, stopping a process and quarantining need a named approver, and a second person can be required; nothing happens before the approval. Each request carries a key so that repeating it never runs it twice. The machine only obeys orders that are signed by the Controller, meant for that machine and that customer, and still valid; it keeps its own tamper-evident log of every order. An isolated machine can still talk to the Controller, ends the isolation by itself at the set time even if the Controller is gone, and keeps it across an agent restart or a reboot. Every step is recorded in the audit log. When a firewall is connected, an isolated machine can also be blocked at the firewall, and quarantined file fingerprints are passed on to it.",
+     "note": "Preview. Linux only, tested on Debian 12; Windows comes later. In the lab the machine was cut off 11 seconds after approval at the 95th percentile (100 runs, worst 12.1 s). The firewall step was tested against a simulator, not yet against a real firewall. Actions are available through the administration API; the console screen comes later."
+    },
+    {
+     "tag": "new",
+     "title": "Administration console in the browser",
+     "body": "The Controller now serves a console at /console/. Sign in with an API token and see your devices, search events by field or free text, handle alerts, request and approve isolation, create enrolment tokens with install instructions, edit endpoint protection settings, verify the audit log and change the language between English and Brazilian Portuguese. Every screen shows only your own tenant."
+    },
+    {
+     "tag": "new",
+     "title": "Endpoint protection settings",
+     "body": "Settings for threat protection, application control, device control, host firewall, web protection and exclusions can be set per tenant, group or device, each as off, monitor or enforce. In this release the host firewall (Linux) and USB storage control are enforced on the machine. The other settings are saved and checked, and each machine reports them as \"not enforced\" until their enforcement arrives, so nothing claims protection that is not running. Unsafe settings, such as a firewall that allows nothing in, are refused when you save them."
+    },
+    {
+     "tag": "new",
+     "title": "Device limit and end of term per tenant",
+     "body": "An operator can set a maximum number of devices and an end date for a tenant. Enrolment beyond the limit or after the end date is refused with a clear message and recorded in the audit log."
     },
     {
      "tag": "new",
@@ -359,6 +374,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Console and endpoint protection settings",
+    "text": "A browser console, endpoint protection settings and per-tenant device limits."
    },
    {
     "date": "2026-11-24",

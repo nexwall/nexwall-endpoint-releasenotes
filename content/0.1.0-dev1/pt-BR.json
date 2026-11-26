@@ -284,8 +284,23 @@
     {
      "tag": "new",
      "title": "Isolar uma máquina, com aprovação (Linux)",
-     "body": "Os administradores agora podem pedir que uma máquina Linux se desconecte da rede, religá-la, encerrar um processo e tudo o que ele iniciou, mover um arquivo suspeito para uma pasta de quarentena protegida ou coletar a lista de processos em execução. Isolar, encerrar um processo e colocar em quarentena exigem um aprovador identificado, e uma segunda pessoa pode ser exigida; nada acontece antes da aprovação. Cada pedido leva uma chave para que repeti-lo nunca o execute duas vezes. A máquina só obedece a ordens assinadas pelo Controller, destinadas a ela e àquele cliente, e ainda válidas; ela também mantém seu próprio registro à prova de adulteração de cada ordem. Uma máquina isolada continua falando com o Controller, encerra o isolamento sozinha no horário definido mesmo que o Controller não esteja disponível, e o mantém após reiniciar o agente ou a máquina. Cada etapa fica no registro de auditoria.",
-     "note": "Prévia. Somente Linux, testado no Debian 12; o Windows virá depois. No laboratório a máquina foi isolada 11 segundos após a aprovação no percentil 95 (100 execuções, pior caso 12,1 s). O bloqueio no firewall está previsto para uma versão posterior. As ações estão disponíveis pela API de administração; a tela do console virá depois."
+     "body": "Os administradores agora podem pedir que uma máquina Linux se desconecte da rede, religá-la, encerrar um processo e tudo o que ele iniciou, mover um arquivo suspeito para uma pasta de quarentena protegida ou coletar a lista de processos em execução. Isolar, encerrar um processo e colocar em quarentena exigem um aprovador identificado, e uma segunda pessoa pode ser exigida; nada acontece antes da aprovação. Cada pedido leva uma chave para que repeti-lo nunca o execute duas vezes. A máquina só obedece a ordens assinadas pelo Controller, destinadas a ela e àquele cliente, e ainda válidas; ela também mantém seu próprio registro à prova de adulteração de cada ordem. Uma máquina isolada continua falando com o Controller, encerra o isolamento sozinha no horário definido mesmo que o Controller não esteja disponível, e o mantém após reiniciar o agente ou a máquina. Cada etapa fica no registro de auditoria. Quando há um firewall conectado, a máquina isolada também pode ser bloqueada no firewall, e as impressões digitais dos arquivos em quarentena são repassadas a ele.",
+     "note": "Prévia. Somente Linux, testado no Debian 12; o Windows virá depois. No laboratório a máquina foi isolada 11 segundos após a aprovação no percentil 95 (100 execuções, pior caso 12,1 s). A etapa do firewall foi testada com um simulador, ainda não com um firewall real. As ações estão disponíveis pela API de administração; a tela do console virá depois."
+    },
+    {
+     "tag": "new",
+     "title": "Console de administração no navegador",
+     "body": "O Controller agora serve um console em /console/. Entre com um token de API e veja seus dispositivos, pesquise eventos por campo ou texto livre, trate alertas, peça e aprove isolamentos, crie tokens de cadastro com instruções de instalação, edite as configurações de proteção do endpoint, verifique o registro de auditoria e troque o idioma entre inglês e português do Brasil. Cada tela mostra apenas o seu próprio tenant."
+    },
+    {
+     "tag": "new",
+     "title": "Configurações de proteção do endpoint",
+     "body": "As configurações de proteção contra ameaças, controle de aplicações, controle de dispositivos, firewall do host, proteção web e exclusões podem ser definidas por tenant, grupo ou dispositivo, cada uma como desligada, monitorar ou aplicar. Nesta versão, o firewall do host (Linux) e o controle de armazenamento USB são aplicados na máquina. As demais configurações são salvas e validadas, e cada máquina as informa como \"não aplicadas\" até que a aplicação chegue, para que nada afirme uma proteção que não está ativa. Configurações inseguras, como um firewall que não permite nenhuma entrada, são recusadas ao salvar."
+    },
+    {
+     "tag": "new",
+     "title": "Limite de dispositivos e fim de vigência por tenant",
+     "body": "Um operador pode definir um número máximo de dispositivos e uma data de fim para um tenant. O cadastro além do limite ou depois da data é recusado com uma mensagem clara e registrado na auditoria."
     },
     {
      "tag": "new",
@@ -359,6 +374,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores e fila de eventos",
     "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Console e configurações de proteção do endpoint",
+    "text": "Um console no navegador, configurações de proteção do endpoint e limites de dispositivos por tenant."
    },
    {
     "date": "2026-11-24",
