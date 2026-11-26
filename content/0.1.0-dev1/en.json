@@ -105,7 +105,7 @@
           "tag": "new",
           "title": "Sensors run as separate programs",
           "body": "The agent can now start and supervise sensors that run as their own programs and talk to it over a local channel (a Unix socket, or a named pipe on Windows). Events from a sensor travel through the agent to the Controller, and each sensor receives its own part of the signed policy when it connects and whenever the policy changes. If a sensor refuses a policy, the agent rolls the whole policy back. A small test sensor is included for labs.",
-          "note": "The Windows, Linux and macOS production sensors are not connected yet; only the test sensor uses this path today."
+          "note": "The Linux and Windows production sensors are connected (the Windows sensor is read from the event log, not a named pipe); macOS is not connected yet."
         },
         {
           "tag": "new",
@@ -327,6 +327,12 @@
           "tag": "new",
           "title": "Install on one server, backup, restore and upgrade",
           "body": "The Controller, event search, message bus and database install on a single Linux server with one script. Encrypted backups restore onto a new server, upgrades keep a rollback, and a failed upgrade returns to the previous version by itself. Health and metrics endpoints and support bundles without keys or tokens are included. Tested on Debian 12; not yet on other distributions."
+        },
+        {
+          "tag": "new",
+          "title": "Windows endpoint: service, installer, protection settings, response",
+          "body": "The Windows agent runs as a service installed by an MSI (silent install with an enrolment token), updates itself and rolls back a bad update, supervises the Windows sensor (Fibratus, with Nexwall process and DNS rules), and applies the protection settings from the Controller: Windows Firewall, USB storage blocking, web deny-list, exclusions and application-control findings. Response actions (isolate with Windows Firewall rules, kill process tree, quarantine, collect) work after approval and survive a reboot. The Controller alerts when a device stops reporting.",
+          "note": "Lab preview, Windows 10 only, unsigned installer. The Windows firewall setting does not remove allow rules made by others; web protection is IP level; application control only reports (blocking comes later); isolation does not cover ICMPv6 or DHCP. Detection coverage is the list of stock rules, not a measured rate."
         }
       ]
     },

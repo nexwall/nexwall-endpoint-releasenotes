@@ -105,7 +105,7 @@
           "tag": "new",
           "title": "Sensores executam como programas separados",
           "body": "O agente agora pode iniciar e supervisionar sensores que executam como programas próprios e se comunicam com ele por um canal local (um socket Unix, ou um pipe nomeado no Windows). Os eventos de um sensor passam pelo agente até o Controller, e cada sensor recebe a sua própria parte da política assinada ao conectar e sempre que a política muda. Se um sensor recusa uma política, o agente reverte a política inteira. Um pequeno sensor de teste é incluído para laboratórios.",
-          "note": "Os sensores de produção para Windows, Linux e macOS ainda não estão conectados; hoje apenas o sensor de teste usa esse caminho."
+          "note": "Os sensores de produção do Linux e do Windows estão conectados (o do Windows é lido do log de eventos, não de um named pipe); o macOS ainda não está conectado."
         },
         {
           "tag": "new",
@@ -327,6 +327,12 @@
           "tag": "new",
           "title": "Instalação em um servidor, backup, restauração e atualização",
           "body": "O Controller, a busca de eventos, o barramento de mensagens e o banco de dados são instalados em um único servidor Linux com um só script. Backups criptografados são restaurados em um servidor novo, as atualizações mantêm um retorno e uma atualização com falha volta sozinha à versão anterior. Inclui endpoints de saúde e métricas e pacotes de suporte sem chaves nem tokens. Testado no Debian 12; ainda não em outras distribuições."
+        },
+        {
+          "tag": "new",
+          "title": "Endpoint para Windows: serviço, instalador, configurações de proteção, resposta",
+          "body": "O agente do Windows roda como serviço instalado por um MSI (instalação silenciosa com token de inscrição), atualiza a si mesmo e desfaz uma atualização defeituosa, supervisiona o sensor do Windows (Fibratus, com regras da Nexwall para processos e DNS) e aplica as configurações de proteção do Controller: Windows Firewall, bloqueio de armazenamento USB, lista de domínios negados, exclusões e achados de controle de aplicativos. As ações de resposta (isolar com regras do Windows Firewall, encerrar a árvore de processos, quarentena, coletar) funcionam após aprovação e sobrevivem a uma reinicialização. O Controller alerta quando um dispositivo para de reportar.",
+          "note": "Prévia de laboratório, somente Windows 10, instalador não assinado. A configuração de firewall não remove regras de permissão de terceiros; a proteção web atua por IP; o controle de aplicativos só reporta (o bloqueio vem depois); o isolamento não cobre ICMPv6 nem DHCP. A cobertura de detecção é a lista de regras, não uma taxa medida."
         }
       ]
     },
