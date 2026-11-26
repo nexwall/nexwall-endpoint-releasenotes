@@ -277,6 +277,12 @@
     },
     {
      "tag": "new",
+     "title": "Alertas por correo y webhook",
+     "body": "Las detecciones de los sensores de Linux ahora se convierten en alertas. Las repeticiones de la misma detección en la misma máquina se agrupan en una sola alerta con un contador, y cada alerta muestra su severidad, la técnica de MITRE ATT&CK y el origen, la licencia y el autor de la regla que la generó. Los administradores pueden reconocer y resolver alertas (cada cambio queda en el registro de auditoría) y elegir adónde van las alertas nuevas: una dirección de correo, o un webhook HTTPS firmado para un SIEM o un puente de chat, cada uno con su propia severidad mínima. Si un servidor de correo o un receptor no responde, el envío se reintenta con esperas crecientes en lugar de perderse. Cada cliente solo ve sus propias alertas y rutas.",
+     "note": "Vista previa. Las alertas están disponibles mediante la API de administración; la pantalla de la consola llegará después. En el laboratorio, el correo y el webhook se entregaron en menos de un segundo desde la detección."
+    },
+    {
+     "tag": "new",
      "title": "Políticas firmadas con reversión",
      "body": "El Controller firma cada política; el agente verifica la firma, rechaza revisiones más antiguas que la que ya ejecuta, aplica la política módulo por módulo y vuelve a la última política buena si un módulo falla al aplicarse o no pasa su comprobación de salud. Después el agente informa si cumple.",
      "bullets": [
@@ -347,6 +353,11 @@
     "date": "2026-11-24",
     "title": "Políticas, canal de sensores y cola de eventos",
     "text": "Obtención de políticas firmadas con reversión, canal local de sensores y cola de eventos duradera, verificados en Windows 10 y Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Alertas por correo y webhook",
+    "text": "Las detecciones se convierten en alertas, con reintentos."
    },
    {
     "date": "2026-11-24",

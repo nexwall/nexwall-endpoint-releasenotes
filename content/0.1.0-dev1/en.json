@@ -277,6 +277,12 @@
     },
     {
      "tag": "new",
+     "title": "Alerts by e-mail and webhook",
+     "body": "Detections from the Linux sensors now become alerts. Repeats of the same detection on the same machine are grouped into one alert with a count, and each alert shows its severity, MITRE ATT&CK technique, and the source, licence and author of the rule that raised it. Administrators can acknowledge and resolve alerts (every change is recorded in the audit log) and choose where new alerts go: an e-mail address, or a signed HTTPS webhook for a SIEM or chat bridge, each with its own minimum severity. If a mail relay or receiver is down, delivery is retried with growing delays instead of being lost. Each customer only ever sees its own alerts and routes.",
+     "note": "Preview. Alerts are available through the administration API; the console screen comes later. In the lab, e-mail and webhook were delivered within one second of the detection."
+    },
+    {
+     "tag": "new",
      "title": "Signed policies with rollback",
      "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
      "bullets": [
@@ -347,6 +353,11 @@
     "date": "2026-11-24",
     "title": "Policies, sensor channel and event queue",
     "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+   },
+   {
+    "date": "2026-11-24",
+    "title": "Alerts by e-mail and webhook",
+    "text": "Detections become alerts, delivered with retry."
    },
    {
     "date": "2026-11-24",
