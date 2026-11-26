@@ -1,564 +1,569 @@
 {
- "title": "Nexwall Endpoint 0.1.0-dev1",
- "summary": "First development preview: enrolment with a tenant-bound identity, an ingest service that rejects cross-tenant events, and the OCSF event model. Not for production; there is no download yet.",
- "overview": "Nexwall Endpoint is the endpoint detection and response product of Nexwall, built to work together with Nexwall Firewall. This first development preview contains the foundations only: how an endpoint proves who it is, how its events reach the service, and how events are described. It is a lab build for the development team and is not available for download.",
- "at_a_glance": [
-  {
-   "label": "Version",
-   "value": "0.1.0-dev1"
-  },
-  {
-   "label": "Status",
-   "value": "Development preview, not released"
-  },
-  {
-   "label": "Endpoint systems tested",
-   "value": "Windows 10 22H2 and Linux x86-64, in the lab"
-  },
-  {
-   "label": "Event model",
-   "value": "OCSF 1.10.0"
-  },
-  {
-   "label": "Download",
-   "value": "None yet"
-  }
- ],
- "sections": [
-  {
-   "id": "whats-new",
-   "title": "What is new",
-   "intro": "Everything in this preview is new.",
-   "items": [
+  "title": "Nexwall Endpoint 0.1.0-dev1",
+  "summary": "First development preview: enrolment with a tenant-bound identity, an ingest service that rejects cross-tenant events, and the OCSF event model. Not for production; there is no download yet.",
+  "overview": "Nexwall Endpoint is the endpoint detection and response product of Nexwall, built to work together with Nexwall Firewall. This first development preview contains the foundations only: how an endpoint proves who it is, how its events reach the service, and how events are described. It is a lab build for the development team and is not available for download.",
+  "at_a_glance": [
     {
-     "tag": "new",
-     "title": "Enrolment with a single-use token",
-     "body": "An administrator creates a one-time token for a tenant. The agent generates its own key on the endpoint, sends a certificate request with the token, and receives a certificate signed by the Nexwall Endpoint certificate authority.",
-     "bullets": [
-      "The private key never leaves the endpoint.",
-      "The tenant and the device are written into the certificate by the service; nothing in the request can choose them.",
-      "A token works once and expires; a reused or unknown token is refused.",
-      "Verified end to end on Windows 10 and Linux."
-     ]
+      "label": "Version",
+      "value": "0.1.0-dev1"
     },
     {
-     "tag": "new",
-     "title": "Tenant isolation at ingest",
-     "body": "Events are accepted over mutual TLS (TLS 1.3). The tenant and the device come only from the certificate. An event that names another tenant or device is rejected with 403, and the request size is limited to 1 MiB."
+      "label": "Status",
+      "value": "Development preview, not released"
     },
     {
-     "tag": "new",
-     "title": "OCSF 1.10.0 event model",
-     "body": "Every event is wrapped in a versioned envelope and described with the Open Cybersecurity Schema Framework, version 1.10.0. This preview maps process, file, network and DNS activity. The class numbers are pinned and checked by the tests."
+      "label": "Endpoint systems tested",
+      "value": "Windows 10 22H2 and Linux x86-64, in the lab"
     },
     {
-     "tag": "new",
-     "title": "Windows sensor verified in the lab",
-     "body": "On a Windows 10 22H2 lab machine with Defender on, 11 stock behaviour rules of the Windows sensor fired as expected. A 25-minute soak test ran 115 loops with no crash and a peak of 121 MB of memory.",
-     "note": "Lab results on one operating system; the wider matrix is still to be tested."
+      "label": "Event model",
+      "value": "OCSF 1.10.0"
     },
     {
-     "tag": "new",
-     "title": "Batch ingestion",
-     "body": "The agent sends events to the Controller in batches of up to 50. The Controller refuses a whole batch if any event in it names another tenant or device than the certificate, so nothing from a refused batch is stored. If the Controller is unreachable the events stay on disk and are delivered later; an event the Controller refuses for good is counted and skipped without blocking the others."
-    },
-    {
-     "tag": "new",
-     "title": "Staged updates (agent side)",
-     "body": "The agent can verify a signed update manifest, refuse an older one, place each device in a canary, early or general ring, install only after checking size and SHA-256, check that the new version is healthy, and go back to the previous version if it is not. A stop switch from the Controller holds every device, and an older manifest cannot lift it.",
-     "note": "The update service and the installers are not built yet; this preview has the agent logic only."
-    },
-    {
-     "tag": "new",
-     "title": "Certificate renewal and revocation",
-     "body": "Agent certificates are short-lived. The agent renews its certificate before it expires and rotates its key at the same time, without a restart. An administrator can revoke a single device or a whole tenant; a revoked identity is refused immediately on every route, including renewal, even though its certificate has not yet expired.",
-     "bullets": [
-      "The key and certificate are replaced as a pair, and an interrupted renewal is repaired at the next start.",
-      "Events queued on a revoked device are kept, not discarded."
-     ]
-    },
-    {
-     "tag": "new",
-     "title": "Tamper-evident audit log",
-     "body": "Enrolments, certificate renewals, revocations and update releases are written to an append-only log in which every record includes the hash of the previous one. Editing, deleting, inserting or reordering records is detected, and signed checkpoints detect a log that was cut short. If a record cannot be written, the action is refused.",
-     "note": "Checkpoint signing with a managed key and a tenant-facing view of the log are not built yet."
-    },
-    {
-     "tag": "new",
-     "title": "Update service",
-     "body": "The Controller signs update manifests and serves the update files. A release is opened ring by ring (canary, early, general), and a stop switch halts one release stream or all of them at once. A stop cannot be undone by replaying an older manifest.",
-     "note": "In this preview the update is applied by a generic file installer in the lab; installers that replace the running agent on Windows, Linux and macOS are not built yet."
-    },
-    {
-     "tag": "new",
-     "title": "Durable event pipeline",
-     "body": "Events accepted by the Controller are published to a message bus (NATS JetStream) before the agent is told they were accepted, so an accepted event is on disk. The tenant and device are taken from the certificate and written into every event. An indexer stores events in a separate area for each tenant and moves any message whose content does not match its tenant to a quarantine instead of storing it. An agent that resends the same event does not create a duplicate.",
-     "note": "This preview stores events in files for development. Search and analytics stores (OpenSearch, ClickHouse) are not built yet."
-    },
-    {
-     "tag": "improved",
-     "title": "Stricter tenant checks on events",
-     "body": "An event that carries its own tenant or device field is accepted only if it matches the certificate exactly. Empty or malformed values and keys that differ only in letter case are refused, and a refused event is reported as a permanent error so the agent does not retry it forever. Certificate names must be in one exact form. A new randomised cross-tenant test and fuzz tests now run against these paths.",
-     "note": "Found during testing: no customer data was involved."
-    },
-    {
-     "tag": "new",
-     "title": "Sensors run as separate programs",
-     "body": "The agent can now start and supervise sensors that run as their own programs and talk to it over a local channel (a Unix socket, or a named pipe on Windows). Events from a sensor travel through the agent to the Controller, and each sensor receives its own part of the signed policy when it connects and whenever the policy changes. If a sensor refuses a policy, the agent rolls the whole policy back. A small test sensor is included for labs.",
-     "note": "The Windows, Linux and macOS production sensors are not connected yet; only the test sensor uses this path today."
-    },
-    {
-     "tag": "new",
-     "title": "More event types in the common format",
-     "body": "Events can now describe registry key and value changes, modules (DLLs and libraries) being loaded or unloaded, memory operations between processes, sign-ins and sign-outs, and detection findings with the rule and the MITRE ATT&CK technique that raised them. They use the same open schema (OCSF 1.10.0) as process, file, network and DNS events, so they can be searched and correlated together.",
-     "note": "The sensors that produce these events are still being connected; the format is ready for them."
-    },
-    {
-     "tag": "new",
-     "title": "Policy by group, OU, tag and device",
-     "body": "Policy can now be set at several levels: for the whole tenant, for a directory group, an organisational unit, a tag, or a single device. For each device the levels are combined in that order and a more specific level replaces a module of a broader one, unless the broader level locked it. Each device receives its own signed policy, and an agent refuses a policy made for another device. An administrator can preview exactly what a device will get, including any override that a lock blocked. Which groups, OUs and tags a device has is decided in the Controller, never by the device itself.",
-     "note": "Preview. Administration is by API with access tokens; sign-in through the identity service and a management screen come later. Every change is recorded in the tenant audit trail."
-    },
-    {
-     "tag": "new",
-     "title": "Policy stored in a database with tenant isolation",
-     "body": "Policy and device attributes are now stored in PostgreSQL instead of memory, so they survive a restart and several Controllers can share them. The database itself keeps tenants apart: every table of tenant data has row-level security that cannot be switched off by the application, and each request works inside a transaction bound to one tenant. If the database is unavailable, devices keep their last good policy and the Controller reports the problem instead of saying there is no policy.",
-     "note": "Preview. Device records, enrolment tokens, revocations and the audit log are not in the database yet."
-    },
-    {
-     "tag": "new",
-     "title": "Enrolment tokens, device list and revoke from the administration API",
-     "body": "Tenant administrators can now create single-use enrolment tokens, see the devices enrolled in their tenant, and revoke a device. A token is shown once when it is created and is never stored or logged in readable form; it works for its own tenant only and only once, even if several Controllers share the database. A revoked device is refused on every route right away, and the same device number in another tenant is not affected. If the database cannot be reached, devices are told to retry later instead of being accepted or treated as revoked. Every action is recorded in the audit log before and after it happens.",
-     "note": "Preview. Revoking a whole tenant is an operator action and is not offered to tenant administrators."
-    },
-    {
-     "tag": "new",
-     "title": "Controller can start in production mode",
-     "body": "The Controller now has a production start path: a one-time offline command creates the signing keys (agent certificate authority, policy, updates and audit log), and the Controller refuses to start if a key file can be read by other users, if a key does not match its certificate, or if no database is configured. It never generates keys or falls back to memory on its own. After a restart, certificates issued earlier still work, revoked devices stay revoked, used enrolment tokens stay used and policy is unchanged. The audit log can be verified at any time with the public key from the same ceremony.",
-     "note": "Preview. Keys are held in protected files for now; a hardware or cloud key service will replace them before release."
-    },
-    {
-     "tag": "new",
-     "title": "Audit log stored in the database, one chain per tenant",
-     "body": "In production the audit log now lives in the same database as the rest of the tenant data, so several Controllers can write to it at once. Each tenant has its own chain of records, linked by hashes, and a tenant never sees anything of another tenant's chain. The database refuses to change or delete records, and signed checkpoints, made with a key that is not stored in the database, reveal a log that was edited, cut short or emptied. An operator can verify any tenant's chain with one command, and a privileged action is still refused if its record cannot be written.",
-     "note": "Preview. A call that lets tenants verify their own audit trail will come with the portal."
-    },
-    {
-     "tag": "new",
-     "title": "Published API contracts for agents and administrators",
-     "body": "The two interfaces of the Controller, the one agents use and the one tenant administrators use, now have OpenAPI 3.1 descriptions. The build checks them against the running code, so a route that is served but not documented, documented but not served, or documented with the wrong role fails the build. The documents say, for each call, what it does, who may use it and what each error means, including that another tenant's objects always answer \"not found\".",
-     "note": "Preview. The contract may change before release."
-    },
-    {
-     "tag": "new",
-     "title": "Sign in to the administration API with your identity provider",
-     "body": "Administrators can now call the Controller with access tokens from the partner portal's identity service instead of, or next to, static tokens. Tokens are checked strictly: signature against the provider's published keys, issuer, audience, expiry, and an exact tenant and role. Anything unclear is refused, and the audit log records who acted as \"oidc:\" plus the user.",
-     "note": "Preview. Needs the identity service to put the tenant and role into the token."
-    },
-    {
-     "tag": "new",
-     "title": "Agent updates survive restarts and can only be published by an operator",
-     "body": "Update releases, their rollout rings and the stop switch are now stored in the database, so a Controller restart no longer makes agents ignore later releases, and several Controllers serve the same ones. The Controller no longer holds the update signing key and its database account can only read releases: publishing, widening a ring, halting or resuming all updates are done by an operator with the signing key and the owner credentials, and each action is written to the audit log before it takes effect.",
-     "note": "Preview. Large artifacts will move to object storage later."
-    },
-    {
-     "tag": "new",
-     "title": "Directory groups and OUs can drive device policy",
-     "body": "A directory connector can now send the Controller a snapshot of which devices belong to which groups and organizational units. It is applied in one step, all or nothing, and the policy of every affected device follows at its next check. Values from the directory and values set by administrators are kept apart, so neither overwrites the other; a snapshot that changes nothing causes no new policy revision, and a complete snapshot removes memberships the directory no longer reports.",
-     "note": "Preview. The Active Directory and Entra ID connectors themselves are not built yet."
-    },
-    {
-     "tag": "new",
-     "title": "Device inventory and policy-drift findings",
-     "body": "The agent can now report what each device is (name, operating system, hardware, network addresses) and which policy settings it has drifted from. The inventory is off until the tenant policy turns it on, then it is sent once, again when something changes, and on a schedule you set. Policy drift is reported as findings that open when a setting stops being met and close when it is met again, so a healthy fleet adds no traffic. The vulnerability finding format is also ready for the scanner module that will feed it.",
-     "note": "Preview. Linux reports the most detail today; Windows and macOS detail follows with their adapters."
-    },
-    {
-     "tag": "new",
-     "title": "Verify your own audit trail",
-     "body": "Every tenant can now check that nothing recorded about it was edited, removed or reordered. Three read-only calls (viewer role) publish the key that signs the audit checkpoints, let the Controller check your chain for you, and hand out the signed checkpoints. A new offline tool, nx-auditverify, recomputes every hash, link and signature from the downloaded records, so you do not have to trust the Controller's own answer. A changed or cut-short trail is reported as not verified.",
-     "note": "Preview. Available on production Controllers (database audit log). Records newer than the last checkpoint are linked but only signed by the next checkpoint, written within a minute of activity."
-    },
-    {
-     "tag": "new",
-     "title": "Vulnerability findings from installed software",
-     "body": "On Linux devices the agent can now compare the software installed through the system package manager (Debian and Ubuntu, Alpine, RPM-based distributions) with a signed list of known vulnerabilities, and report one finding for each vulnerability that applies: created when a package becomes affected, updated when the affected packages change, closed when it is upgraded or removed. The scan is off until the tenant policy turns it on. A list that is missing, expired, older than the one in use or not signed by a trusted key is refused as a whole, and in that case no finding is ever closed. The new nx-advisory tool signs and checks the lists.",
-     "note": "Preview. Needs a signed advisory list on the device; delivery through the update channel and Windows and macOS software inventories follow."
-    },
-    {
-     "tag": "new",
-     "title": "Advisory lists delivered through the update channel",
-     "body": "The signed vulnerability advisory list now reaches devices the same way agent updates do: it is published by the operator as its own update component, released in stages (canary, early, general), covered by the global stop switch, and rolled back automatically if the installed list does not verify. A device checks the list twice, with the update key for the release and with a separate advisory key for the content, and refuses a list that is unsigned, expired, or numbered differently from its release. A new list makes the scanner run immediately.",
-     "note": "Preview. Enable on the agent with the advisory update option together with the update and advisory keys."
-    },
-    {
-     "tag": "new",
-     "title": "Active Directory sync for groups and OUs",
-     "body": "A new program, nx-dirsync, reads computers, security groups (including nested groups) and organisational units from Active Directory over LDAP and sends them to the Controller, so policy scopes by group and OU follow the directory. Computers are matched to devices by the label of their enrolment token or by an optional mapping file, and a name that matches more than one machine is skipped, never guessed. Disabled accounts are left out. A safety guard refuses a snapshot that is empty or has lost more than 30% of the previous one, so an unreachable domain controller cannot strip groups from every device. Connections require ldaps or StartTLS, and passwords and tokens are read only from protected files.",
-     "note": "Preview. Tested against a simulated directory; a test against a real domain controller is still to come."
-    },
-    {
-     "tag": "new",
-     "title": "Microsoft Entra ID as a directory source",
-     "body": "The directory connector can now read devices and security groups from Microsoft Entra ID as well as Active Directory (nx-dirsync with the entra source). It signs in as a read-only application, lets Microsoft resolve nested group membership, leaves out disabled devices and skips display names shared by several devices. Paging links are followed only on the Microsoft host, throttling is respected, and any failure stops the cycle before anything is sent, with the same drop guard as the Active Directory source.",
-     "note": "Preview. Tested against a simulated Microsoft Graph; a test against a real tenant is still to come."
-    },
-    {
-     "tag": "new",
-     "title": "Vulnerability scanning on Windows and macOS",
-     "body": "The vulnerability scanner now also reads installed software on Windows (the registered programs of the machine, without updates and hidden system components) and on macOS (application bundles in the Applications folders). Advisories for these systems use a new strict numeric version format, so a version is either compared exactly or reported as not comparable and never assumed to be fixed. A new command, nx-advisory name, gives the exact program name to use in a Windows advisory.",
-     "note": "Preview. The Windows reader still needs a live test on a Windows device; programs installed per user and language package ecosystems are not covered yet."
-    },
-    {
-     "tag": "new",
-     "title": "Signing keys can live on a separate signing service",
-     "body": "The Controller can now ask a separate signing service (nx-signer) to sign policy, update releases and audit checkpoints, so none of those keys has to be on the Controller host. The service accepts only clients with an allowed certificate, lets each client use only its own keys, limits the audit key to checkpoints, rate limits requests and logs every signature without its content. The Controller checks every signature against a public key it has pinned. If the service is unreachable no unsigned policy is served and no update is published, while audited actions keep working and the audit checkpoint is made when the service returns.",
-     "note": "Preview. Keys on the signing host are still files; support for a cloud KMS or hardware module is planned and depends on the vendor chosen."
-    },
-    {
-     "tag": "new",
-     "title": "Events can be stored in OpenSearch and ClickHouse",
-     "body": "The event pipeline can now write to OpenSearch, ClickHouse or both. Each tenant has its own indices (OpenSearch) or its own key range (ClickHouse), the layout of stored events is fixed so a device cannot grow it, writing the same event twice stores it once, and events come back in a stable order that can be paged. A failing store is retried without losing events, and an event a store refuses for good is set aside for review. Very long text values are shortened in the searchable copy while the full event is kept.",
-     "note": "Preview. Tested against real servers in the lab. Search screens, retention rules and per-tenant access on the message bus are still to come."
-    },
-    {
-     "tag": "new",
-     "title": "Search your stored events through the administration API",
-     "body": "Administrators and viewers can now read the events stored for their organisation through the administration API: filter by device and by time range, and page through results from oldest to newest. A token only ever reaches its own organisation, and a request that tries to name another one is refused. If the event store is unavailable the API answers that it is unavailable and shows nothing partial.",
-     "note": "Preview. Free-text search, saved searches and the web screens for this come later."
-    },
-    {
-     "tag": "new",
-     "title": "Event retention and erasure for each organisation",
-     "body": "Operators can now set how long each organisation's stored events are kept, with a default and per-organisation exceptions, including keeping an organisation's events indefinitely. A daily job removes older events from OpenSearch and ClickHouse. It first reports what it would remove, and a minimum period prevents a mistyped value from wiping history. An organisation's events can also be erased completely on request, with a confirmation that must repeat its name. One organisation's clean-up never touches another's.",
-     "note": "Preview. Retention periods are set by the operator in a file for now; a setting in the portal comes later."
-    },
-    {
-     "tag": "improved",
-     "title": "Secure, restricted connections to the message bus",
-     "body": "The Controller and the indexer can now connect to the NATS message bus over TLS, with a user and password, a credentials file, or a client certificate. Each of them gets only the rights it needs: the Controller can publish events but cannot read them back, and the indexer can read events but cannot publish them, so a stolen credential cannot be used to read or forge another organisation's events. Neither may create or change the event stream. Connections to another host without TLS or without a credential are refused at start.",
-     "note": "Preview. Tested against a real NATS server with TLS and mutual TLS."
-    },
-    {
-     "tag": "new",
-     "title": "Linux packages for the agent (DEB and RPM)",
-     "body": "The Linux agent now comes as DEB and RPM packages for Intel/AMD and ARM 64-bit systems. A single command installs it, enrols it with your Nexwall Controller using a one-time token and starts it as a service; for a fleet the Controller address and the token can be supplied when the install command runs. The token is used once and then removed from the device. The service runs with restricted permissions, and removing the package keeps the device identity so a reinstall does not need a new token, while purging it deletes everything.",
-     "note": "Preview. The packages are not yet signed, and installers for Windows and macOS come later."
-    },
-    {
-     "tag": "new",
-     "title": "Linux agent updates itself safely",
-     "body": "The Linux agent can now install new signed releases on its own. It checks that the downloaded file is a genuine program for the device and for the release your Controller announced, replaces itself, restarts, and keeps the previous version until the new one has successfully contacted the Controller. A release that fails to start is automatically replaced by the previous one and is never tried again on that device; a network outage alone does not trigger a rollback.",
-     "note": "Preview. Windows and macOS follow, and updating is off unless the update key is configured."
-    },
-    {
-     "tag": "new",
-     "title": "See which agent releases are rolling out",
-     "body": "The administration interface can now list the agent release streams your Controller offers: the current release for each platform, how far it has been opened (canary, early or general) and whether it has been halted. The list is read only; publishing, promoting and halting a release remain controlled operator actions.",
-     "note": "Preview."
-    },
-    {
-     "tag": "improved",
-     "title": "Lab test with 10,000 simulated endpoints",
-     "body": "We added a load-test tool that enrols thousands of simulated endpoints against a Controller, sends events and policy requests as real agents do, and then checks that every acknowledged event can be read back. In our first lab run, 10,000 endpoints enrolled in under a minute and about 400,000 events were delivered with no loss, no duplicates and no errors on a single test Controller. Browsing events page by page in the development store is also much faster.",
-     "note": "Lab result on one test Controller with a development store; production-scale and long-duration tests are still to come."
-    },
-    {
-     "tag": "new",
-     "title": "Software bill of materials and licence notices",
-     "body": "Each release can now be accompanied by a software bill of materials (CycloneDX) for every program we ship and every operating system it runs on, listing exactly which third-party components are inside, with versions, checksums and licences. The Linux agent packages now include the full third-party licence notices. Our checks refuse a release whose bill of materials has a missing or disallowed licence.",
-     "note": "Preview. Bills of materials are not signed yet, and Windows and macOS installers are still to come."
-    },
-    {
-     "tag": "new",
-     "title": "Linux telemetry and runtime detections (osquery and Falco)",
-     "body": "On Linux the agent can now report what is really happening on the machine: processes starting and stopping, network connections and listening ports, logins, and changes to watched files, collected with osquery, plus runtime detections from Falco, each mapped to the open OCSF format and tagged with the rule author, source and licence. A separate optional package, nexwall-agent-sensors, installs both with pinned, signature-checked upstream versions. If either sensor is killed repeatedly the agent keeps running and reports the sensor as degraded until it recovers. All events are checked against the official OCSF 1.10.0 definitions.",
-     "note": "Preview. x86_64 only for now; osquery polls every few seconds, so a process shorter than that is seen by Falco only."
-    },
-    {
-     "tag": "new",
-     "title": "Alerts by e-mail and webhook",
-     "body": "Detections from the Linux sensors now become alerts. Repeats of the same detection on the same machine are grouped into one alert with a count, and each alert shows its severity, MITRE ATT&CK technique, and the source, licence and author of the rule that raised it. Administrators can acknowledge and resolve alerts (every change is recorded in the audit log) and choose where new alerts go: an e-mail address, or a signed HTTPS webhook for a SIEM or chat bridge, each with its own minimum severity. If a mail relay or receiver is down, delivery is retried with growing delays instead of being lost. Each customer only ever sees its own alerts and routes.",
-     "note": "Preview. Alerts are available through the administration API; the console screen comes later. In the lab, e-mail and webhook were delivered within one second of the detection."
-    },
-    {
-     "tag": "new",
-     "title": "Isolate a machine, with approval (Linux)",
-     "body": "Administrators can now ask a Linux machine to cut itself off the network, release it again, stop a process and everything it started, move a suspicious file into a locked quarantine folder, or collect a list of running processes. Isolating, stopping a process and quarantining need a named approver, and a second person can be required; nothing happens before the approval. Each request carries a key so that repeating it never runs it twice. The machine only obeys orders that are signed by the Controller, meant for that machine and that customer, and still valid; it keeps its own tamper-evident log of every order. An isolated machine can still talk to the Controller, ends the isolation by itself at the set time even if the Controller is gone, and keeps it across an agent restart or a reboot. Every step is recorded in the audit log. When a firewall is connected, an isolated machine can also be blocked at the firewall, and quarantined file fingerprints are passed on to it.",
-     "note": "Preview. Linux only, tested on Debian 12; Windows comes later. In the lab the machine was cut off 11 seconds after approval at the 95th percentile (100 runs, worst 12.1 s). The firewall step was tested against a simulator, not yet against a real firewall. Actions are available through the administration API; the console screen comes later."
-    },
-    {
-     "tag": "new",
-     "title": "Administration console in the browser",
-     "body": "The Controller now serves a console at /console/. Sign in with an API token and see your devices, search events by field or free text, handle alerts, request and approve isolation, create enrolment tokens with install instructions, edit endpoint protection settings, verify the audit log and change the language between English and Brazilian Portuguese. Every screen shows only your own tenant."
-    },
-    {
-     "tag": "new",
-     "title": "Endpoint protection settings",
-     "body": "Settings for threat protection, application control, device control, host firewall, web protection and exclusions can be set per tenant, group or device, each as off, monitor or enforce, and are now applied on Linux. Exclusions drop the events of chosen paths and programs on the machine, and rules that raise no alert; threat settings disable rules, set the lowest severity that raises an alert and can ask to isolate a machine (a person still approves); application control raises an alert when a program outside the allow-list starts; USB storage is blocked within seconds of plugging in; the host firewall blocks inbound connections; web protection blocks the addresses of listed domains and raises an alert when a listed name is looked up. Each machine reports what it really does: a setting that asks for more than is enforced is shown as \"not fully enforced\" with the reason. A setting removed from the policy is switched off. Unsafe settings, such as a firewall that allows nothing in, are refused when you save them.",
-     "note": "Preview. Linux only. Web protection works at address level: it cannot see encrypted names, can block other sites on the same address, and has no categories yet. Application control reports but does not block. Windows comes later."
-    },
-    {
-     "tag": "new",
-     "title": "Device limit and end of term per tenant",
-     "body": "An operator can set a maximum number of devices and an end date for a tenant. Enrolment beyond the limit or after the end date is refused with a clear message and recorded in the audit log."
-    },
-    {
-     "tag": "new",
-     "title": "Signed policies with rollback",
-     "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
-     "bullets": [
-      "Keys can be rotated without re-enrolling.",
-      "Each tenant has its own policy and its own revision counter.",
-      "Verified on Windows 10 and Linux, including a wrong-key refusal."
-     ]
-    },
-    {
-     "tag": "new",
-     "title": "Sensor channel",
-     "body": "Detection sensors run as separate processes and send events to the agent over a local channel that only the system and administrators can open. If the agent restarts it asks the sensor to resume after the last event it received, and lost events are counted."
-    },
-    {
-     "tag": "new",
-     "title": "Durable event queue",
-     "body": "Events wait on disk until the Controller confirms them, so a restart or a network outage does not lose them. The queue has a size limit; when it is full the oldest events are dropped and the number dropped is counted. Damaged records are detected and skipped."
+      "label": "Download",
+      "value": "None yet"
     }
-   ]
-  },
-  {
-   "id": "improvements",
-   "title": "Improvements and changes",
-   "intro": "",
-   "items": [
+  ],
+  "sections": [
     {
-     "tag": "improved",
-     "title": "Licence check in every build",
-     "body": "Each build scans its dependencies and fails when a licence is incompatible with the product, and keeps a record of where every detection rule and component comes from."
+      "id": "whats-new",
+      "title": "What is new",
+      "intro": "Everything in this preview is new.",
+      "items": [
+        {
+          "tag": "new",
+          "title": "Enrolment with a single-use token",
+          "body": "An administrator creates a one-time token for a tenant. The agent generates its own key on the endpoint, sends a certificate request with the token, and receives a certificate signed by the Nexwall Endpoint certificate authority.",
+          "bullets": [
+            "The private key never leaves the endpoint.",
+            "The tenant and the device are written into the certificate by the service; nothing in the request can choose them.",
+            "A token works once and expires; a reused or unknown token is refused.",
+            "Verified end to end on Windows 10 and Linux."
+          ]
+        },
+        {
+          "tag": "new",
+          "title": "Tenant isolation at ingest",
+          "body": "Events are accepted over mutual TLS (TLS 1.3). The tenant and the device come only from the certificate. An event that names another tenant or device is rejected with 403, and the request size is limited to 1 MiB."
+        },
+        {
+          "tag": "new",
+          "title": "OCSF 1.10.0 event model",
+          "body": "Every event is wrapped in a versioned envelope and described with the Open Cybersecurity Schema Framework, version 1.10.0. This preview maps process, file, network and DNS activity. The class numbers are pinned and checked by the tests."
+        },
+        {
+          "tag": "new",
+          "title": "Windows sensor verified in the lab",
+          "body": "On a Windows 10 22H2 lab machine with Defender on, 11 stock behaviour rules of the Windows sensor fired as expected. A 25-minute soak test ran 115 loops with no crash and a peak of 121 MB of memory.",
+          "note": "Lab results on one operating system; the wider matrix is still to be tested."
+        },
+        {
+          "tag": "new",
+          "title": "Batch ingestion",
+          "body": "The agent sends events to the Controller in batches of up to 50. The Controller refuses a whole batch if any event in it names another tenant or device than the certificate, so nothing from a refused batch is stored. If the Controller is unreachable the events stay on disk and are delivered later; an event the Controller refuses for good is counted and skipped without blocking the others."
+        },
+        {
+          "tag": "new",
+          "title": "Staged updates (agent side)",
+          "body": "The agent can verify a signed update manifest, refuse an older one, place each device in a canary, early or general ring, install only after checking size and SHA-256, check that the new version is healthy, and go back to the previous version if it is not. A stop switch from the Controller holds every device, and an older manifest cannot lift it.",
+          "note": "The update service and the installers are not built yet; this preview has the agent logic only."
+        },
+        {
+          "tag": "new",
+          "title": "Certificate renewal and revocation",
+          "body": "Agent certificates are short-lived. The agent renews its certificate before it expires and rotates its key at the same time, without a restart. An administrator can revoke a single device or a whole tenant; a revoked identity is refused immediately on every route, including renewal, even though its certificate has not yet expired.",
+          "bullets": [
+            "The key and certificate are replaced as a pair, and an interrupted renewal is repaired at the next start.",
+            "Events queued on a revoked device are kept, not discarded."
+          ]
+        },
+        {
+          "tag": "new",
+          "title": "Tamper-evident audit log",
+          "body": "Enrolments, certificate renewals, revocations and update releases are written to an append-only log in which every record includes the hash of the previous one. Editing, deleting, inserting or reordering records is detected, and signed checkpoints detect a log that was cut short. If a record cannot be written, the action is refused.",
+          "note": "Checkpoint signing with a managed key and a tenant-facing view of the log are not built yet."
+        },
+        {
+          "tag": "new",
+          "title": "Update service",
+          "body": "The Controller signs update manifests and serves the update files. A release is opened ring by ring (canary, early, general), and a stop switch halts one release stream or all of them at once. A stop cannot be undone by replaying an older manifest.",
+          "note": "In this preview the update is applied by a generic file installer in the lab; installers that replace the running agent on Windows, Linux and macOS are not built yet."
+        },
+        {
+          "tag": "new",
+          "title": "Durable event pipeline",
+          "body": "Events accepted by the Controller are published to a message bus (NATS JetStream) before the agent is told they were accepted, so an accepted event is on disk. The tenant and device are taken from the certificate and written into every event. An indexer stores events in a separate area for each tenant and moves any message whose content does not match its tenant to a quarantine instead of storing it. An agent that resends the same event does not create a duplicate.",
+          "note": "This preview stores events in files for development. Search and analytics stores (OpenSearch, ClickHouse) are not built yet."
+        },
+        {
+          "tag": "improved",
+          "title": "Stricter tenant checks on events",
+          "body": "An event that carries its own tenant or device field is accepted only if it matches the certificate exactly. Empty or malformed values and keys that differ only in letter case are refused, and a refused event is reported as a permanent error so the agent does not retry it forever. Certificate names must be in one exact form. A new randomised cross-tenant test and fuzz tests now run against these paths.",
+          "note": "Found during testing: no customer data was involved."
+        },
+        {
+          "tag": "new",
+          "title": "Sensors run as separate programs",
+          "body": "The agent can now start and supervise sensors that run as their own programs and talk to it over a local channel (a Unix socket, or a named pipe on Windows). Events from a sensor travel through the agent to the Controller, and each sensor receives its own part of the signed policy when it connects and whenever the policy changes. If a sensor refuses a policy, the agent rolls the whole policy back. A small test sensor is included for labs.",
+          "note": "The Windows, Linux and macOS production sensors are not connected yet; only the test sensor uses this path today."
+        },
+        {
+          "tag": "new",
+          "title": "More event types in the common format",
+          "body": "Events can now describe registry key and value changes, modules (DLLs and libraries) being loaded or unloaded, memory operations between processes, sign-ins and sign-outs, and detection findings with the rule and the MITRE ATT&CK technique that raised them. They use the same open schema (OCSF 1.10.0) as process, file, network and DNS events, so they can be searched and correlated together.",
+          "note": "The sensors that produce these events are still being connected; the format is ready for them."
+        },
+        {
+          "tag": "new",
+          "title": "Policy by group, OU, tag and device",
+          "body": "Policy can now be set at several levels: for the whole tenant, for a directory group, an organisational unit, a tag, or a single device. For each device the levels are combined in that order and a more specific level replaces a module of a broader one, unless the broader level locked it. Each device receives its own signed policy, and an agent refuses a policy made for another device. An administrator can preview exactly what a device will get, including any override that a lock blocked. Which groups, OUs and tags a device has is decided in the Controller, never by the device itself.",
+          "note": "Preview. Administration is by API with access tokens; sign-in through the identity service and a management screen come later. Every change is recorded in the tenant audit trail."
+        },
+        {
+          "tag": "new",
+          "title": "Policy stored in a database with tenant isolation",
+          "body": "Policy and device attributes are now stored in PostgreSQL instead of memory, so they survive a restart and several Controllers can share them. The database itself keeps tenants apart: every table of tenant data has row-level security that cannot be switched off by the application, and each request works inside a transaction bound to one tenant. If the database is unavailable, devices keep their last good policy and the Controller reports the problem instead of saying there is no policy.",
+          "note": "Preview. Device records, enrolment tokens, revocations and the audit log are not in the database yet."
+        },
+        {
+          "tag": "new",
+          "title": "Enrolment tokens, device list and revoke from the administration API",
+          "body": "Tenant administrators can now create single-use enrolment tokens, see the devices enrolled in their tenant, and revoke a device. A token is shown once when it is created and is never stored or logged in readable form; it works for its own tenant only and only once, even if several Controllers share the database. A revoked device is refused on every route right away, and the same device number in another tenant is not affected. If the database cannot be reached, devices are told to retry later instead of being accepted or treated as revoked. Every action is recorded in the audit log before and after it happens.",
+          "note": "Preview. Revoking a whole tenant is an operator action and is not offered to tenant administrators."
+        },
+        {
+          "tag": "new",
+          "title": "Controller can start in production mode",
+          "body": "The Controller now has a production start path: a one-time offline command creates the signing keys (agent certificate authority, policy, updates and audit log), and the Controller refuses to start if a key file can be read by other users, if a key does not match its certificate, or if no database is configured. It never generates keys or falls back to memory on its own. After a restart, certificates issued earlier still work, revoked devices stay revoked, used enrolment tokens stay used and policy is unchanged. The audit log can be verified at any time with the public key from the same ceremony.",
+          "note": "Preview. Keys are held in protected files for now; a hardware or cloud key service will replace them before release."
+        },
+        {
+          "tag": "new",
+          "title": "Audit log stored in the database, one chain per tenant",
+          "body": "In production the audit log now lives in the same database as the rest of the tenant data, so several Controllers can write to it at once. Each tenant has its own chain of records, linked by hashes, and a tenant never sees anything of another tenant's chain. The database refuses to change or delete records, and signed checkpoints, made with a key that is not stored in the database, reveal a log that was edited, cut short or emptied. An operator can verify any tenant's chain with one command, and a privileged action is still refused if its record cannot be written.",
+          "note": "Preview. A call that lets tenants verify their own audit trail will come with the portal."
+        },
+        {
+          "tag": "new",
+          "title": "Published API contracts for agents and administrators",
+          "body": "The two interfaces of the Controller, the one agents use and the one tenant administrators use, now have OpenAPI 3.1 descriptions. The build checks them against the running code, so a route that is served but not documented, documented but not served, or documented with the wrong role fails the build. The documents say, for each call, what it does, who may use it and what each error means, including that another tenant's objects always answer \"not found\".",
+          "note": "Preview. The contract may change before release."
+        },
+        {
+          "tag": "new",
+          "title": "Sign in to the administration API with your identity provider",
+          "body": "Administrators can now call the Controller with access tokens from the partner portal's identity service instead of, or next to, static tokens. Tokens are checked strictly: signature against the provider's published keys, issuer, audience, expiry, and an exact tenant and role. Anything unclear is refused, and the audit log records who acted as \"oidc:\" plus the user.",
+          "note": "Preview. Needs the identity service to put the tenant and role into the token."
+        },
+        {
+          "tag": "new",
+          "title": "Agent updates survive restarts and can only be published by an operator",
+          "body": "Update releases, their rollout rings and the stop switch are now stored in the database, so a Controller restart no longer makes agents ignore later releases, and several Controllers serve the same ones. The Controller no longer holds the update signing key and its database account can only read releases: publishing, widening a ring, halting or resuming all updates are done by an operator with the signing key and the owner credentials, and each action is written to the audit log before it takes effect.",
+          "note": "Preview. Large artifacts will move to object storage later."
+        },
+        {
+          "tag": "new",
+          "title": "Directory groups and OUs can drive device policy",
+          "body": "A directory connector can now send the Controller a snapshot of which devices belong to which groups and organizational units. It is applied in one step, all or nothing, and the policy of every affected device follows at its next check. Values from the directory and values set by administrators are kept apart, so neither overwrites the other; a snapshot that changes nothing causes no new policy revision, and a complete snapshot removes memberships the directory no longer reports.",
+          "note": "Preview. The Active Directory and Entra ID connectors themselves are not built yet."
+        },
+        {
+          "tag": "new",
+          "title": "Device inventory and policy-drift findings",
+          "body": "The agent can now report what each device is (name, operating system, hardware, network addresses) and which policy settings it has drifted from. The inventory is off until the tenant policy turns it on, then it is sent once, again when something changes, and on a schedule you set. Policy drift is reported as findings that open when a setting stops being met and close when it is met again, so a healthy fleet adds no traffic. The vulnerability finding format is also ready for the scanner module that will feed it.",
+          "note": "Preview. Linux reports the most detail today; Windows and macOS detail follows with their adapters."
+        },
+        {
+          "tag": "new",
+          "title": "Verify your own audit trail",
+          "body": "Every tenant can now check that nothing recorded about it was edited, removed or reordered. Three read-only calls (viewer role) publish the key that signs the audit checkpoints, let the Controller check your chain for you, and hand out the signed checkpoints. A new offline tool, nx-auditverify, recomputes every hash, link and signature from the downloaded records, so you do not have to trust the Controller's own answer. A changed or cut-short trail is reported as not verified.",
+          "note": "Preview. Available on production Controllers (database audit log). Records newer than the last checkpoint are linked but only signed by the next checkpoint, written within a minute of activity."
+        },
+        {
+          "tag": "new",
+          "title": "Vulnerability findings from installed software",
+          "body": "On Linux devices the agent can now compare the software installed through the system package manager (Debian and Ubuntu, Alpine, RPM-based distributions) with a signed list of known vulnerabilities, and report one finding for each vulnerability that applies: created when a package becomes affected, updated when the affected packages change, closed when it is upgraded or removed. The scan is off until the tenant policy turns it on. A list that is missing, expired, older than the one in use or not signed by a trusted key is refused as a whole, and in that case no finding is ever closed. The new nx-advisory tool signs and checks the lists.",
+          "note": "Preview. Needs a signed advisory list on the device; delivery through the update channel and Windows and macOS software inventories follow."
+        },
+        {
+          "tag": "new",
+          "title": "Advisory lists delivered through the update channel",
+          "body": "The signed vulnerability advisory list now reaches devices the same way agent updates do: it is published by the operator as its own update component, released in stages (canary, early, general), covered by the global stop switch, and rolled back automatically if the installed list does not verify. A device checks the list twice, with the update key for the release and with a separate advisory key for the content, and refuses a list that is unsigned, expired, or numbered differently from its release. A new list makes the scanner run immediately.",
+          "note": "Preview. Enable on the agent with the advisory update option together with the update and advisory keys."
+        },
+        {
+          "tag": "new",
+          "title": "Active Directory sync for groups and OUs",
+          "body": "A new program, nx-dirsync, reads computers, security groups (including nested groups) and organisational units from Active Directory over LDAP and sends them to the Controller, so policy scopes by group and OU follow the directory. Computers are matched to devices by the label of their enrolment token or by an optional mapping file, and a name that matches more than one machine is skipped, never guessed. Disabled accounts are left out. A safety guard refuses a snapshot that is empty or has lost more than 30% of the previous one, so an unreachable domain controller cannot strip groups from every device. Connections require ldaps or StartTLS, and passwords and tokens are read only from protected files.",
+          "note": "Preview. Tested against a simulated directory; a test against a real domain controller is still to come."
+        },
+        {
+          "tag": "new",
+          "title": "Microsoft Entra ID as a directory source",
+          "body": "The directory connector can now read devices and security groups from Microsoft Entra ID as well as Active Directory (nx-dirsync with the entra source). It signs in as a read-only application, lets Microsoft resolve nested group membership, leaves out disabled devices and skips display names shared by several devices. Paging links are followed only on the Microsoft host, throttling is respected, and any failure stops the cycle before anything is sent, with the same drop guard as the Active Directory source.",
+          "note": "Preview. Tested against a simulated Microsoft Graph; a test against a real tenant is still to come."
+        },
+        {
+          "tag": "new",
+          "title": "Vulnerability scanning on Windows and macOS",
+          "body": "The vulnerability scanner now also reads installed software on Windows (the registered programs of the machine, without updates and hidden system components) and on macOS (application bundles in the Applications folders). Advisories for these systems use a new strict numeric version format, so a version is either compared exactly or reported as not comparable and never assumed to be fixed. A new command, nx-advisory name, gives the exact program name to use in a Windows advisory.",
+          "note": "Preview. The Windows reader still needs a live test on a Windows device; programs installed per user and language package ecosystems are not covered yet."
+        },
+        {
+          "tag": "new",
+          "title": "Signing keys can live on a separate signing service",
+          "body": "The Controller can now ask a separate signing service (nx-signer) to sign policy, update releases and audit checkpoints, so none of those keys has to be on the Controller host. The service accepts only clients with an allowed certificate, lets each client use only its own keys, limits the audit key to checkpoints, rate limits requests and logs every signature without its content. The Controller checks every signature against a public key it has pinned. If the service is unreachable no unsigned policy is served and no update is published, while audited actions keep working and the audit checkpoint is made when the service returns.",
+          "note": "Preview. Keys on the signing host are still files; support for a cloud KMS or hardware module is planned and depends on the vendor chosen."
+        },
+        {
+          "tag": "new",
+          "title": "Events can be stored in OpenSearch and ClickHouse",
+          "body": "The event pipeline can now write to OpenSearch, ClickHouse or both. Each tenant has its own indices (OpenSearch) or its own key range (ClickHouse), the layout of stored events is fixed so a device cannot grow it, writing the same event twice stores it once, and events come back in a stable order that can be paged. A failing store is retried without losing events, and an event a store refuses for good is set aside for review. Very long text values are shortened in the searchable copy while the full event is kept.",
+          "note": "Preview. Tested against real servers in the lab. Search screens, retention rules and per-tenant access on the message bus are still to come."
+        },
+        {
+          "tag": "new",
+          "title": "Search your stored events through the administration API",
+          "body": "Administrators and viewers can now read the events stored for their organisation through the administration API: filter by device and by time range, and page through results from oldest to newest. A token only ever reaches its own organisation, and a request that tries to name another one is refused. If the event store is unavailable the API answers that it is unavailable and shows nothing partial.",
+          "note": "Preview. Free-text search, saved searches and the web screens for this come later."
+        },
+        {
+          "tag": "new",
+          "title": "Event retention and erasure for each organisation",
+          "body": "Operators can now set how long each organisation's stored events are kept, with a default and per-organisation exceptions, including keeping an organisation's events indefinitely. A daily job removes older events from OpenSearch and ClickHouse. It first reports what it would remove, and a minimum period prevents a mistyped value from wiping history. An organisation's events can also be erased completely on request, with a confirmation that must repeat its name. One organisation's clean-up never touches another's.",
+          "note": "Preview. Retention periods are set by the operator in a file for now; a setting in the portal comes later."
+        },
+        {
+          "tag": "improved",
+          "title": "Secure, restricted connections to the message bus",
+          "body": "The Controller and the indexer can now connect to the NATS message bus over TLS, with a user and password, a credentials file, or a client certificate. Each of them gets only the rights it needs: the Controller can publish events but cannot read them back, and the indexer can read events but cannot publish them, so a stolen credential cannot be used to read or forge another organisation's events. Neither may create or change the event stream. Connections to another host without TLS or without a credential are refused at start.",
+          "note": "Preview. Tested against a real NATS server with TLS and mutual TLS."
+        },
+        {
+          "tag": "new",
+          "title": "Linux packages for the agent (DEB and RPM)",
+          "body": "The Linux agent now comes as DEB and RPM packages for Intel/AMD and ARM 64-bit systems. A single command installs it, enrols it with your Nexwall Controller using a one-time token and starts it as a service; for a fleet the Controller address and the token can be supplied when the install command runs. The token is used once and then removed from the device. The service runs with restricted permissions, and removing the package keeps the device identity so a reinstall does not need a new token, while purging it deletes everything.",
+          "note": "Preview. The packages are not yet signed, and installers for Windows and macOS come later."
+        },
+        {
+          "tag": "new",
+          "title": "Linux agent updates itself safely",
+          "body": "The Linux agent can now install new signed releases on its own. It checks that the downloaded file is a genuine program for the device and for the release your Controller announced, replaces itself, restarts, and keeps the previous version until the new one has successfully contacted the Controller. A release that fails to start is automatically replaced by the previous one and is never tried again on that device; a network outage alone does not trigger a rollback.",
+          "note": "Preview. Windows and macOS follow, and updating is off unless the update key is configured."
+        },
+        {
+          "tag": "new",
+          "title": "See which agent releases are rolling out",
+          "body": "The administration interface can now list the agent release streams your Controller offers: the current release for each platform, how far it has been opened (canary, early or general) and whether it has been halted. The list is read only; publishing, promoting and halting a release remain controlled operator actions.",
+          "note": "Preview."
+        },
+        {
+          "tag": "improved",
+          "title": "Lab test with 10,000 simulated endpoints",
+          "body": "We added a load-test tool that enrols thousands of simulated endpoints against a Controller, sends events and policy requests as real agents do, and then checks that every acknowledged event can be read back. In our first lab run, 10,000 endpoints enrolled in under a minute and about 400,000 events were delivered with no loss, no duplicates and no errors on a single test Controller. Browsing events page by page in the development store is also much faster.",
+          "note": "Lab result on one test Controller with a development store; production-scale and long-duration tests are still to come."
+        },
+        {
+          "tag": "new",
+          "title": "Software bill of materials and licence notices",
+          "body": "Each release can now be accompanied by a software bill of materials (CycloneDX) for every program we ship and every operating system it runs on, listing exactly which third-party components are inside, with versions, checksums and licences. The Linux agent packages now include the full third-party licence notices. Our checks refuse a release whose bill of materials has a missing or disallowed licence.",
+          "note": "Preview. Bills of materials are not signed yet, and Windows and macOS installers are still to come."
+        },
+        {
+          "tag": "new",
+          "title": "Linux telemetry and runtime detections (osquery and Falco)",
+          "body": "On Linux the agent can now report what is really happening on the machine: processes starting and stopping, network connections and listening ports, logins, and changes to watched files, collected with osquery, plus runtime detections from Falco, each mapped to the open OCSF format and tagged with the rule author, source and licence. A separate optional package, nexwall-agent-sensors, installs both with pinned, signature-checked upstream versions. If either sensor is killed repeatedly the agent keeps running and reports the sensor as degraded until it recovers. All events are checked against the official OCSF 1.10.0 definitions.",
+          "note": "Preview. x86_64 only for now; osquery polls every few seconds, so a process shorter than that is seen by Falco only."
+        },
+        {
+          "tag": "new",
+          "title": "Alerts by e-mail and webhook",
+          "body": "Detections from the Linux sensors now become alerts. Repeats of the same detection on the same machine are grouped into one alert with a count, and each alert shows its severity, MITRE ATT&CK technique, and the source, licence and author of the rule that raised it. Administrators can acknowledge and resolve alerts (every change is recorded in the audit log) and choose where new alerts go: an e-mail address, or a signed HTTPS webhook for a SIEM or chat bridge, each with its own minimum severity. If a mail relay or receiver is down, delivery is retried with growing delays instead of being lost. Each customer only ever sees its own alerts and routes.",
+          "note": "Preview. Alerts are available through the administration API; the console screen comes later. In the lab, e-mail and webhook were delivered within one second of the detection."
+        },
+        {
+          "tag": "new",
+          "title": "Isolate a machine, with approval (Linux)",
+          "body": "Administrators can now ask a Linux machine to cut itself off the network, release it again, stop a process and everything it started, move a suspicious file into a locked quarantine folder, or collect a list of running processes. Isolating, stopping a process and quarantining need a named approver, and a second person can be required; nothing happens before the approval. Each request carries a key so that repeating it never runs it twice. The machine only obeys orders that are signed by the Controller, meant for that machine and that customer, and still valid; it keeps its own tamper-evident log of every order. An isolated machine can still talk to the Controller, ends the isolation by itself at the set time even if the Controller is gone, and keeps it across an agent restart or a reboot. Every step is recorded in the audit log. When a firewall is connected, an isolated machine can also be blocked at the firewall, and quarantined file fingerprints are passed on to it.",
+          "note": "Preview. Linux only, tested on Debian 12; Windows comes later. In the lab the machine was cut off 11 seconds after approval at the 95th percentile (100 runs, worst 12.1 s). The firewall step was tested against a simulator, not yet against a real firewall. Actions are available through the administration API; the console screen comes later."
+        },
+        {
+          "tag": "new",
+          "title": "Administration console in the browser",
+          "body": "The Controller now serves a console at /console/. Sign in with an API token and see your devices, search events by field or free text, handle alerts, request and approve isolation, create enrolment tokens with install instructions, edit endpoint protection settings, verify the audit log and change the language between English and Brazilian Portuguese. Every screen shows only your own tenant."
+        },
+        {
+          "tag": "new",
+          "title": "Endpoint protection settings",
+          "body": "Settings for threat protection, application control, device control, host firewall, web protection and exclusions can be set per tenant, group or device, each as off, monitor or enforce, and are now applied on Linux. Exclusions drop the events of chosen paths and programs on the machine, and rules that raise no alert; threat settings disable rules, set the lowest severity that raises an alert and can ask to isolate a machine (a person still approves); application control raises an alert when a program outside the allow-list starts; USB storage is blocked within seconds of plugging in; the host firewall blocks inbound connections; web protection blocks the addresses of listed domains and raises an alert when a listed name is looked up. Each machine reports what it really does: a setting that asks for more than is enforced is shown as \"not fully enforced\" with the reason. A setting removed from the policy is switched off. Unsafe settings, such as a firewall that allows nothing in, are refused when you save them.",
+          "note": "Preview. Linux only. Web protection works at address level: it cannot see encrypted names, can block other sites on the same address, and has no categories yet. Application control reports but does not block. Windows comes later."
+        },
+        {
+          "tag": "new",
+          "title": "Device limit and end of term per tenant",
+          "body": "An operator can set a maximum number of devices and an end date for a tenant. Enrolment beyond the limit or after the end date is refused with a clear message and recorded in the audit log."
+        },
+        {
+          "tag": "new",
+          "title": "Signed policies with rollback",
+          "body": "The Controller signs each policy; the agent verifies the signature, refuses older revisions than the one it already runs, applies the policy module by module, and goes back to the last known good policy if a module fails to apply or fails its health check. The agent then reports whether it complies.",
+          "bullets": [
+            "Keys can be rotated without re-enrolling.",
+            "Each tenant has its own policy and its own revision counter.",
+            "Verified on Windows 10 and Linux, including a wrong-key refusal."
+          ]
+        },
+        {
+          "tag": "new",
+          "title": "Sensor channel",
+          "body": "Detection sensors run as separate processes and send events to the agent over a local channel that only the system and administrators can open. If the agent restarts it asks the sensor to resume after the last event it received, and lost events are counted."
+        },
+        {
+          "tag": "new",
+          "title": "Durable event queue",
+          "body": "Events wait on disk until the Controller confirms them, so a restart or a network outage does not lose them. The queue has a size limit; when it is full the oldest events are dropped and the number dropped is counted. Damaged records are detected and skipped."
+        },
+        {
+          "tag": "new",
+          "title": "Install on one server, backup, restore and upgrade",
+          "body": "The Controller, event search, message bus and database install on a single Linux server with one script. Encrypted backups restore onto a new server, upgrades keep a rollback, and a failed upgrade returns to the previous version by itself. Health and metrics endpoints and support bundles without keys or tokens are included. Tested on Debian 12; not yet on other distributions."
+        }
+      ]
+    },
+    {
+      "id": "improvements",
+      "title": "Improvements and changes",
+      "intro": "",
+      "items": [
+        {
+          "tag": "improved",
+          "title": "Licence check in every build",
+          "body": "Each build scans its dependencies and fails when a licence is incompatible with the product, and keeps a record of where every detection rule and component comes from."
+        }
+      ]
     }
-   ]
-  }
- ],
- "components": {
-  "intro": "Versions of the parts that make up this preview.",
-  "rows": [
-   {
-    "name": "Agent (nx-agent)",
-    "version": "0.1.0-dev1",
-    "note": "Windows and Linux, enrolment and probe commands"
-   },
-   {
-    "name": "Controller (nx-controller)",
-    "version": "0.1.0-dev1",
-    "note": "Ingest and enrolment service, development mode"
-   },
-   {
-    "name": "Event model",
-    "version": "OCSF 1.10.0",
-    "note": "Envelope schema version 1"
-   }
-  ]
- },
- "timeline": {
-  "intro": "Development history of this preview.",
-  "entries": [
-   {
-    "date": "2026-11-24",
-    "title": "Batch ingestion and update logic",
-    "text": "The agent run loop, batch ingestion and the staged-update logic, verified on Windows 10 and Linux."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Renewal, revocation, audit log, update service",
-    "text": "Certificate renewal and revocation, the tamper-evident audit log and the Controller update service, verified end to end."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Policies, sensor channel and event queue",
-    "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Console and endpoint protection settings",
-    "text": "A browser console, endpoint protection settings and per-tenant device limits."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Isolate a machine, with approval",
-    "text": "Isolate, stop a process, quarantine a file, collect: approved and audited."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Alerts by e-mail and webhook",
-    "text": "Detections become alerts, delivered with retry."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Linux sensors: osquery and Falco",
-    "text": "Real Linux telemetry and detections, mapped to OCSF."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Software bill of materials",
-    "text": "CycloneDX SBOMs and licence notices for every release."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Load test with 10,000 simulated endpoints",
-    "text": "First lab result: no event loss on one test Controller."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Agent release streams in the admin API",
-    "text": "Read-only view of rollout rings and halts."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Linux agent self-update",
-    "text": "Signed releases install, confirm and roll back automatically."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Linux agent packages",
-    "text": "DEB and RPM packages with silent, token-based enrolment."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Secure message bus connections",
-    "text": "TLS, credentials and least-privilege access to the event bus."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Event retention and erasure",
-    "text": "Set how long each organisation's events are kept, and erase an organisation on request."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Event search API",
-    "text": "Read your stored events through the administration API, by device and time range."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Events in OpenSearch and ClickHouse",
-    "text": "Events can be stored per tenant in OpenSearch, ClickHouse or both."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Separate signing service",
-    "text": "Policy, update and audit keys can be kept on a separate signing service."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Scanning on Windows and macOS",
-    "text": "Vulnerability scanning now covers Windows programs and macOS applications."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Entra ID directory source",
-    "text": "Groups can now follow Microsoft Entra ID as well as Active Directory."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Active Directory sync",
-    "text": "Groups and OUs now follow Active Directory through the nx-dirsync connector."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Advisory lists by update",
-    "text": "Vulnerability advisory lists are released in stages through the update channel."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Vulnerability findings",
-    "text": "The agent reports known vulnerabilities in installed Linux software, from a signed advisory list."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Verify your audit trail",
-    "text": "Tenants can check their audit trail on the server or offline with nx-auditverify."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Inventory and drift findings",
-    "text": "The agent reports device inventory (opt-in by policy) and policy-drift findings in OCSF."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Directory-driven policy",
-    "text": "Device groups and OUs from a directory snapshot select policy layers; manual and directory values are kept apart."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Durable, operator-only updates",
-    "text": "Update releases stored in the database; only an operator can publish, widen or halt."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Identity provider sign-in",
-    "text": "OIDC access tokens accepted by the administration API, strictly verified and audited."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "API contracts",
-    "text": "OpenAPI 3.1 descriptions of the agent and administration APIs, checked against the code in every build."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Audit log in the database",
-    "text": "One hash chain per tenant, append-only in the database, signed checkpoints, operator verification."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Production start path",
-    "text": "Offline key ceremony, protected key files, database required; restarts keep certificates, revocations and policy."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Tokens, devices and revocation",
-    "text": "Tenant administrators create one-time enrolment tokens, list devices and revoke them; stored with tenant isolation."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Policy in a database",
-    "text": "Policy and device attributes survive restarts; the database enforces tenant isolation with row-level security."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Policy by group, OU, tag, device",
-    "text": "Layered policy with locks, signed per device, managed through a tenant administration API."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "More event types",
-    "text": "Registry, module, memory, sign-in and detection-finding events in the OCSF 1.10.0 format."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Sensors as separate programs",
-    "text": "The agent supervises sensor processes over a local channel; events and per-sensor policy cross the process boundary."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Stricter tenant checks",
-    "text": "Events must match the certificate identity exactly; look-alike fields are refused; cross-tenant and fuzz tests added."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Durable event pipeline",
-    "text": "Events are persisted on a message bus before acceptance, and indexed per tenant with quarantine for mismatches."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "First development preview",
-    "text": "Enrolment, tenant-bound ingest and the first OCSF mappers, verified on Windows 10 22H2 and Linux."
-   }
-  ]
- },
- "requirements": [
-  "There is nothing to install yet: the preview is not published for download.",
-  "Later releases will state the supported Windows, Linux and macOS versions here."
- ],
- "upgrade": [
-  "There is no upgrade path yet. Development previews are not meant to be installed by customers."
- ],
- "open_source": "Nexwall Endpoint combines open-source components with Nexwall code. The list of components, versions and licences will be published with the first release, together with the software bill of materials. Every build already runs a licence check."
+  ],
+  "components": {
+    "intro": "Versions of the parts that make up this preview.",
+    "rows": [
+      {
+        "name": "Agent (nx-agent)",
+        "version": "0.1.0-dev1",
+        "note": "Windows and Linux, enrolment and probe commands"
+      },
+      {
+        "name": "Controller (nx-controller)",
+        "version": "0.1.0-dev1",
+        "note": "Ingest and enrolment service, development mode"
+      },
+      {
+        "name": "Event model",
+        "version": "OCSF 1.10.0",
+        "note": "Envelope schema version 1"
+      }
+    ]
+  },
+  "timeline": {
+    "intro": "Development history of this preview.",
+    "entries": [
+      {
+        "date": "2026-11-24",
+        "title": "Batch ingestion and update logic",
+        "text": "The agent run loop, batch ingestion and the staged-update logic, verified on Windows 10 and Linux."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Renewal, revocation, audit log, update service",
+        "text": "Certificate renewal and revocation, the tamper-evident audit log and the Controller update service, verified end to end."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Policies, sensor channel and event queue",
+        "text": "Signed policy pull with rollback, the local sensor channel and the durable event queue, verified on Windows 10 and Linux."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Console and endpoint protection settings",
+        "text": "A browser console, endpoint protection settings and per-tenant device limits."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Isolate a machine, with approval",
+        "text": "Isolate, stop a process, quarantine a file, collect: approved and audited."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Alerts by e-mail and webhook",
+        "text": "Detections become alerts, delivered with retry."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Linux sensors: osquery and Falco",
+        "text": "Real Linux telemetry and detections, mapped to OCSF."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Software bill of materials",
+        "text": "CycloneDX SBOMs and licence notices for every release."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Load test with 10,000 simulated endpoints",
+        "text": "First lab result: no event loss on one test Controller."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Agent release streams in the admin API",
+        "text": "Read-only view of rollout rings and halts."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Linux agent self-update",
+        "text": "Signed releases install, confirm and roll back automatically."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Linux agent packages",
+        "text": "DEB and RPM packages with silent, token-based enrolment."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Secure message bus connections",
+        "text": "TLS, credentials and least-privilege access to the event bus."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Event retention and erasure",
+        "text": "Set how long each organisation's events are kept, and erase an organisation on request."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Event search API",
+        "text": "Read your stored events through the administration API, by device and time range."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Events in OpenSearch and ClickHouse",
+        "text": "Events can be stored per tenant in OpenSearch, ClickHouse or both."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Separate signing service",
+        "text": "Policy, update and audit keys can be kept on a separate signing service."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Scanning on Windows and macOS",
+        "text": "Vulnerability scanning now covers Windows programs and macOS applications."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Entra ID directory source",
+        "text": "Groups can now follow Microsoft Entra ID as well as Active Directory."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Active Directory sync",
+        "text": "Groups and OUs now follow Active Directory through the nx-dirsync connector."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Advisory lists by update",
+        "text": "Vulnerability advisory lists are released in stages through the update channel."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Vulnerability findings",
+        "text": "The agent reports known vulnerabilities in installed Linux software, from a signed advisory list."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Verify your audit trail",
+        "text": "Tenants can check their audit trail on the server or offline with nx-auditverify."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Inventory and drift findings",
+        "text": "The agent reports device inventory (opt-in by policy) and policy-drift findings in OCSF."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Directory-driven policy",
+        "text": "Device groups and OUs from a directory snapshot select policy layers; manual and directory values are kept apart."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Durable, operator-only updates",
+        "text": "Update releases stored in the database; only an operator can publish, widen or halt."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Identity provider sign-in",
+        "text": "OIDC access tokens accepted by the administration API, strictly verified and audited."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "API contracts",
+        "text": "OpenAPI 3.1 descriptions of the agent and administration APIs, checked against the code in every build."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Audit log in the database",
+        "text": "One hash chain per tenant, append-only in the database, signed checkpoints, operator verification."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Production start path",
+        "text": "Offline key ceremony, protected key files, database required; restarts keep certificates, revocations and policy."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Tokens, devices and revocation",
+        "text": "Tenant administrators create one-time enrolment tokens, list devices and revoke them; stored with tenant isolation."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Policy in a database",
+        "text": "Policy and device attributes survive restarts; the database enforces tenant isolation with row-level security."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Policy by group, OU, tag, device",
+        "text": "Layered policy with locks, signed per device, managed through a tenant administration API."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "More event types",
+        "text": "Registry, module, memory, sign-in and detection-finding events in the OCSF 1.10.0 format."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Sensors as separate programs",
+        "text": "The agent supervises sensor processes over a local channel; events and per-sensor policy cross the process boundary."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Stricter tenant checks",
+        "text": "Events must match the certificate identity exactly; look-alike fields are refused; cross-tenant and fuzz tests added."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Durable event pipeline",
+        "text": "Events are persisted on a message bus before acceptance, and indexed per tenant with quarantine for mismatches."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "First development preview",
+        "text": "Enrolment, tenant-bound ingest and the first OCSF mappers, verified on Windows 10 22H2 and Linux."
+      }
+    ]
+  },
+  "requirements": [
+    "There is nothing to install yet: the preview is not published for download.",
+    "Later releases will state the supported Windows, Linux and macOS versions here."
+  ],
+  "upgrade": [
+    "There is no upgrade path yet. Development previews are not meant to be installed by customers."
+  ],
+  "open_source": "Nexwall Endpoint combines open-source components with Nexwall code. The list of components, versions and licences will be published with the first release, together with the software bill of materials. Every build already runs a licence check."
 }

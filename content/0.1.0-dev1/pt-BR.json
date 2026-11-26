@@ -1,564 +1,569 @@
 {
- "title": "Nexwall Endpoint 0.1.0-dev1",
- "summary": "Primeira prévia de desenvolvimento: cadastro com identidade vinculada ao tenant, um serviço de ingestão que rejeita eventos de outro tenant e o modelo de eventos OCSF. Não é para produção; ainda não há download.",
- "overview": "O Nexwall Endpoint é o produto de detecção e resposta em endpoints da Nexwall, projetado para funcionar junto com o Nexwall Firewall. Esta primeira prévia contém apenas as bases: como um endpoint prova quem é, como seus eventos chegam ao serviço e como são descritos. É uma versão de laboratório para a equipe de desenvolvimento e não está disponível para download.",
- "at_a_glance": [
-  {
-   "label": "Versão",
-   "value": "0.1.0-dev1"
-  },
-  {
-   "label": "Status",
-   "value": "Prévia de desenvolvimento, não publicada"
-  },
-  {
-   "label": "Sistemas de endpoint testados",
-   "value": "Windows 10 22H2 e Linux x86-64, em laboratório"
-  },
-  {
-   "label": "Modelo de eventos",
-   "value": "OCSF 1.10.0"
-  },
-  {
-   "label": "Download",
-   "value": "Ainda não"
-  }
- ],
- "sections": [
-  {
-   "id": "whats-new",
-   "title": "Novidades",
-   "intro": "Tudo nesta prévia é novo.",
-   "items": [
+  "title": "Nexwall Endpoint 0.1.0-dev1",
+  "summary": "Primeira prévia de desenvolvimento: cadastro com identidade vinculada ao tenant, um serviço de ingestão que rejeita eventos de outro tenant e o modelo de eventos OCSF. Não é para produção; ainda não há download.",
+  "overview": "O Nexwall Endpoint é o produto de detecção e resposta em endpoints da Nexwall, projetado para funcionar junto com o Nexwall Firewall. Esta primeira prévia contém apenas as bases: como um endpoint prova quem é, como seus eventos chegam ao serviço e como são descritos. É uma versão de laboratório para a equipe de desenvolvimento e não está disponível para download.",
+  "at_a_glance": [
     {
-     "tag": "new",
-     "title": "Cadastro com token de uso único",
-     "body": "Um administrador cria um token de uso único para um tenant. O agente gera a própria chave no endpoint, envia uma solicitação de certificado com o token e recebe um certificado assinado pela autoridade certificadora do Nexwall Endpoint.",
-     "bullets": [
-      "A chave privada nunca sai do endpoint.",
-      "O serviço grava o tenant e o dispositivo no certificado; nada na solicitação pode escolhê-los.",
-      "Um token funciona uma única vez e expira; um token reutilizado ou desconhecido é recusado.",
-      "Verificado de ponta a ponta no Windows 10 e no Linux."
-     ]
+      "label": "Versão",
+      "value": "0.1.0-dev1"
     },
     {
-     "tag": "new",
-     "title": "Isolamento de tenants na ingestão",
-     "body": "Os eventos são aceitos por TLS mútuo (TLS 1.3). O tenant e o dispositivo vêm somente do certificado. Um evento que cita outro tenant ou dispositivo é rejeitado com 403, e o tamanho da requisição é limitado a 1 MiB."
+      "label": "Status",
+      "value": "Prévia de desenvolvimento, não publicada"
     },
     {
-     "tag": "new",
-     "title": "Modelo de eventos OCSF 1.10.0",
-     "body": "Cada evento é colocado em um envelope versionado e descrito com o Open Cybersecurity Schema Framework, versão 1.10.0. Esta prévia mapeia atividade de processos, arquivos, rede e DNS. Os números de classe são fixados e verificados pelos testes."
+      "label": "Sistemas de endpoint testados",
+      "value": "Windows 10 22H2 e Linux x86-64, em laboratório"
     },
     {
-     "tag": "new",
-     "title": "Sensor do Windows verificado em laboratório",
-     "body": "Em uma máquina de laboratório com Windows 10 22H2 e Defender ligado, 11 regras de comportamento padrão do sensor do Windows dispararam como esperado. Um teste de resistência de 25 minutos executou 115 ciclos sem falhas e com pico de 121 MB de memória.",
-     "note": "Resultados de laboratório em um único sistema operacional; a matriz mais ampla ainda será testada."
+      "label": "Modelo de eventos",
+      "value": "OCSF 1.10.0"
     },
     {
-     "tag": "new",
-     "title": "Ingestão em lotes",
-     "body": "O agente envia os eventos ao Controller em lotes de até 50. O Controller recusa o lote inteiro se algum evento citar outro tenant ou dispositivo diferente do certificado, então nada de um lote recusado é armazenado. Se o Controller estiver inacessível, os eventos ficam em disco e são entregues depois; um evento que o Controller recusa em definitivo é contado e ignorado sem bloquear os demais."
-    },
-    {
-     "tag": "new",
-     "title": "Atualizações em etapas (lado do agente)",
-     "body": "O agente consegue verificar um manifesto de atualização assinado, recusar um mais antigo, colocar cada dispositivo em um anel canário, inicial ou geral, instalar somente após conferir tamanho e SHA-256, verificar se a nova versão está saudável e voltar à anterior se não estiver. Uma chave de parada do Controller segura todos os dispositivos e um manifesto mais antigo não consegue liberá-la.",
-     "note": "O serviço de atualização e os instaladores ainda não foram construídos; esta prévia traz apenas a lógica do agente."
-    },
-    {
-     "tag": "new",
-     "title": "Renovação e revogação de certificados",
-     "body": "Os certificados dos agentes têm vida curta. O agente renova o certificado antes de vencer e troca a chave ao mesmo tempo, sem reiniciar. Um administrador pode revogar um dispositivo ou um tenant inteiro; uma identidade revogada é recusada imediatamente em todas as rotas, inclusive na renovação, mesmo que o certificado ainda não tenha vencido.",
-     "bullets": [
-      "A chave e o certificado são trocados como um par, e uma renovação interrompida é reparada na próxima inicialização.",
-      "Os eventos em fila de um dispositivo revogado são mantidos, não descartados."
-     ]
-    },
-    {
-     "tag": "new",
-     "title": "Registro de auditoria à prova de adulteração",
-     "body": "Cadastros, renovações de certificado, revogações e publicações de atualização são gravados em um log somente de acréscimo, em que cada registro inclui o hash do anterior. Qualquer edição, exclusão, inserção ou reordenação é detectada, e pontos de verificação assinados detectam um log cortado. Se um registro não puder ser gravado, a ação é recusada.",
-     "note": "A assinatura dos pontos de verificação com uma chave gerenciada e uma visão do log para cada tenant ainda não existem."
-    },
-    {
-     "tag": "new",
-     "title": "Serviço de atualizações",
-     "body": "O Controller assina os manifestos de atualização e entrega os arquivos. Uma versão é aberta anel por anel (canário, inicial, geral), e uma chave de parada interrompe uma linha de versões ou todas de uma vez. Uma parada não pode ser desfeita reenviando um manifesto mais antigo.",
-     "note": "Nesta prévia a atualização é aplicada por um instalador de arquivos genérico em laboratório; os instaladores que substituem o agente em execução no Windows, Linux e macOS ainda não foram construídos."
-    },
-    {
-     "tag": "new",
-     "title": "Canal de eventos durável",
-     "body": "Os eventos aceitos pelo Controller são publicados em um barramento de mensagens (NATS JetStream) antes de avisar o agente de que foram aceitos, então um evento aceito já está em disco. O tenant e o dispositivo vêm do certificado e são gravados em cada evento. Um indexador guarda os eventos em uma área separada para cada tenant e envia para quarentena, em vez de guardar, qualquer mensagem cujo conteúdo não corresponda ao seu tenant. Um agente que reenvia o mesmo evento não cria duplicata.",
-     "note": "Esta prévia guarda os eventos em arquivos para desenvolvimento. Os armazenamentos de busca e análise (OpenSearch, ClickHouse) ainda não foram construídos."
-    },
-    {
-     "tag": "improved",
-     "title": "Verificações de tenant mais rígidas nos eventos",
-     "body": "Um evento que traz seu próprio campo de tenant ou dispositivo só é aceito se coincidir exatamente com o certificado. Valores vazios ou malformados e chaves que diferem apenas em maiúsculas são recusados, e um evento recusado é informado como erro permanente para que o agente não tente reenviá-lo sem fim. Os nomes no certificado precisam ter uma única forma exata. Agora há um teste aleatório entre tenants e testes de fuzzing nesses caminhos.",
-     "note": "Encontrado durante os testes: nenhum dado de cliente esteve envolvido."
-    },
-    {
-     "tag": "new",
-     "title": "Sensores executam como programas separados",
-     "body": "O agente agora pode iniciar e supervisionar sensores que executam como programas próprios e se comunicam com ele por um canal local (um socket Unix, ou um pipe nomeado no Windows). Os eventos de um sensor passam pelo agente até o Controller, e cada sensor recebe a sua própria parte da política assinada ao conectar e sempre que a política muda. Se um sensor recusa uma política, o agente reverte a política inteira. Um pequeno sensor de teste é incluído para laboratórios.",
-     "note": "Os sensores de produção para Windows, Linux e macOS ainda não estão conectados; hoje apenas o sensor de teste usa esse caminho."
-    },
-    {
-     "tag": "new",
-     "title": "Mais tipos de eventos no formato comum",
-     "body": "Os eventos agora podem descrever alterações em chaves e valores do registro, módulos (DLLs e bibliotecas) carregados ou descarregados, operações de memória entre processos, logins e logoffs, e achados de detecção com a regra e a técnica MITRE ATT&CK que os gerou. Eles usam o mesmo esquema aberto (OCSF 1.10.0) dos eventos de processo, arquivo, rede e DNS, então podem ser pesquisados e correlacionados juntos.",
-     "note": "Os sensores que produzem esses eventos ainda estão sendo conectados; o formato já está pronto para eles."
-    },
-    {
-     "tag": "new",
-     "title": "Política por grupo, UO, etiqueta e dispositivo",
-     "body": "A política agora pode ser definida em vários níveis: para todo o tenant, para um grupo do diretório, uma unidade organizacional, uma etiqueta ou um único dispositivo. Para cada dispositivo os níveis são combinados nessa ordem e um nível mais específico substitui um módulo de um mais amplo, a menos que o mais amplo o tenha bloqueado. Cada dispositivo recebe a sua própria política assinada, e um agente recusa uma política feita para outro dispositivo. Um administrador pode ver antecipadamente o que um dispositivo receberá, incluindo qualquer substituição que um bloqueio tenha impedido. Os grupos, UOs e etiquetas de um dispositivo são decididos pelo Controller, nunca pelo próprio dispositivo.",
-     "note": "Prévia. A administração é feita por API com tokens de acesso; o login pelo serviço de identidade e uma tela de gestão virão depois. Cada alteração fica registrada na auditoria do tenant."
-    },
-    {
-     "tag": "new",
-     "title": "Política guardada em banco de dados com isolamento por tenant",
-     "body": "A política e os atributos dos dispositivos agora ficam no PostgreSQL em vez da memória, então sobrevivem a uma reinicialização e vários Controllers podem compartilhá-los. O próprio banco de dados mantém os tenants separados: cada tabela de dados de tenant tem segurança em nível de linha que a aplicação não consegue desligar, e cada requisição trabalha dentro de uma transação ligada a um único tenant. Se o banco estiver indisponível, os dispositivos mantêm a última política válida e o Controller informa o problema em vez de dizer que não há política.",
-     "note": "Prévia. Registros de dispositivos, tokens de inscrição, revogações e o log de auditoria ainda não estão no banco de dados."
-    },
-    {
-     "tag": "new",
-     "title": "Tokens de inscrição, lista de dispositivos e revogação pela API de administração",
-     "body": "Os administradores de um tenant agora podem criar tokens de inscrição de uso único, ver os dispositivos inscritos no seu tenant e revogar um dispositivo. O token é mostrado uma única vez na criação e nunca é guardado nem registrado de forma legível; vale só para o próprio tenant e uma única vez, mesmo que vários Controllers compartilhem o banco de dados. Um dispositivo revogado é recusado imediatamente em todas as rotas, e o mesmo número de dispositivo em outro tenant não é afetado. Se o banco de dados não puder ser acessado, os dispositivos são instruídos a tentar de novo mais tarde, em vez de serem aceitos ou tratados como revogados. Cada ação é gravada no log de auditoria antes e depois de acontecer.",
-     "note": "Prévia. Revogar um tenant inteiro é uma ação do operador e não é oferecida aos administradores do tenant."
-    },
-    {
-     "tag": "new",
-     "title": "O Controller pode iniciar em modo de produção",
-     "body": "O Controller agora tem uma inicialização de produção: um comando único e offline cria as chaves de assinatura (autoridade certificadora dos agentes, política, atualizações e log de auditoria), e o Controller se recusa a iniciar se um arquivo de chave puder ser lido por outros usuários, se uma chave não corresponder ao seu certificado ou se não houver banco de dados configurado. Ele nunca gera chaves nem recorre à memória por conta própria. Após uma reinicialização, os certificados emitidos antes continuam funcionando, dispositivos revogados continuam revogados, tokens de inscrição usados continuam usados e a política não muda. O log de auditoria pode ser verificado a qualquer momento com a chave pública da mesma cerimônia.",
-     "note": "Prévia. Por enquanto as chaves ficam em arquivos protegidos; um serviço de chaves em hardware ou na nuvem as substituirá antes do lançamento."
-    },
-    {
-     "tag": "new",
-     "title": "Log de auditoria no banco de dados, uma cadeia por tenant",
-     "body": "Em produção o log de auditoria agora fica no mesmo banco de dados dos demais dados do tenant, então vários Controllers podem gravar nele ao mesmo tempo. Cada tenant tem sua própria cadeia de registros, ligados por hashes, e um tenant nunca vê nada da cadeia de outro. O banco recusa alterar ou apagar registros, e pontos de verificação assinados, feitos com uma chave que não fica no banco, revelam um log editado, cortado ou esvaziado. Um operador pode verificar a cadeia de qualquer tenant com um único comando, e uma ação privilegiada continua sendo recusada se o seu registro não puder ser gravado.",
-     "note": "Prévia. Uma chamada para os tenants verificarem a própria trilha de auditoria virá com o portal."
-    },
-    {
-     "tag": "new",
-     "title": "Contratos de API publicados para agentes e administradores",
-     "body": "As duas interfaces do Controller, a usada pelos agentes e a usada pelos administradores do tenant, agora têm descrições OpenAPI 3.1. A compilação as confere com o código em execução, de modo que uma rota que é servida mas não documentada, documentada mas não servida, ou documentada com o papel errado, quebra a compilação. Os documentos dizem, para cada chamada, o que ela faz, quem pode usá-la e o que cada erro significa, inclusive que objetos de outro tenant sempre respondem \"não encontrado\".",
-     "note": "Prévia. O contrato pode mudar antes do lançamento."
-    },
-    {
-     "tag": "new",
-     "title": "Acesso à API de administração com o seu provedor de identidade",
-     "body": "Os administradores agora podem chamar o Controller com tokens de acesso do serviço de identidade do portal de parceiros, no lugar dos tokens estáticos ou junto com eles. Os tokens são verificados com rigor: assinatura com as chaves publicadas do provedor, emissor, audiência, validade, e um tenant e papel exatos. Tudo que for duvidoso é recusado, e o registro de auditoria anota quem agiu como \"oidc:\" mais o usuário.",
-     "note": "Prévia. Exige que o serviço de identidade coloque o tenant e o papel no token."
-    },
-    {
-     "tag": "new",
-     "title": "As atualizações do agente sobrevivem a reinícios e só um operador as publica",
-     "body": "As versões de atualização, seus anéis de implantação e a chave de parada agora ficam no banco de dados, então reiniciar um Controller não faz mais os agentes ignorarem versões posteriores, e vários Controllers servem as mesmas. O Controller não guarda mais a chave de assinatura de atualizações e sua conta de banco só pode ler versões: publicar, ampliar um anel, parar ou retomar todas as atualizações é feito por um operador com a chave de assinatura e as credenciais do proprietário, e cada ação é gravada na auditoria antes de valer.",
-     "note": "Prévia. Artefatos grandes passarão depois para armazenamento de objetos."
-    },
-    {
-     "tag": "new",
-     "title": "Grupos e UOs do diretório podem conduzir a política dos dispositivos",
-     "body": "Um conector de diretório agora pode enviar ao Controller um retrato de quais dispositivos pertencem a quais grupos e unidades organizacionais. Ele é aplicado de uma vez, tudo ou nada, e a política de cada dispositivo afetado o acompanha na próxima consulta. Os valores do diretório e os definidos por administradores ficam separados, então um não sobrescreve o outro; um retrato que não muda nada não gera nova revisão de política, e um retrato completo remove os vínculos que o diretório não informa mais.",
-     "note": "Prévia. Os conectores de Active Directory e Entra ID ainda não foram construídos."
-    },
-    {
-     "tag": "new",
-     "title": "Inventário de dispositivos e achados de desvio de política",
-     "body": "O agente agora pode informar o que cada dispositivo é (nome, sistema operacional, hardware, endereços de rede) e de quais configurações de política ele se desviou. O inventário fica desligado até a política do tenant ligá-lo; então é enviado uma vez, de novo quando algo muda e na periodicidade que você definir. O desvio de política é informado como achados que abrem quando uma configuração deixa de ser atendida e fecham quando volta a ser atendida, então uma frota saudável não gera tráfego. O formato de achado de vulnerabilidades também está pronto para o módulo scanner que vai alimentá-lo.",
-     "note": "Prévia. O Linux informa mais detalhes hoje; os detalhes de Windows e macOS virão com seus adaptadores."
-    },
-    {
-     "tag": "new",
-     "title": "Verifique a sua própria trilha de auditoria",
-     "body": "Cada tenant agora pode conferir que nada do que foi registrado sobre ele foi editado, removido ou reordenado. Três chamadas somente leitura (papel de visualizador) publicam a chave que assina os pontos de controle da auditoria, deixam o Controller conferir a sua cadeia e entregam os pontos de controle assinados. Uma nova ferramenta offline, nx-auditverify, recalcula cada hash, vínculo e assinatura a partir dos registros baixados, então não é preciso confiar na resposta do próprio Controller. Uma trilha alterada ou cortada é informada como não verificada.",
-     "note": "Prévia. Disponível em Controllers de produção (registro de auditoria em banco de dados). Os registros mais novos que o último ponto de controle estão encadeados, mas só o próximo ponto de controle, gravado em até um minuto de atividade, os assina."
-    },
-    {
-     "tag": "new",
-     "title": "Achados de vulnerabilidades do software instalado",
-     "body": "Em dispositivos Linux o agente agora pode comparar o software instalado pelo gerenciador de pacotes do sistema (Debian e Ubuntu, Alpine, distribuições baseadas em RPM) com uma lista assinada de vulnerabilidades conhecidas e informar um achado para cada vulnerabilidade que se aplica: criado quando um pacote passa a ser afetado, atualizado quando os pacotes afetados mudam e encerrado quando é atualizado ou removido. A varredura fica desligada até a política do tenant ligá-la. Uma lista ausente, vencida, mais antiga que a em uso ou não assinada por uma chave confiável é recusada por inteiro, e nesse caso nenhum achado é encerrado. A nova ferramenta nx-advisory assina e confere as listas.",
-     "note": "Prévia. Precisa de uma lista de avisos assinada no dispositivo; a entrega pelo canal de atualização e os inventários de software de Windows e macOS virão depois."
-    },
-    {
-     "tag": "new",
-     "title": "Listas de avisos entregues pelo canal de atualização",
-     "body": "A lista assinada de avisos de vulnerabilidades agora chega aos dispositivos do mesmo modo que as atualizações do agente: o operador a publica como um componente de atualização próprio, ela é liberada em etapas (canary, early, general), fica coberta pela chave geral de parada e é revertida automaticamente se a lista instalada não for verificada. O dispositivo confere a lista duas vezes, com a chave de atualização para a versão e com uma chave de avisos separada para o conteúdo, e recusa uma lista sem assinatura, vencida ou numerada diferente da sua versão. Uma lista nova faz a varredura rodar imediatamente.",
-     "note": "Prévia. Ativada no agente com a opção de atualização de avisos junto com as chaves de atualização e de avisos."
-    },
-    {
-     "tag": "new",
-     "title": "Sincronização com o Active Directory para grupos e UOs",
-     "body": "Um novo programa, nx-dirsync, lê computadores, grupos de segurança (inclusive aninhados) e unidades organizacionais do Active Directory por LDAP e os envia ao Controller, de modo que os escopos de política por grupo e UO acompanham o diretório. Os computadores são associados aos dispositivos pelo rótulo do token de inscrição ou por um arquivo de mapeamento opcional, e um nome que corresponde a mais de uma máquina é ignorado, nunca adivinhado. Contas desabilitadas ficam de fora. Uma proteção recusa um instantâneo vazio ou que perdeu mais de 30% do anterior, para que um controlador de domínio inacessível não remova os grupos de todos os dispositivos. As conexões exigem ldaps ou StartTLS, e senhas e tokens são lidos apenas de arquivos protegidos.",
-     "note": "Prévia. Testado com um diretório simulado; falta o teste contra um controlador de domínio real."
-    },
-    {
-     "tag": "new",
-     "title": "Microsoft Entra ID como fonte de diretório",
-     "body": "O conector de diretório agora pode ler dispositivos e grupos de segurança do Microsoft Entra ID, além do Active Directory (nx-dirsync com a fonte entra). Ele entra como um aplicativo somente leitura, deixa a Microsoft resolver os grupos aninhados, ignora dispositivos desabilitados e nomes compartilhados por vários dispositivos. Os links de paginação só são seguidos no host da Microsoft, a limitação de requisições é respeitada e qualquer falha interrompe o ciclo antes de enviar algo, com a mesma proteção contra quedas da fonte do Active Directory.",
-     "note": "Prévia. Testado com um Microsoft Graph simulado; falta o teste com um tenant real."
-    },
-    {
-     "tag": "new",
-     "title": "Análise de vulnerabilidades no Windows e no macOS",
-     "body": "O analisador de vulnerabilidades agora também lê o software instalado no Windows (os programas registrados da máquina, sem atualizações nem componentes ocultos do sistema) e no macOS (pacotes de aplicativos nas pastas Applications). Os avisos para esses sistemas usam um novo formato numérico estrito de versão, de modo que uma versão é comparada com exatidão ou informada como não comparável, e nunca é presumida como corrigida. Um novo comando, nx-advisory name, informa o nome exato do programa para um aviso do Windows.",
-     "note": "Prévia. O leitor do Windows ainda precisa de um teste em um dispositivo Windows real; programas instalados por usuário e ecossistemas de pacotes de linguagens ainda não são cobertos."
-    },
-    {
-     "tag": "new",
-     "title": "As chaves de assinatura podem ficar em um serviço de assinatura separado",
-     "body": "O Controller agora pode pedir a um serviço de assinatura separado (nx-signer) que assine a política, as versões de atualização e os pontos de controle da auditoria, de modo que nenhuma dessas chaves precise ficar no servidor do Controller. O serviço aceita apenas clientes com um certificado permitido, deixa cada cliente usar somente as suas chaves, limita a chave de auditoria aos pontos de controle, limita a taxa de requisições e registra cada assinatura sem o seu conteúdo. O Controller confere cada assinatura com uma chave pública fixada previamente. Se o serviço estiver inacessível, nenhuma política sem assinatura é entregue e nenhuma atualização é publicada, enquanto as ações auditadas continuam funcionando e o ponto de controle é feito quando o serviço voltar.",
-     "note": "Prévia. As chaves no servidor de assinatura ainda são arquivos; o suporte a um KMS na nuvem ou a um módulo de hardware está planejado e depende do fornecedor escolhido."
-    },
-    {
-     "tag": "new",
-     "title": "Os eventos podem ser guardados no OpenSearch e no ClickHouse",
-     "body": "O pipeline de eventos agora pode gravar no OpenSearch, no ClickHouse ou em ambos. Cada tenant tem seus próprios índices (OpenSearch) ou sua própria faixa de chaves (ClickHouse), a estrutura dos eventos guardados é fixa para que um dispositivo não possa ampliá-la, gravar o mesmo evento duas vezes o guarda uma só vez, e os eventos voltam em uma ordem estável que pode ser paginada. Se um armazenamento falha, a gravação é repetida sem perder eventos, e um evento que um armazenamento recusa em definitivo é separado para revisão. Textos muito longos são encurtados na cópia de busca, enquanto o evento completo é mantido.",
-     "note": "Prévia. Testado com servidores reais no laboratório. Ainda faltam as telas de busca, as regras de retenção e o acesso por tenant no barramento de mensagens."
-    },
-    {
-     "tag": "new",
-     "title": "Pesquise seus eventos guardados pela API de administração",
-     "body": "Administradores e usuários somente leitura agora podem ler os eventos guardados de sua organização pela API de administração: filtrar por dispositivo e por intervalo de tempo, e percorrer os resultados do mais antigo ao mais recente. Um token só alcança a própria organização, e uma requisição que tente nomear outra é recusada. Se o armazenamento de eventos estiver indisponível, a API informa que está indisponível e não mostra nada parcial.",
-     "note": "Prévia. A busca em texto livre, as buscas salvas e as telas web virão depois."
-    },
-    {
-     "tag": "new",
-     "title": "Retenção e exclusão de eventos para cada organização",
-     "body": "Os operadores agora podem definir por quanto tempo os eventos guardados de cada organização são mantidos, com um valor padrão e exceções por organização, inclusive a manutenção por tempo indeterminado. Uma tarefa diária remove os eventos mais antigos do OpenSearch e do ClickHouse. Ela primeiro informa o que removeria, e um período mínimo impede que um valor digitado errado apague o histórico. Os eventos de uma organização também podem ser apagados por completo sob pedido, com uma confirmação que deve repetir o nome dela. A limpeza de uma organização nunca afeta outra.",
-     "note": "Prévia. Por enquanto o operador define os períodos de retenção em um arquivo; uma opção no portal virá depois."
-    },
-    {
-     "tag": "improved",
-     "title": "Conexões seguras e restritas ao barramento de mensagens",
-     "body": "O Controller e o indexador agora podem se conectar ao barramento de mensagens NATS por TLS, com usuário e senha, um arquivo de credenciais ou um certificado de cliente. Cada um recebe somente os direitos de que precisa: o Controller pode publicar eventos, mas não lê-los, e o indexador pode ler eventos, mas não publicá-los, de modo que uma credencial roubada não serve para ler nem forjar eventos de outra organização. Nenhum dos dois pode criar ou alterar o fluxo de eventos. Conexões a outro servidor sem TLS ou sem credencial são recusadas na inicialização.",
-     "note": "Prévia. Testado com um servidor NATS real com TLS e TLS mútuo."
-    },
-    {
-     "tag": "new",
-     "title": "Pacotes Linux para o agente (DEB e RPM)",
-     "body": "O agente Linux agora é entregue em pacotes DEB e RPM para sistemas de 64 bits Intel/AMD e ARM. Um único comando o instala, o registra no seu Controller Nexwall com um token de uso único e o inicia como serviço; para uma frota, o endereço do Controller e o token podem ser informados ao executar o comando de instalação. O token é usado uma vez e depois removido do equipamento. O serviço roda com permissões restritas, e remover o pacote mantém a identidade do equipamento, de modo que reinstalar não exige um novo token, enquanto expurgá-lo apaga tudo.",
-     "note": "Prévia. Os pacotes ainda não são assinados, e os instaladores para Windows e macOS virão depois."
-    },
-    {
-     "tag": "new",
-     "title": "O agente Linux se atualiza com segurança",
-     "body": "O agente Linux agora pode instalar por conta própria novas versões assinadas. Ele verifica se o arquivo baixado é um programa genuíno para o equipamento e para a versão anunciada pelo seu Controller, substitui a si mesmo, reinicia e mantém a versão anterior até que a nova tenha contatado o Controller com sucesso. Uma versão que não inicia é substituída automaticamente pela anterior e não é tentada novamente nesse equipamento; uma queda de rede, por si só, não causa reversão.",
-     "note": "Prévia. Windows e macOS virão depois, e a atualização fica desativada a menos que a chave de atualização seja configurada."
-    },
-    {
-     "tag": "new",
-     "title": "Veja quais versões do agente estão sendo liberadas",
-     "body": "A interface de administração agora pode listar os canais de versões do agente oferecidos pelo seu Controller: a versão atual de cada plataforma, até onde foi aberta (canário, antecipada ou geral) e se foi interrompida. A lista é somente leitura; publicar, promover e interromper uma versão continuam sendo ações controladas do operador.",
-     "note": "Prévia."
-    },
-    {
-     "tag": "improved",
-     "title": "Teste de laboratório com 10.000 endpoints simulados",
-     "body": "Adicionamos uma ferramenta de teste de carga que registra milhares de endpoints simulados em um Controller, envia eventos e solicitações de política como os agentes reais fazem e depois verifica se cada evento confirmado pode ser lido de volta. Em nosso primeiro teste de laboratório, 10.000 endpoints foram registrados em menos de um minuto e cerca de 400.000 eventos foram entregues sem perdas, sem duplicatas e sem erros em um único Controller de teste. Percorrer os eventos página a página no armazenamento de desenvolvimento também ficou muito mais rápido.",
-     "note": "Resultado de laboratório em um Controller de teste com armazenamento de desenvolvimento; testes em escala de produção e de longa duração ainda virão."
-    },
-    {
-     "tag": "new",
-     "title": "Lista de materiais de software e avisos de licenças",
-     "body": "Cada versão agora pode ser acompanhada de uma lista de materiais de software (CycloneDX) para cada programa que distribuímos e cada sistema operacional em que ele roda, com os componentes de terceiros contidos, suas versões, somas de verificação e licenças. Os pacotes do agente Linux agora incluem os avisos completos de licenças de terceiros. Nossas verificações recusam uma versão cuja lista tenha uma licença ausente ou não permitida.",
-     "note": "Prévia. As listas de materiais ainda não são assinadas, e os instaladores para Windows e macOS virão depois."
-    },
-    {
-     "tag": "new",
-     "title": "Telemetria e detecções em tempo de execução no Linux (osquery e Falco)",
-     "body": "No Linux, o agente agora pode informar o que realmente acontece na máquina: processos que iniciam e terminam, conexões de rede e portas em escuta, logins e alterações em arquivos monitorados, coletados com osquery, além de detecções em tempo de execução do Falco, cada uma mapeada para o formato aberto OCSF e marcada com o autor, a origem e a licença da regra. Um pacote opcional separado, nexwall-agent-sensors, instala ambos com versões originais fixadas e assinatura verificada. Se um dos sensores for encerrado repetidamente, o agente continua funcionando e informa o sensor como degradado até que se recupere. Todos os eventos são validados contra as definições oficiais do OCSF 1.10.0.",
-     "note": "Prévia. Somente x86_64 por enquanto; o osquery consulta a cada poucos segundos, então um processo mais curto só é visto pelo Falco."
-    },
-    {
-     "tag": "new",
-     "title": "Alertas por e-mail e webhook",
-     "body": "As detecções dos sensores do Linux agora viram alertas. Repetições da mesma detecção na mesma máquina são agrupadas em um único alerta com um contador, e cada alerta mostra sua severidade, a técnica do MITRE ATT&CK e a origem, a licença e o autor da regra que o gerou. Os administradores podem reconhecer e resolver alertas (cada alteração fica no registro de auditoria) e escolher para onde vão os novos alertas: um endereço de e-mail ou um webhook HTTPS assinado para um SIEM ou uma ponte de chat, cada um com sua própria severidade mínima. Se um servidor de e-mail ou um receptor estiver fora do ar, o envio é repetido com esperas crescentes em vez de se perder. Cada cliente vê apenas seus próprios alertas e rotas.",
-     "note": "Prévia. Os alertas estão disponíveis pela API de administração; a tela do console virá depois. No laboratório, o e-mail e o webhook foram entregues em menos de um segundo após a detecção."
-    },
-    {
-     "tag": "new",
-     "title": "Isolar uma máquina, com aprovação (Linux)",
-     "body": "Os administradores agora podem pedir que uma máquina Linux se desconecte da rede, religá-la, encerrar um processo e tudo o que ele iniciou, mover um arquivo suspeito para uma pasta de quarentena protegida ou coletar a lista de processos em execução. Isolar, encerrar um processo e colocar em quarentena exigem um aprovador identificado, e uma segunda pessoa pode ser exigida; nada acontece antes da aprovação. Cada pedido leva uma chave para que repeti-lo nunca o execute duas vezes. A máquina só obedece a ordens assinadas pelo Controller, destinadas a ela e àquele cliente, e ainda válidas; ela também mantém seu próprio registro à prova de adulteração de cada ordem. Uma máquina isolada continua falando com o Controller, encerra o isolamento sozinha no horário definido mesmo que o Controller não esteja disponível, e o mantém após reiniciar o agente ou a máquina. Cada etapa fica no registro de auditoria. Quando há um firewall conectado, a máquina isolada também pode ser bloqueada no firewall, e as impressões digitais dos arquivos em quarentena são repassadas a ele.",
-     "note": "Prévia. Somente Linux, testado no Debian 12; o Windows virá depois. No laboratório a máquina foi isolada 11 segundos após a aprovação no percentil 95 (100 execuções, pior caso 12,1 s). A etapa do firewall foi testada com um simulador, ainda não com um firewall real. As ações estão disponíveis pela API de administração; a tela do console virá depois."
-    },
-    {
-     "tag": "new",
-     "title": "Console de administração no navegador",
-     "body": "O Controller agora serve um console em /console/. Entre com um token de API e veja seus dispositivos, pesquise eventos por campo ou texto livre, trate alertas, peça e aprove isolamentos, crie tokens de cadastro com instruções de instalação, edite as configurações de proteção do endpoint, verifique o registro de auditoria e troque o idioma entre inglês e português do Brasil. Cada tela mostra apenas o seu próprio tenant."
-    },
-    {
-     "tag": "new",
-     "title": "Configurações de proteção do endpoint",
-     "body": "As configurações de proteção contra ameaças, controle de aplicativos, controle de dispositivos, firewall do host, proteção web e exclusões podem ser definidas por tenant, grupo ou dispositivo, cada uma como desligada, monitorar ou aplicar, e agora são aplicadas no Linux. As exclusões descartam na máquina os eventos de caminhos e programas escolhidos, e as regras que não geram alerta; a configuração de ameaças desativa regras, define a menor severidade que gera alerta e pode pedir o isolamento de uma máquina (uma pessoa ainda aprova); o controle de aplicativos gera um alerta quando um programa fora da lista permitida inicia; o armazenamento USB é bloqueado poucos segundos depois de conectado; o firewall do host bloqueia as conexões de entrada; a proteção web bloqueia os endereços dos domínios listados e gera um alerta quando um nome listado é consultado. Cada máquina informa o que realmente faz: uma configuração que pede mais do que é aplicado aparece como \"não totalmente aplicada\" com o motivo. Uma configuração retirada da política é desligada. Configurações inseguras, como um firewall que não permite nenhuma entrada, são recusadas ao salvar.",
-     "note": "Prévia. Somente Linux. A proteção web atua por endereço: não enxerga nomes criptografados, pode bloquear outros sites no mesmo endereço e ainda não tem categorias. O controle de aplicativos avisa mas não bloqueia. O Windows vem depois."
-    },
-    {
-     "tag": "new",
-     "title": "Limite de dispositivos e fim de vigência por tenant",
-     "body": "Um operador pode definir um número máximo de dispositivos e uma data de fim para um tenant. O cadastro além do limite ou depois da data é recusado com uma mensagem clara e registrado na auditoria."
-    },
-    {
-     "tag": "new",
-     "title": "Políticas assinadas com reversão",
-     "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
-     "bullets": [
-      "As chaves podem ser trocadas sem recadastrar o agente.",
-      "Cada tenant tem sua própria política e seu próprio contador de revisões.",
-      "Verificado no Windows 10 e no Linux, incluindo a recusa de uma chave incorreta."
-     ]
-    },
-    {
-     "tag": "new",
-     "title": "Canal de sensores",
-     "body": "Os sensores de detecção rodam como processos separados e enviam eventos ao agente por um canal local que só o sistema e os administradores podem abrir. Se o agente reinicia, pede ao sensor que continue depois do último evento recebido, e os eventos perdidos são contados."
-    },
-    {
-     "tag": "new",
-     "title": "Fila de eventos durável",
-     "body": "Os eventos aguardam em disco até o Controller confirmá-los, então uma reinicialização ou queda de rede não os perde. A fila tem limite de tamanho; quando enche, os eventos mais antigos são descartados e a quantidade é contada. Registros danificados são detectados e ignorados."
+      "label": "Download",
+      "value": "Ainda não"
     }
-   ]
-  },
-  {
-   "id": "improvements",
-   "title": "Melhorias e mudanças",
-   "intro": "",
-   "items": [
+  ],
+  "sections": [
     {
-     "tag": "improved",
-     "title": "Verificação de licenças em cada build",
-     "body": "Cada build analisa suas dependências e falha quando uma licença é incompatível com o produto, e guarda o registro da origem de cada regra de detecção e componente."
+      "id": "whats-new",
+      "title": "Novidades",
+      "intro": "Tudo nesta prévia é novo.",
+      "items": [
+        {
+          "tag": "new",
+          "title": "Cadastro com token de uso único",
+          "body": "Um administrador cria um token de uso único para um tenant. O agente gera a própria chave no endpoint, envia uma solicitação de certificado com o token e recebe um certificado assinado pela autoridade certificadora do Nexwall Endpoint.",
+          "bullets": [
+            "A chave privada nunca sai do endpoint.",
+            "O serviço grava o tenant e o dispositivo no certificado; nada na solicitação pode escolhê-los.",
+            "Um token funciona uma única vez e expira; um token reutilizado ou desconhecido é recusado.",
+            "Verificado de ponta a ponta no Windows 10 e no Linux."
+          ]
+        },
+        {
+          "tag": "new",
+          "title": "Isolamento de tenants na ingestão",
+          "body": "Os eventos são aceitos por TLS mútuo (TLS 1.3). O tenant e o dispositivo vêm somente do certificado. Um evento que cita outro tenant ou dispositivo é rejeitado com 403, e o tamanho da requisição é limitado a 1 MiB."
+        },
+        {
+          "tag": "new",
+          "title": "Modelo de eventos OCSF 1.10.0",
+          "body": "Cada evento é colocado em um envelope versionado e descrito com o Open Cybersecurity Schema Framework, versão 1.10.0. Esta prévia mapeia atividade de processos, arquivos, rede e DNS. Os números de classe são fixados e verificados pelos testes."
+        },
+        {
+          "tag": "new",
+          "title": "Sensor do Windows verificado em laboratório",
+          "body": "Em uma máquina de laboratório com Windows 10 22H2 e Defender ligado, 11 regras de comportamento padrão do sensor do Windows dispararam como esperado. Um teste de resistência de 25 minutos executou 115 ciclos sem falhas e com pico de 121 MB de memória.",
+          "note": "Resultados de laboratório em um único sistema operacional; a matriz mais ampla ainda será testada."
+        },
+        {
+          "tag": "new",
+          "title": "Ingestão em lotes",
+          "body": "O agente envia os eventos ao Controller em lotes de até 50. O Controller recusa o lote inteiro se algum evento citar outro tenant ou dispositivo diferente do certificado, então nada de um lote recusado é armazenado. Se o Controller estiver inacessível, os eventos ficam em disco e são entregues depois; um evento que o Controller recusa em definitivo é contado e ignorado sem bloquear os demais."
+        },
+        {
+          "tag": "new",
+          "title": "Atualizações em etapas (lado do agente)",
+          "body": "O agente consegue verificar um manifesto de atualização assinado, recusar um mais antigo, colocar cada dispositivo em um anel canário, inicial ou geral, instalar somente após conferir tamanho e SHA-256, verificar se a nova versão está saudável e voltar à anterior se não estiver. Uma chave de parada do Controller segura todos os dispositivos e um manifesto mais antigo não consegue liberá-la.",
+          "note": "O serviço de atualização e os instaladores ainda não foram construídos; esta prévia traz apenas a lógica do agente."
+        },
+        {
+          "tag": "new",
+          "title": "Renovação e revogação de certificados",
+          "body": "Os certificados dos agentes têm vida curta. O agente renova o certificado antes de vencer e troca a chave ao mesmo tempo, sem reiniciar. Um administrador pode revogar um dispositivo ou um tenant inteiro; uma identidade revogada é recusada imediatamente em todas as rotas, inclusive na renovação, mesmo que o certificado ainda não tenha vencido.",
+          "bullets": [
+            "A chave e o certificado são trocados como um par, e uma renovação interrompida é reparada na próxima inicialização.",
+            "Os eventos em fila de um dispositivo revogado são mantidos, não descartados."
+          ]
+        },
+        {
+          "tag": "new",
+          "title": "Registro de auditoria à prova de adulteração",
+          "body": "Cadastros, renovações de certificado, revogações e publicações de atualização são gravados em um log somente de acréscimo, em que cada registro inclui o hash do anterior. Qualquer edição, exclusão, inserção ou reordenação é detectada, e pontos de verificação assinados detectam um log cortado. Se um registro não puder ser gravado, a ação é recusada.",
+          "note": "A assinatura dos pontos de verificação com uma chave gerenciada e uma visão do log para cada tenant ainda não existem."
+        },
+        {
+          "tag": "new",
+          "title": "Serviço de atualizações",
+          "body": "O Controller assina os manifestos de atualização e entrega os arquivos. Uma versão é aberta anel por anel (canário, inicial, geral), e uma chave de parada interrompe uma linha de versões ou todas de uma vez. Uma parada não pode ser desfeita reenviando um manifesto mais antigo.",
+          "note": "Nesta prévia a atualização é aplicada por um instalador de arquivos genérico em laboratório; os instaladores que substituem o agente em execução no Windows, Linux e macOS ainda não foram construídos."
+        },
+        {
+          "tag": "new",
+          "title": "Canal de eventos durável",
+          "body": "Os eventos aceitos pelo Controller são publicados em um barramento de mensagens (NATS JetStream) antes de avisar o agente de que foram aceitos, então um evento aceito já está em disco. O tenant e o dispositivo vêm do certificado e são gravados em cada evento. Um indexador guarda os eventos em uma área separada para cada tenant e envia para quarentena, em vez de guardar, qualquer mensagem cujo conteúdo não corresponda ao seu tenant. Um agente que reenvia o mesmo evento não cria duplicata.",
+          "note": "Esta prévia guarda os eventos em arquivos para desenvolvimento. Os armazenamentos de busca e análise (OpenSearch, ClickHouse) ainda não foram construídos."
+        },
+        {
+          "tag": "improved",
+          "title": "Verificações de tenant mais rígidas nos eventos",
+          "body": "Um evento que traz seu próprio campo de tenant ou dispositivo só é aceito se coincidir exatamente com o certificado. Valores vazios ou malformados e chaves que diferem apenas em maiúsculas são recusados, e um evento recusado é informado como erro permanente para que o agente não tente reenviá-lo sem fim. Os nomes no certificado precisam ter uma única forma exata. Agora há um teste aleatório entre tenants e testes de fuzzing nesses caminhos.",
+          "note": "Encontrado durante os testes: nenhum dado de cliente esteve envolvido."
+        },
+        {
+          "tag": "new",
+          "title": "Sensores executam como programas separados",
+          "body": "O agente agora pode iniciar e supervisionar sensores que executam como programas próprios e se comunicam com ele por um canal local (um socket Unix, ou um pipe nomeado no Windows). Os eventos de um sensor passam pelo agente até o Controller, e cada sensor recebe a sua própria parte da política assinada ao conectar e sempre que a política muda. Se um sensor recusa uma política, o agente reverte a política inteira. Um pequeno sensor de teste é incluído para laboratórios.",
+          "note": "Os sensores de produção para Windows, Linux e macOS ainda não estão conectados; hoje apenas o sensor de teste usa esse caminho."
+        },
+        {
+          "tag": "new",
+          "title": "Mais tipos de eventos no formato comum",
+          "body": "Os eventos agora podem descrever alterações em chaves e valores do registro, módulos (DLLs e bibliotecas) carregados ou descarregados, operações de memória entre processos, logins e logoffs, e achados de detecção com a regra e a técnica MITRE ATT&CK que os gerou. Eles usam o mesmo esquema aberto (OCSF 1.10.0) dos eventos de processo, arquivo, rede e DNS, então podem ser pesquisados e correlacionados juntos.",
+          "note": "Os sensores que produzem esses eventos ainda estão sendo conectados; o formato já está pronto para eles."
+        },
+        {
+          "tag": "new",
+          "title": "Política por grupo, UO, etiqueta e dispositivo",
+          "body": "A política agora pode ser definida em vários níveis: para todo o tenant, para um grupo do diretório, uma unidade organizacional, uma etiqueta ou um único dispositivo. Para cada dispositivo os níveis são combinados nessa ordem e um nível mais específico substitui um módulo de um mais amplo, a menos que o mais amplo o tenha bloqueado. Cada dispositivo recebe a sua própria política assinada, e um agente recusa uma política feita para outro dispositivo. Um administrador pode ver antecipadamente o que um dispositivo receberá, incluindo qualquer substituição que um bloqueio tenha impedido. Os grupos, UOs e etiquetas de um dispositivo são decididos pelo Controller, nunca pelo próprio dispositivo.",
+          "note": "Prévia. A administração é feita por API com tokens de acesso; o login pelo serviço de identidade e uma tela de gestão virão depois. Cada alteração fica registrada na auditoria do tenant."
+        },
+        {
+          "tag": "new",
+          "title": "Política guardada em banco de dados com isolamento por tenant",
+          "body": "A política e os atributos dos dispositivos agora ficam no PostgreSQL em vez da memória, então sobrevivem a uma reinicialização e vários Controllers podem compartilhá-los. O próprio banco de dados mantém os tenants separados: cada tabela de dados de tenant tem segurança em nível de linha que a aplicação não consegue desligar, e cada requisição trabalha dentro de uma transação ligada a um único tenant. Se o banco estiver indisponível, os dispositivos mantêm a última política válida e o Controller informa o problema em vez de dizer que não há política.",
+          "note": "Prévia. Registros de dispositivos, tokens de inscrição, revogações e o log de auditoria ainda não estão no banco de dados."
+        },
+        {
+          "tag": "new",
+          "title": "Tokens de inscrição, lista de dispositivos e revogação pela API de administração",
+          "body": "Os administradores de um tenant agora podem criar tokens de inscrição de uso único, ver os dispositivos inscritos no seu tenant e revogar um dispositivo. O token é mostrado uma única vez na criação e nunca é guardado nem registrado de forma legível; vale só para o próprio tenant e uma única vez, mesmo que vários Controllers compartilhem o banco de dados. Um dispositivo revogado é recusado imediatamente em todas as rotas, e o mesmo número de dispositivo em outro tenant não é afetado. Se o banco de dados não puder ser acessado, os dispositivos são instruídos a tentar de novo mais tarde, em vez de serem aceitos ou tratados como revogados. Cada ação é gravada no log de auditoria antes e depois de acontecer.",
+          "note": "Prévia. Revogar um tenant inteiro é uma ação do operador e não é oferecida aos administradores do tenant."
+        },
+        {
+          "tag": "new",
+          "title": "O Controller pode iniciar em modo de produção",
+          "body": "O Controller agora tem uma inicialização de produção: um comando único e offline cria as chaves de assinatura (autoridade certificadora dos agentes, política, atualizações e log de auditoria), e o Controller se recusa a iniciar se um arquivo de chave puder ser lido por outros usuários, se uma chave não corresponder ao seu certificado ou se não houver banco de dados configurado. Ele nunca gera chaves nem recorre à memória por conta própria. Após uma reinicialização, os certificados emitidos antes continuam funcionando, dispositivos revogados continuam revogados, tokens de inscrição usados continuam usados e a política não muda. O log de auditoria pode ser verificado a qualquer momento com a chave pública da mesma cerimônia.",
+          "note": "Prévia. Por enquanto as chaves ficam em arquivos protegidos; um serviço de chaves em hardware ou na nuvem as substituirá antes do lançamento."
+        },
+        {
+          "tag": "new",
+          "title": "Log de auditoria no banco de dados, uma cadeia por tenant",
+          "body": "Em produção o log de auditoria agora fica no mesmo banco de dados dos demais dados do tenant, então vários Controllers podem gravar nele ao mesmo tempo. Cada tenant tem sua própria cadeia de registros, ligados por hashes, e um tenant nunca vê nada da cadeia de outro. O banco recusa alterar ou apagar registros, e pontos de verificação assinados, feitos com uma chave que não fica no banco, revelam um log editado, cortado ou esvaziado. Um operador pode verificar a cadeia de qualquer tenant com um único comando, e uma ação privilegiada continua sendo recusada se o seu registro não puder ser gravado.",
+          "note": "Prévia. Uma chamada para os tenants verificarem a própria trilha de auditoria virá com o portal."
+        },
+        {
+          "tag": "new",
+          "title": "Contratos de API publicados para agentes e administradores",
+          "body": "As duas interfaces do Controller, a usada pelos agentes e a usada pelos administradores do tenant, agora têm descrições OpenAPI 3.1. A compilação as confere com o código em execução, de modo que uma rota que é servida mas não documentada, documentada mas não servida, ou documentada com o papel errado, quebra a compilação. Os documentos dizem, para cada chamada, o que ela faz, quem pode usá-la e o que cada erro significa, inclusive que objetos de outro tenant sempre respondem \"não encontrado\".",
+          "note": "Prévia. O contrato pode mudar antes do lançamento."
+        },
+        {
+          "tag": "new",
+          "title": "Acesso à API de administração com o seu provedor de identidade",
+          "body": "Os administradores agora podem chamar o Controller com tokens de acesso do serviço de identidade do portal de parceiros, no lugar dos tokens estáticos ou junto com eles. Os tokens são verificados com rigor: assinatura com as chaves publicadas do provedor, emissor, audiência, validade, e um tenant e papel exatos. Tudo que for duvidoso é recusado, e o registro de auditoria anota quem agiu como \"oidc:\" mais o usuário.",
+          "note": "Prévia. Exige que o serviço de identidade coloque o tenant e o papel no token."
+        },
+        {
+          "tag": "new",
+          "title": "As atualizações do agente sobrevivem a reinícios e só um operador as publica",
+          "body": "As versões de atualização, seus anéis de implantação e a chave de parada agora ficam no banco de dados, então reiniciar um Controller não faz mais os agentes ignorarem versões posteriores, e vários Controllers servem as mesmas. O Controller não guarda mais a chave de assinatura de atualizações e sua conta de banco só pode ler versões: publicar, ampliar um anel, parar ou retomar todas as atualizações é feito por um operador com a chave de assinatura e as credenciais do proprietário, e cada ação é gravada na auditoria antes de valer.",
+          "note": "Prévia. Artefatos grandes passarão depois para armazenamento de objetos."
+        },
+        {
+          "tag": "new",
+          "title": "Grupos e UOs do diretório podem conduzir a política dos dispositivos",
+          "body": "Um conector de diretório agora pode enviar ao Controller um retrato de quais dispositivos pertencem a quais grupos e unidades organizacionais. Ele é aplicado de uma vez, tudo ou nada, e a política de cada dispositivo afetado o acompanha na próxima consulta. Os valores do diretório e os definidos por administradores ficam separados, então um não sobrescreve o outro; um retrato que não muda nada não gera nova revisão de política, e um retrato completo remove os vínculos que o diretório não informa mais.",
+          "note": "Prévia. Os conectores de Active Directory e Entra ID ainda não foram construídos."
+        },
+        {
+          "tag": "new",
+          "title": "Inventário de dispositivos e achados de desvio de política",
+          "body": "O agente agora pode informar o que cada dispositivo é (nome, sistema operacional, hardware, endereços de rede) e de quais configurações de política ele se desviou. O inventário fica desligado até a política do tenant ligá-lo; então é enviado uma vez, de novo quando algo muda e na periodicidade que você definir. O desvio de política é informado como achados que abrem quando uma configuração deixa de ser atendida e fecham quando volta a ser atendida, então uma frota saudável não gera tráfego. O formato de achado de vulnerabilidades também está pronto para o módulo scanner que vai alimentá-lo.",
+          "note": "Prévia. O Linux informa mais detalhes hoje; os detalhes de Windows e macOS virão com seus adaptadores."
+        },
+        {
+          "tag": "new",
+          "title": "Verifique a sua própria trilha de auditoria",
+          "body": "Cada tenant agora pode conferir que nada do que foi registrado sobre ele foi editado, removido ou reordenado. Três chamadas somente leitura (papel de visualizador) publicam a chave que assina os pontos de controle da auditoria, deixam o Controller conferir a sua cadeia e entregam os pontos de controle assinados. Uma nova ferramenta offline, nx-auditverify, recalcula cada hash, vínculo e assinatura a partir dos registros baixados, então não é preciso confiar na resposta do próprio Controller. Uma trilha alterada ou cortada é informada como não verificada.",
+          "note": "Prévia. Disponível em Controllers de produção (registro de auditoria em banco de dados). Os registros mais novos que o último ponto de controle estão encadeados, mas só o próximo ponto de controle, gravado em até um minuto de atividade, os assina."
+        },
+        {
+          "tag": "new",
+          "title": "Achados de vulnerabilidades do software instalado",
+          "body": "Em dispositivos Linux o agente agora pode comparar o software instalado pelo gerenciador de pacotes do sistema (Debian e Ubuntu, Alpine, distribuições baseadas em RPM) com uma lista assinada de vulnerabilidades conhecidas e informar um achado para cada vulnerabilidade que se aplica: criado quando um pacote passa a ser afetado, atualizado quando os pacotes afetados mudam e encerrado quando é atualizado ou removido. A varredura fica desligada até a política do tenant ligá-la. Uma lista ausente, vencida, mais antiga que a em uso ou não assinada por uma chave confiável é recusada por inteiro, e nesse caso nenhum achado é encerrado. A nova ferramenta nx-advisory assina e confere as listas.",
+          "note": "Prévia. Precisa de uma lista de avisos assinada no dispositivo; a entrega pelo canal de atualização e os inventários de software de Windows e macOS virão depois."
+        },
+        {
+          "tag": "new",
+          "title": "Listas de avisos entregues pelo canal de atualização",
+          "body": "A lista assinada de avisos de vulnerabilidades agora chega aos dispositivos do mesmo modo que as atualizações do agente: o operador a publica como um componente de atualização próprio, ela é liberada em etapas (canary, early, general), fica coberta pela chave geral de parada e é revertida automaticamente se a lista instalada não for verificada. O dispositivo confere a lista duas vezes, com a chave de atualização para a versão e com uma chave de avisos separada para o conteúdo, e recusa uma lista sem assinatura, vencida ou numerada diferente da sua versão. Uma lista nova faz a varredura rodar imediatamente.",
+          "note": "Prévia. Ativada no agente com a opção de atualização de avisos junto com as chaves de atualização e de avisos."
+        },
+        {
+          "tag": "new",
+          "title": "Sincronização com o Active Directory para grupos e UOs",
+          "body": "Um novo programa, nx-dirsync, lê computadores, grupos de segurança (inclusive aninhados) e unidades organizacionais do Active Directory por LDAP e os envia ao Controller, de modo que os escopos de política por grupo e UO acompanham o diretório. Os computadores são associados aos dispositivos pelo rótulo do token de inscrição ou por um arquivo de mapeamento opcional, e um nome que corresponde a mais de uma máquina é ignorado, nunca adivinhado. Contas desabilitadas ficam de fora. Uma proteção recusa um instantâneo vazio ou que perdeu mais de 30% do anterior, para que um controlador de domínio inacessível não remova os grupos de todos os dispositivos. As conexões exigem ldaps ou StartTLS, e senhas e tokens são lidos apenas de arquivos protegidos.",
+          "note": "Prévia. Testado com um diretório simulado; falta o teste contra um controlador de domínio real."
+        },
+        {
+          "tag": "new",
+          "title": "Microsoft Entra ID como fonte de diretório",
+          "body": "O conector de diretório agora pode ler dispositivos e grupos de segurança do Microsoft Entra ID, além do Active Directory (nx-dirsync com a fonte entra). Ele entra como um aplicativo somente leitura, deixa a Microsoft resolver os grupos aninhados, ignora dispositivos desabilitados e nomes compartilhados por vários dispositivos. Os links de paginação só são seguidos no host da Microsoft, a limitação de requisições é respeitada e qualquer falha interrompe o ciclo antes de enviar algo, com a mesma proteção contra quedas da fonte do Active Directory.",
+          "note": "Prévia. Testado com um Microsoft Graph simulado; falta o teste com um tenant real."
+        },
+        {
+          "tag": "new",
+          "title": "Análise de vulnerabilidades no Windows e no macOS",
+          "body": "O analisador de vulnerabilidades agora também lê o software instalado no Windows (os programas registrados da máquina, sem atualizações nem componentes ocultos do sistema) e no macOS (pacotes de aplicativos nas pastas Applications). Os avisos para esses sistemas usam um novo formato numérico estrito de versão, de modo que uma versão é comparada com exatidão ou informada como não comparável, e nunca é presumida como corrigida. Um novo comando, nx-advisory name, informa o nome exato do programa para um aviso do Windows.",
+          "note": "Prévia. O leitor do Windows ainda precisa de um teste em um dispositivo Windows real; programas instalados por usuário e ecossistemas de pacotes de linguagens ainda não são cobertos."
+        },
+        {
+          "tag": "new",
+          "title": "As chaves de assinatura podem ficar em um serviço de assinatura separado",
+          "body": "O Controller agora pode pedir a um serviço de assinatura separado (nx-signer) que assine a política, as versões de atualização e os pontos de controle da auditoria, de modo que nenhuma dessas chaves precise ficar no servidor do Controller. O serviço aceita apenas clientes com um certificado permitido, deixa cada cliente usar somente as suas chaves, limita a chave de auditoria aos pontos de controle, limita a taxa de requisições e registra cada assinatura sem o seu conteúdo. O Controller confere cada assinatura com uma chave pública fixada previamente. Se o serviço estiver inacessível, nenhuma política sem assinatura é entregue e nenhuma atualização é publicada, enquanto as ações auditadas continuam funcionando e o ponto de controle é feito quando o serviço voltar.",
+          "note": "Prévia. As chaves no servidor de assinatura ainda são arquivos; o suporte a um KMS na nuvem ou a um módulo de hardware está planejado e depende do fornecedor escolhido."
+        },
+        {
+          "tag": "new",
+          "title": "Os eventos podem ser guardados no OpenSearch e no ClickHouse",
+          "body": "O pipeline de eventos agora pode gravar no OpenSearch, no ClickHouse ou em ambos. Cada tenant tem seus próprios índices (OpenSearch) ou sua própria faixa de chaves (ClickHouse), a estrutura dos eventos guardados é fixa para que um dispositivo não possa ampliá-la, gravar o mesmo evento duas vezes o guarda uma só vez, e os eventos voltam em uma ordem estável que pode ser paginada. Se um armazenamento falha, a gravação é repetida sem perder eventos, e um evento que um armazenamento recusa em definitivo é separado para revisão. Textos muito longos são encurtados na cópia de busca, enquanto o evento completo é mantido.",
+          "note": "Prévia. Testado com servidores reais no laboratório. Ainda faltam as telas de busca, as regras de retenção e o acesso por tenant no barramento de mensagens."
+        },
+        {
+          "tag": "new",
+          "title": "Pesquise seus eventos guardados pela API de administração",
+          "body": "Administradores e usuários somente leitura agora podem ler os eventos guardados de sua organização pela API de administração: filtrar por dispositivo e por intervalo de tempo, e percorrer os resultados do mais antigo ao mais recente. Um token só alcança a própria organização, e uma requisição que tente nomear outra é recusada. Se o armazenamento de eventos estiver indisponível, a API informa que está indisponível e não mostra nada parcial.",
+          "note": "Prévia. A busca em texto livre, as buscas salvas e as telas web virão depois."
+        },
+        {
+          "tag": "new",
+          "title": "Retenção e exclusão de eventos para cada organização",
+          "body": "Os operadores agora podem definir por quanto tempo os eventos guardados de cada organização são mantidos, com um valor padrão e exceções por organização, inclusive a manutenção por tempo indeterminado. Uma tarefa diária remove os eventos mais antigos do OpenSearch e do ClickHouse. Ela primeiro informa o que removeria, e um período mínimo impede que um valor digitado errado apague o histórico. Os eventos de uma organização também podem ser apagados por completo sob pedido, com uma confirmação que deve repetir o nome dela. A limpeza de uma organização nunca afeta outra.",
+          "note": "Prévia. Por enquanto o operador define os períodos de retenção em um arquivo; uma opção no portal virá depois."
+        },
+        {
+          "tag": "improved",
+          "title": "Conexões seguras e restritas ao barramento de mensagens",
+          "body": "O Controller e o indexador agora podem se conectar ao barramento de mensagens NATS por TLS, com usuário e senha, um arquivo de credenciais ou um certificado de cliente. Cada um recebe somente os direitos de que precisa: o Controller pode publicar eventos, mas não lê-los, e o indexador pode ler eventos, mas não publicá-los, de modo que uma credencial roubada não serve para ler nem forjar eventos de outra organização. Nenhum dos dois pode criar ou alterar o fluxo de eventos. Conexões a outro servidor sem TLS ou sem credencial são recusadas na inicialização.",
+          "note": "Prévia. Testado com um servidor NATS real com TLS e TLS mútuo."
+        },
+        {
+          "tag": "new",
+          "title": "Pacotes Linux para o agente (DEB e RPM)",
+          "body": "O agente Linux agora é entregue em pacotes DEB e RPM para sistemas de 64 bits Intel/AMD e ARM. Um único comando o instala, o registra no seu Controller Nexwall com um token de uso único e o inicia como serviço; para uma frota, o endereço do Controller e o token podem ser informados ao executar o comando de instalação. O token é usado uma vez e depois removido do equipamento. O serviço roda com permissões restritas, e remover o pacote mantém a identidade do equipamento, de modo que reinstalar não exige um novo token, enquanto expurgá-lo apaga tudo.",
+          "note": "Prévia. Os pacotes ainda não são assinados, e os instaladores para Windows e macOS virão depois."
+        },
+        {
+          "tag": "new",
+          "title": "O agente Linux se atualiza com segurança",
+          "body": "O agente Linux agora pode instalar por conta própria novas versões assinadas. Ele verifica se o arquivo baixado é um programa genuíno para o equipamento e para a versão anunciada pelo seu Controller, substitui a si mesmo, reinicia e mantém a versão anterior até que a nova tenha contatado o Controller com sucesso. Uma versão que não inicia é substituída automaticamente pela anterior e não é tentada novamente nesse equipamento; uma queda de rede, por si só, não causa reversão.",
+          "note": "Prévia. Windows e macOS virão depois, e a atualização fica desativada a menos que a chave de atualização seja configurada."
+        },
+        {
+          "tag": "new",
+          "title": "Veja quais versões do agente estão sendo liberadas",
+          "body": "A interface de administração agora pode listar os canais de versões do agente oferecidos pelo seu Controller: a versão atual de cada plataforma, até onde foi aberta (canário, antecipada ou geral) e se foi interrompida. A lista é somente leitura; publicar, promover e interromper uma versão continuam sendo ações controladas do operador.",
+          "note": "Prévia."
+        },
+        {
+          "tag": "improved",
+          "title": "Teste de laboratório com 10.000 endpoints simulados",
+          "body": "Adicionamos uma ferramenta de teste de carga que registra milhares de endpoints simulados em um Controller, envia eventos e solicitações de política como os agentes reais fazem e depois verifica se cada evento confirmado pode ser lido de volta. Em nosso primeiro teste de laboratório, 10.000 endpoints foram registrados em menos de um minuto e cerca de 400.000 eventos foram entregues sem perdas, sem duplicatas e sem erros em um único Controller de teste. Percorrer os eventos página a página no armazenamento de desenvolvimento também ficou muito mais rápido.",
+          "note": "Resultado de laboratório em um Controller de teste com armazenamento de desenvolvimento; testes em escala de produção e de longa duração ainda virão."
+        },
+        {
+          "tag": "new",
+          "title": "Lista de materiais de software e avisos de licenças",
+          "body": "Cada versão agora pode ser acompanhada de uma lista de materiais de software (CycloneDX) para cada programa que distribuímos e cada sistema operacional em que ele roda, com os componentes de terceiros contidos, suas versões, somas de verificação e licenças. Os pacotes do agente Linux agora incluem os avisos completos de licenças de terceiros. Nossas verificações recusam uma versão cuja lista tenha uma licença ausente ou não permitida.",
+          "note": "Prévia. As listas de materiais ainda não são assinadas, e os instaladores para Windows e macOS virão depois."
+        },
+        {
+          "tag": "new",
+          "title": "Telemetria e detecções em tempo de execução no Linux (osquery e Falco)",
+          "body": "No Linux, o agente agora pode informar o que realmente acontece na máquina: processos que iniciam e terminam, conexões de rede e portas em escuta, logins e alterações em arquivos monitorados, coletados com osquery, além de detecções em tempo de execução do Falco, cada uma mapeada para o formato aberto OCSF e marcada com o autor, a origem e a licença da regra. Um pacote opcional separado, nexwall-agent-sensors, instala ambos com versões originais fixadas e assinatura verificada. Se um dos sensores for encerrado repetidamente, o agente continua funcionando e informa o sensor como degradado até que se recupere. Todos os eventos são validados contra as definições oficiais do OCSF 1.10.0.",
+          "note": "Prévia. Somente x86_64 por enquanto; o osquery consulta a cada poucos segundos, então um processo mais curto só é visto pelo Falco."
+        },
+        {
+          "tag": "new",
+          "title": "Alertas por e-mail e webhook",
+          "body": "As detecções dos sensores do Linux agora viram alertas. Repetições da mesma detecção na mesma máquina são agrupadas em um único alerta com um contador, e cada alerta mostra sua severidade, a técnica do MITRE ATT&CK e a origem, a licença e o autor da regra que o gerou. Os administradores podem reconhecer e resolver alertas (cada alteração fica no registro de auditoria) e escolher para onde vão os novos alertas: um endereço de e-mail ou um webhook HTTPS assinado para um SIEM ou uma ponte de chat, cada um com sua própria severidade mínima. Se um servidor de e-mail ou um receptor estiver fora do ar, o envio é repetido com esperas crescentes em vez de se perder. Cada cliente vê apenas seus próprios alertas e rotas.",
+          "note": "Prévia. Os alertas estão disponíveis pela API de administração; a tela do console virá depois. No laboratório, o e-mail e o webhook foram entregues em menos de um segundo após a detecção."
+        },
+        {
+          "tag": "new",
+          "title": "Isolar uma máquina, com aprovação (Linux)",
+          "body": "Os administradores agora podem pedir que uma máquina Linux se desconecte da rede, religá-la, encerrar um processo e tudo o que ele iniciou, mover um arquivo suspeito para uma pasta de quarentena protegida ou coletar a lista de processos em execução. Isolar, encerrar um processo e colocar em quarentena exigem um aprovador identificado, e uma segunda pessoa pode ser exigida; nada acontece antes da aprovação. Cada pedido leva uma chave para que repeti-lo nunca o execute duas vezes. A máquina só obedece a ordens assinadas pelo Controller, destinadas a ela e àquele cliente, e ainda válidas; ela também mantém seu próprio registro à prova de adulteração de cada ordem. Uma máquina isolada continua falando com o Controller, encerra o isolamento sozinha no horário definido mesmo que o Controller não esteja disponível, e o mantém após reiniciar o agente ou a máquina. Cada etapa fica no registro de auditoria. Quando há um firewall conectado, a máquina isolada também pode ser bloqueada no firewall, e as impressões digitais dos arquivos em quarentena são repassadas a ele.",
+          "note": "Prévia. Somente Linux, testado no Debian 12; o Windows virá depois. No laboratório a máquina foi isolada 11 segundos após a aprovação no percentil 95 (100 execuções, pior caso 12,1 s). A etapa do firewall foi testada com um simulador, ainda não com um firewall real. As ações estão disponíveis pela API de administração; a tela do console virá depois."
+        },
+        {
+          "tag": "new",
+          "title": "Console de administração no navegador",
+          "body": "O Controller agora serve um console em /console/. Entre com um token de API e veja seus dispositivos, pesquise eventos por campo ou texto livre, trate alertas, peça e aprove isolamentos, crie tokens de cadastro com instruções de instalação, edite as configurações de proteção do endpoint, verifique o registro de auditoria e troque o idioma entre inglês e português do Brasil. Cada tela mostra apenas o seu próprio tenant."
+        },
+        {
+          "tag": "new",
+          "title": "Configurações de proteção do endpoint",
+          "body": "As configurações de proteção contra ameaças, controle de aplicativos, controle de dispositivos, firewall do host, proteção web e exclusões podem ser definidas por tenant, grupo ou dispositivo, cada uma como desligada, monitorar ou aplicar, e agora são aplicadas no Linux. As exclusões descartam na máquina os eventos de caminhos e programas escolhidos, e as regras que não geram alerta; a configuração de ameaças desativa regras, define a menor severidade que gera alerta e pode pedir o isolamento de uma máquina (uma pessoa ainda aprova); o controle de aplicativos gera um alerta quando um programa fora da lista permitida inicia; o armazenamento USB é bloqueado poucos segundos depois de conectado; o firewall do host bloqueia as conexões de entrada; a proteção web bloqueia os endereços dos domínios listados e gera um alerta quando um nome listado é consultado. Cada máquina informa o que realmente faz: uma configuração que pede mais do que é aplicado aparece como \"não totalmente aplicada\" com o motivo. Uma configuração retirada da política é desligada. Configurações inseguras, como um firewall que não permite nenhuma entrada, são recusadas ao salvar.",
+          "note": "Prévia. Somente Linux. A proteção web atua por endereço: não enxerga nomes criptografados, pode bloquear outros sites no mesmo endereço e ainda não tem categorias. O controle de aplicativos avisa mas não bloqueia. O Windows vem depois."
+        },
+        {
+          "tag": "new",
+          "title": "Limite de dispositivos e fim de vigência por tenant",
+          "body": "Um operador pode definir um número máximo de dispositivos e uma data de fim para um tenant. O cadastro além do limite ou depois da data é recusado com uma mensagem clara e registrado na auditoria."
+        },
+        {
+          "tag": "new",
+          "title": "Políticas assinadas com reversão",
+          "body": "O Controller assina cada política; o agente verifica a assinatura, recusa revisões mais antigas que a que já executa, aplica a política módulo a módulo e volta à última política boa se um módulo falhar ao aplicar ou na verificação de saúde. Depois o agente informa se está em conformidade.",
+          "bullets": [
+            "As chaves podem ser trocadas sem recadastrar o agente.",
+            "Cada tenant tem sua própria política e seu próprio contador de revisões.",
+            "Verificado no Windows 10 e no Linux, incluindo a recusa de uma chave incorreta."
+          ]
+        },
+        {
+          "tag": "new",
+          "title": "Canal de sensores",
+          "body": "Os sensores de detecção rodam como processos separados e enviam eventos ao agente por um canal local que só o sistema e os administradores podem abrir. Se o agente reinicia, pede ao sensor que continue depois do último evento recebido, e os eventos perdidos são contados."
+        },
+        {
+          "tag": "new",
+          "title": "Fila de eventos durável",
+          "body": "Os eventos aguardam em disco até o Controller confirmá-los, então uma reinicialização ou queda de rede não os perde. A fila tem limite de tamanho; quando enche, os eventos mais antigos são descartados e a quantidade é contada. Registros danificados são detectados e ignorados."
+        },
+        {
+          "tag": "new",
+          "title": "Instalação em um servidor, backup, restauração e atualização",
+          "body": "O Controller, a busca de eventos, o barramento de mensagens e o banco de dados são instalados em um único servidor Linux com um só script. Backups criptografados são restaurados em um servidor novo, as atualizações mantêm um retorno e uma atualização com falha volta sozinha à versão anterior. Inclui endpoints de saúde e métricas e pacotes de suporte sem chaves nem tokens. Testado no Debian 12; ainda não em outras distribuições."
+        }
+      ]
+    },
+    {
+      "id": "improvements",
+      "title": "Melhorias e mudanças",
+      "intro": "",
+      "items": [
+        {
+          "tag": "improved",
+          "title": "Verificação de licenças em cada build",
+          "body": "Cada build analisa suas dependências e falha quando uma licença é incompatível com o produto, e guarda o registro da origem de cada regra de detecção e componente."
+        }
+      ]
     }
-   ]
-  }
- ],
- "components": {
-  "intro": "Versões das partes que formam esta prévia.",
-  "rows": [
-   {
-    "name": "Agente (nx-agent)",
-    "version": "0.1.0-dev1",
-    "note": "Windows e Linux, comandos de cadastro e de teste"
-   },
-   {
-    "name": "Controller (nx-controller)",
-    "version": "0.1.0-dev1",
-    "note": "Serviço de ingestão e cadastro, modo de desenvolvimento"
-   },
-   {
-    "name": "Modelo de eventos",
-    "version": "OCSF 1.10.0",
-    "note": "Esquema do envelope, versão 1"
-   }
-  ]
- },
- "timeline": {
-  "intro": "Histórico de desenvolvimento desta prévia.",
-  "entries": [
-   {
-    "date": "2026-11-24",
-    "title": "Ingestão em lotes e lógica de atualização",
-    "text": "O laço de execução do agente, a ingestão em lotes e a lógica de atualização em etapas, verificados no Windows 10 e no Linux."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Renovação, revogação, auditoria e serviço de atualizações",
-    "text": "Renovação e revogação de certificados, registro de auditoria e serviço de atualizações, verificados de ponta a ponta."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Políticas, canal de sensores e fila de eventos",
-    "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Console e configurações de proteção do endpoint",
-    "text": "Um console no navegador, configurações de proteção do endpoint e limites de dispositivos por tenant."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Isolar uma máquina, com aprovação",
-    "text": "Isolar, encerrar um processo, colocar um arquivo em quarentena e coletar: com aprovação e auditoria."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Alertas por e-mail e webhook",
-    "text": "Detecções viram alertas, entregues com novas tentativas."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Sensores Linux: osquery e Falco",
-    "text": "Telemetria e detecções reais no Linux, mapeadas para OCSF."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Lista de materiais de software",
-    "text": "SBOMs CycloneDX e avisos de licenças para cada versão."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Teste de carga com 10.000 endpoints simulados",
-    "text": "Primeiro resultado de laboratório: sem perda de eventos em um Controller de teste."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Canais de versões do agente na API de administração",
-    "text": "Visão somente leitura dos anéis de liberação e interrupções."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Autoatualização do agente Linux",
-    "text": "Versões assinadas são instaladas, confirmadas e revertidas automaticamente."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Pacotes Linux do agente",
-    "text": "Pacotes DEB e RPM com registro silencioso por token."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Conexões seguras ao barramento de mensagens",
-    "text": "TLS, credenciais e acesso de privilégio mínimo ao barramento de eventos."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Retenção e exclusão de eventos",
-    "text": "Defina por quanto tempo os eventos de cada organização são mantidos e apague uma organização sob pedido."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "API de busca de eventos",
-    "text": "Leia seus eventos guardados pela API de administração, por dispositivo e intervalo de tempo."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Eventos no OpenSearch e no ClickHouse",
-    "text": "Os eventos podem ser guardados por tenant no OpenSearch, no ClickHouse ou em ambos."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Serviço de assinatura separado",
-    "text": "As chaves de política, atualização e auditoria podem ficar em um serviço de assinatura separado."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Análise no Windows e no macOS",
-    "text": "A análise de vulnerabilidades agora cobre programas do Windows e aplicativos do macOS."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Fonte de diretório Entra ID",
-    "text": "Os grupos agora podem acompanhar o Microsoft Entra ID além do Active Directory."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Sincronização com o Active Directory",
-    "text": "Grupos e UOs agora acompanham o Active Directory pelo conector nx-dirsync."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Listas de avisos por atualização",
-    "text": "As listas de avisos de vulnerabilidades são liberadas em etapas pelo canal de atualização."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Achados de vulnerabilidades",
-    "text": "O agente informa vulnerabilidades conhecidas do software Linux instalado, a partir de uma lista de avisos assinada."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Verifique sua auditoria",
-    "text": "Os tenants podem conferir a trilha de auditoria no servidor ou offline com o nx-auditverify."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Inventário e achados de desvio",
-    "text": "O agente informa o inventário do dispositivo (ativado por política) e achados de desvio de política em OCSF."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Política guiada pelo diretório",
-    "text": "Grupos e UOs de um retrato do diretório selecionam camadas de política; valores manuais e do diretório ficam separados."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Atualizações duráveis, só operador",
-    "text": "Versões de atualização no banco de dados; só um operador pode publicar, ampliar ou parar."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Acesso com provedor de identidade",
-    "text": "Tokens de acesso OIDC aceitos pela API de administração, verificados com rigor e auditados."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Contratos de API",
-    "text": "Descrições OpenAPI 3.1 das APIs de agente e administração, conferidas com o código a cada compilação."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Log de auditoria no banco de dados",
-    "text": "Uma cadeia de hashes por tenant, somente acréscimo no banco, pontos de verificação assinados, verificação pelo operador."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Inicialização de produção",
-    "text": "Cerimônia de chaves offline, arquivos de chave protegidos, banco de dados obrigatório; reinicializações preservam certificados, revogações e política."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Tokens, dispositivos e revogação",
-    "text": "Os administradores criam tokens de inscrição de uso único, listam dispositivos e os revogam; guardado com isolamento por tenant."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Política em banco de dados",
-    "text": "A política e os atributos dos dispositivos sobrevivem a reinicializações; o banco impõe o isolamento por tenant com segurança em nível de linha."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Política por grupo, UO, etiqueta, dispositivo",
-    "text": "Política em camadas com bloqueios, assinada por dispositivo e gerenciada por uma API de administração do tenant."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Mais tipos de eventos",
-    "text": "Eventos de registro, módulos, memória, login e achados de detecção no formato OCSF 1.10.0."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Sensores como programas separados",
-    "text": "O agente supervisiona processos sensores por um canal local; eventos e política de cada sensor cruzam o limite do processo."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Verificações de tenant mais rígidas",
-    "text": "Os eventos devem coincidir exatamente com a identidade do certificado; campos parecidos são recusados; novos testes entre tenants e de fuzzing."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Canal de eventos durável",
-    "text": "Os eventos são persistidos em um barramento de mensagens antes de serem aceitos e indexados por tenant, com quarentena para os que não correspondem."
-   },
-   {
-    "date": "2026-11-24",
-    "title": "Primeira prévia de desenvolvimento",
-    "text": "Cadastro, ingestão vinculada ao tenant e os primeiros mapeamentos OCSF, verificados no Windows 10 22H2 e no Linux."
-   }
-  ]
- },
- "requirements": [
-  "Ainda não há nada para instalar: a prévia não foi publicada para download.",
-  "As próximas versões informarão aqui as versões compatíveis de Windows, Linux e macOS."
- ],
- "upgrade": [
-  "Ainda não há caminho de atualização. As prévias de desenvolvimento não se destinam à instalação por clientes."
- ],
- "open_source": "O Nexwall Endpoint combina componentes de código aberto com código da Nexwall. A lista de componentes, versões e licenças será publicada com a primeira versão, junto com a lista de materiais de software. Cada build já executa uma verificação de licenças."
+  ],
+  "components": {
+    "intro": "Versões das partes que formam esta prévia.",
+    "rows": [
+      {
+        "name": "Agente (nx-agent)",
+        "version": "0.1.0-dev1",
+        "note": "Windows e Linux, comandos de cadastro e de teste"
+      },
+      {
+        "name": "Controller (nx-controller)",
+        "version": "0.1.0-dev1",
+        "note": "Serviço de ingestão e cadastro, modo de desenvolvimento"
+      },
+      {
+        "name": "Modelo de eventos",
+        "version": "OCSF 1.10.0",
+        "note": "Esquema do envelope, versão 1"
+      }
+    ]
+  },
+  "timeline": {
+    "intro": "Histórico de desenvolvimento desta prévia.",
+    "entries": [
+      {
+        "date": "2026-11-24",
+        "title": "Ingestão em lotes e lógica de atualização",
+        "text": "O laço de execução do agente, a ingestão em lotes e a lógica de atualização em etapas, verificados no Windows 10 e no Linux."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Renovação, revogação, auditoria e serviço de atualizações",
+        "text": "Renovação e revogação de certificados, registro de auditoria e serviço de atualizações, verificados de ponta a ponta."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Políticas, canal de sensores e fila de eventos",
+        "text": "Obtenção de políticas assinadas com reversão, canal local de sensores e fila de eventos durável, verificados no Windows 10 e no Linux."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Console e configurações de proteção do endpoint",
+        "text": "Um console no navegador, configurações de proteção do endpoint e limites de dispositivos por tenant."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Isolar uma máquina, com aprovação",
+        "text": "Isolar, encerrar um processo, colocar um arquivo em quarentena e coletar: com aprovação e auditoria."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Alertas por e-mail e webhook",
+        "text": "Detecções viram alertas, entregues com novas tentativas."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Sensores Linux: osquery e Falco",
+        "text": "Telemetria e detecções reais no Linux, mapeadas para OCSF."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Lista de materiais de software",
+        "text": "SBOMs CycloneDX e avisos de licenças para cada versão."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Teste de carga com 10.000 endpoints simulados",
+        "text": "Primeiro resultado de laboratório: sem perda de eventos em um Controller de teste."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Canais de versões do agente na API de administração",
+        "text": "Visão somente leitura dos anéis de liberação e interrupções."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Autoatualização do agente Linux",
+        "text": "Versões assinadas são instaladas, confirmadas e revertidas automaticamente."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Pacotes Linux do agente",
+        "text": "Pacotes DEB e RPM com registro silencioso por token."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Conexões seguras ao barramento de mensagens",
+        "text": "TLS, credenciais e acesso de privilégio mínimo ao barramento de eventos."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Retenção e exclusão de eventos",
+        "text": "Defina por quanto tempo os eventos de cada organização são mantidos e apague uma organização sob pedido."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "API de busca de eventos",
+        "text": "Leia seus eventos guardados pela API de administração, por dispositivo e intervalo de tempo."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Eventos no OpenSearch e no ClickHouse",
+        "text": "Os eventos podem ser guardados por tenant no OpenSearch, no ClickHouse ou em ambos."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Serviço de assinatura separado",
+        "text": "As chaves de política, atualização e auditoria podem ficar em um serviço de assinatura separado."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Análise no Windows e no macOS",
+        "text": "A análise de vulnerabilidades agora cobre programas do Windows e aplicativos do macOS."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Fonte de diretório Entra ID",
+        "text": "Os grupos agora podem acompanhar o Microsoft Entra ID além do Active Directory."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Sincronização com o Active Directory",
+        "text": "Grupos e UOs agora acompanham o Active Directory pelo conector nx-dirsync."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Listas de avisos por atualização",
+        "text": "As listas de avisos de vulnerabilidades são liberadas em etapas pelo canal de atualização."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Achados de vulnerabilidades",
+        "text": "O agente informa vulnerabilidades conhecidas do software Linux instalado, a partir de uma lista de avisos assinada."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Verifique sua auditoria",
+        "text": "Os tenants podem conferir a trilha de auditoria no servidor ou offline com o nx-auditverify."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Inventário e achados de desvio",
+        "text": "O agente informa o inventário do dispositivo (ativado por política) e achados de desvio de política em OCSF."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Política guiada pelo diretório",
+        "text": "Grupos e UOs de um retrato do diretório selecionam camadas de política; valores manuais e do diretório ficam separados."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Atualizações duráveis, só operador",
+        "text": "Versões de atualização no banco de dados; só um operador pode publicar, ampliar ou parar."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Acesso com provedor de identidade",
+        "text": "Tokens de acesso OIDC aceitos pela API de administração, verificados com rigor e auditados."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Contratos de API",
+        "text": "Descrições OpenAPI 3.1 das APIs de agente e administração, conferidas com o código a cada compilação."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Log de auditoria no banco de dados",
+        "text": "Uma cadeia de hashes por tenant, somente acréscimo no banco, pontos de verificação assinados, verificação pelo operador."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Inicialização de produção",
+        "text": "Cerimônia de chaves offline, arquivos de chave protegidos, banco de dados obrigatório; reinicializações preservam certificados, revogações e política."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Tokens, dispositivos e revogação",
+        "text": "Os administradores criam tokens de inscrição de uso único, listam dispositivos e os revogam; guardado com isolamento por tenant."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Política em banco de dados",
+        "text": "A política e os atributos dos dispositivos sobrevivem a reinicializações; o banco impõe o isolamento por tenant com segurança em nível de linha."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Política por grupo, UO, etiqueta, dispositivo",
+        "text": "Política em camadas com bloqueios, assinada por dispositivo e gerenciada por uma API de administração do tenant."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Mais tipos de eventos",
+        "text": "Eventos de registro, módulos, memória, login e achados de detecção no formato OCSF 1.10.0."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Sensores como programas separados",
+        "text": "O agente supervisiona processos sensores por um canal local; eventos e política de cada sensor cruzam o limite do processo."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Verificações de tenant mais rígidas",
+        "text": "Os eventos devem coincidir exatamente com a identidade do certificado; campos parecidos são recusados; novos testes entre tenants e de fuzzing."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Canal de eventos durável",
+        "text": "Os eventos são persistidos em um barramento de mensagens antes de serem aceitos e indexados por tenant, com quarentena para os que não correspondem."
+      },
+      {
+        "date": "2026-11-24",
+        "title": "Primeira prévia de desenvolvimento",
+        "text": "Cadastro, ingestão vinculada ao tenant e os primeiros mapeamentos OCSF, verificados no Windows 10 22H2 e no Linux."
+      }
+    ]
+  },
+  "requirements": [
+    "Ainda não há nada para instalar: a prévia não foi publicada para download.",
+    "As próximas versões informarão aqui as versões compatíveis de Windows, Linux e macOS."
+  ],
+  "upgrade": [
+    "Ainda não há caminho de atualização. As prévias de desenvolvimento não se destinam à instalação por clientes."
+  ],
+  "open_source": "O Nexwall Endpoint combina componentes de código aberto com código da Nexwall. A lista de componentes, versões e licenças será publicada com a primeira versão, junto com a lista de materiais de software. Cada build já executa uma verificação de licenças."
 }
