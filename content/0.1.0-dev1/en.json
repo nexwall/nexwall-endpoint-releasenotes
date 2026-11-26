@@ -295,7 +295,8 @@
     {
      "tag": "new",
      "title": "Endpoint protection settings",
-     "body": "Settings for threat protection, application control, device control, host firewall, web protection and exclusions can be set per tenant, group or device, each as off, monitor or enforce. In this release the host firewall (Linux) and USB storage control are enforced on the machine. The other settings are saved and checked, and each machine reports them as \"not enforced\" until their enforcement arrives, so nothing claims protection that is not running. Unsafe settings, such as a firewall that allows nothing in, are refused when you save them."
+     "body": "Settings for threat protection, application control, device control, host firewall, web protection and exclusions can be set per tenant, group or device, each as off, monitor or enforce, and are now applied on Linux. Exclusions drop the events of chosen paths and programs on the machine, and rules that raise no alert; threat settings disable rules, set the lowest severity that raises an alert and can ask to isolate a machine (a person still approves); application control raises an alert when a program outside the allow-list starts; USB storage is blocked within seconds of plugging in; the host firewall blocks inbound connections; web protection blocks the addresses of listed domains and raises an alert when a listed name is looked up. Each machine reports what it really does: a setting that asks for more than is enforced is shown as \"not fully enforced\" with the reason. A setting removed from the policy is switched off. Unsafe settings, such as a firewall that allows nothing in, are refused when you save them.",
+     "note": "Preview. Linux only. Web protection works at address level: it cannot see encrypted names, can block other sites on the same address, and has no categories yet. Application control reports but does not block. Windows comes later."
     },
     {
      "tag": "new",
